@@ -23,6 +23,8 @@ public class AddAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBe
 		Map<String, String> mapOfDisplayNamesToJSONFieldNames = getMapOfDisplayNamesToJSONFieldNames();
 		Map<String, Validator> validatorMap = getValidatorMap();
 		
+		printHeader();
+		
 		Iterator<String> iterator = keys.iterator();
 		boolean lastEntryWasBlank = false;
 		while (iterator.hasNext() && !lastEntryWasBlank) {
@@ -36,9 +38,7 @@ public class AddAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBe
 			Validator v = validatorMap.get(key);
 			val = v.getValidValue(val);
 			
-			System.out.println(newObj.toJSONString());
 			newObj.put(mapOfDisplayNamesToJSONFieldNames.get(key), val);
-			System.out.println(newObj.toJSONString());
 		}
 
 		if (!lastEntryWasBlank) {
@@ -51,6 +51,14 @@ public class AddAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBe
 		}
 		
 		return rtn;
+	}
+	
+	private void printHeader() {
+		System.out.println("Immediacy and Length values are on a scale of 1-25");
+		System.out.println("Happiness Immediacy: 1 = Phht. Whatever, 5 = One less worry, 13 = Satisfied. A goal accomplished, 20 = exuberant, 25 = bliss");
+		System.out.println("Utility Immediacy: 1 = Could've done without, 5 = Did what I had to do, 13 = Good! Baby steps!, 20 = moving in new circles, 25 = new life skill/ability");
+		System.out.println("Happiness and Utility Length: 1 = A fleeting moment, 5 = scale of months, 13 = a good year or so, 20 = more than 3 years, 25 = the forseeable future");
+		System.out.println();
 	}
 
 }

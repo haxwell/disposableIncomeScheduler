@@ -8,10 +8,12 @@ import net.minidev.json.JSONObject;
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 
-public class AddThisMonthsSavedAmountToEachEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
 
+	private boolean amtHasAlreadyBeenAdded = false;
+	
 	public String getMenuText() {
-		return "Add This Month's Saved Amount To Each Entry";
+		return "Add This Period's Saved Amount To Each Entry";
 	}
 	
 	public boolean doIt(JSONObject data) {
@@ -21,6 +23,11 @@ public class AddThisMonthsSavedAmountToEachEntryMenuItemHandler extends Attribut
 		
 		if (items == null || items.size() == 0) {
 			System.out.println("\nThere are no entries!\n");
+			return rtn;
+		}
+		
+		if (amtHasAlreadyBeenAdded) {
+			System.out.println("\nThe periodically saved amount has already been added!\n");
 			return rtn;
 		}
 
@@ -49,14 +56,19 @@ public class AddThisMonthsSavedAmountToEachEntryMenuItemHandler extends Attribut
 				
 				Double objShare = objWeight * amt;
 				
-				Integer objPrevSaved = Integer.parseInt(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON).toString());
+				Object psam = obj.get(Constants.PREVIOUS_SAVED_AMT_JSON);
+				Long objPrevSaved = 0l;
 				
-				objPrevSaved += Integer.parseInt(objShare.toString());
+				if (psam != null)
+					objPrevSaved = Long.parseLong(psam.toString());
+				
+				objPrevSaved += Math.round(objShare);
 				
 				obj.put(Constants.PREVIOUS_SAVED_AMT_JSON, objPrevSaved+"");
 			}
 			
 			rtn = true;
+			amtHasAlreadyBeenAdded = true;
 		}
 		
 		return rtn;

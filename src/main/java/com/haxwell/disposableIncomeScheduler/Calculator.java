@@ -84,8 +84,8 @@ public class Calculator {
 		
 		int rangeInDays = (int)(((((furthestDate.getTime() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
 		
-		System.out.println(furthestDate.getTime() + ", " + Calendar.getInstance().getTimeInMillis());
-		System.out.println("rangeInDays = " + rangeInDays);
+//		System.out.println(furthestDate.getTime() + ", " + Calendar.getInstance().getTimeInMillis());
+//		System.out.println("rangeInDays = " + rangeInDays);
 		
 		int scale = 25;
 		int maxSegmentSize = rangeInDays / scale;

@@ -10,7 +10,7 @@
 				<ref bean="RemoveAnEntryMenuItemHandler"/>
 				<ref bean="EditAnEntryMenuItemHandler"/>
 				<ref bean="EditCalculationVariablesMenuItemHandler"/>
-				<ref bean="AddThisMonthsSavedAmountToEachEntryMenuItemHandler"/>
+				<ref bean="AddThisPeriodsSavedAmountToEachEntryMenuItemHandler"/>
 				<ref bean="ListTheScheduleMenuItemHandler"/>
 			</list>
 		</property>
@@ -28,7 +28,7 @@
 	<bean id="EditCalculationVariablesMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.EditCalculationVariablesMenuItemHandler">
 	</bean>
 
-	<bean id="AddThisMonthsSavedAmountToEachEntryMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.AddThisMonthsSavedAmountToEachEntryMenuItemHandler">
+	<bean id="AddThisPeriodsSavedAmountToEachEntryMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.AddThisPeriodsSavedAmountToEachEntryMenuItemHandler">
 	</bean>
 
 	<bean id="ListTheScheduleMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.ListTheScheduleMenuItemHandler">

@@ -49,9 +49,9 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 			Double weight = ((Entry<String, Double>)list.get(count)).getValue();
 			
 			Long dollarsClaimedInCurrentDeposit = Math.round(getPercentageOfCurrentDepositClaimed(data, weight));
-			Long daysToGoAtCurrentRateOfDeposit = getDaysToGoAtCurrentRateOfDeposit(item, dollarsClaimedInCurrentDeposit);
+			Long daysToGoAtCurrentRateOfDeposit = getDaysToGoAtCurrentRateOfDeposit(data, item, dollarsClaimedInCurrentDeposit);
 			
-			System.out.format("%-3d%-35s%-11s%8s%16s%29s%27s", count+1, item.get(Constants.DESCRIPTION_JSON), item.get(Constants.DATE_NEEDED_JSON), item.get(Constants.PRICE_JSON), item.get(Constants.PREVIOUS_SAVED_AMT_JSON), dollarsClaimedInCurrentDeposit, daysToGoAtCurrentRateOfDeposit);
+			System.out.format("%-3d%-35s%-11s%8s%16s%29s%27s", count+1, item.get(Constants.DESCRIPTION_JSON), item.get(Constants.DATE_NEEDED_JSON), item.get(Constants.PRICE_JSON), item.get(Constants.PREVIOUS_SAVED_AMT_JSON), dollarsClaimedInCurrentDeposit, getLongDaysToGoAsString(daysToGoAtCurrentRateOfDeposit));
 			System.out.println();
 		}
 		
@@ -62,7 +62,35 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 		return rtn;
 	}
 	
-	private long getDaysToGoAtCurrentRateOfDeposit(JSONObject item, Long depositPerPeriod) {
+	private String getLongDaysToGoAsString(Long l) {
+		Long  days = l;
+		String rtn = "";
+		
+		if (days > 360) {
+			long l2 = days / 360;
+			
+			rtn += l2 + " y";
+			days -= (l2 * 360);
+		}
+		
+		if (days > 30) {
+			long l2 = days / 30;
+			
+			if (!rtn.equals("")) rtn += ", ";
+			
+			rtn += l2 + " m";
+			days -= (l2 * 30);
+		}
+		
+		if (!rtn.equals("")) rtn += ", ";
+		
+		rtn += days + " d";
+		
+		return rtn;
+	}
+	
+	private long getDaysToGoAtCurrentRateOfDeposit(JSONObject data, JSONObject item, Long depositPerPeriod) {
+		Integer daysPerPeriod = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON).toString());
 		Integer price = Integer.parseInt(item.get(Constants.PRICE_JSON).toString());
 		Integer alreadySaved;
 		
@@ -73,7 +101,7 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 			alreadySaved = 0;
 		}
 		
-		return Math.round((price - alreadySaved) / depositPerPeriod);
+		return Math.round((price - alreadySaved) / depositPerPeriod) * daysPerPeriod;
 	}
 	
 	private Double getPercentageOfCurrentDepositClaimed(JSONObject data, Double weight) {
