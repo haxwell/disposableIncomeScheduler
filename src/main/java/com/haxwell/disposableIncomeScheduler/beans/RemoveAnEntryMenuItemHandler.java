@@ -9,7 +9,7 @@ public class RemoveAnEntryMenuItemHandler extends MenuItemHandlerBean {
 		return "Remove An Entry";
 	}
 	
-	public boolean doIt(JSONObject data) {
+	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
 		JSONArray items = (JSONArray)data.get("items");

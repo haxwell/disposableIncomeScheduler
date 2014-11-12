@@ -38,7 +38,7 @@ public class EditCalculationVariablesMenuItemHandler extends AttributeEditingMen
 		return map;
 	}
 	
-	public boolean doIt(JSONObject data) {
+	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
 		LinkedList<String> attrList = getListOfAttributes();

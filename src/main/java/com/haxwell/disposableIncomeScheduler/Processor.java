@@ -1,7 +1,8 @@
 package com.haxwell.disposableIncomeScheduler;
 
-import java.util.HashMap;
+import java.util.HashMap;	
 import java.util.Map;
+import java.util.List;
 
 import net.minidev.json.JSONObject;
 
@@ -9,23 +10,27 @@ import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 
 public class Processor {
 
-	public static boolean process(MenuItemHandlerBean bean, JSONObject data) {
+	public static boolean process(JSONObject data, JSONObject state) {
 		Map<Integer, MenuItemHandlerBean> map = new HashMap<>();
 		boolean changesMade = false;
-		
-		int index = 0;
-		for (MenuItemHandlerBean child : bean.getChildren()) {
-			map.put(++index, child);
-		}
 		
 		MenuItemHandlerBean selection;
 		
 		do {
+			List<MenuItemHandlerBean> list = Controller.getInstance().getMenuItemHandlers(data, state);
+			
+			map.clear();
+			
+			int index = 0;
+			for (MenuItemHandlerBean child : list) {
+				map.put(++index, child);
+			}
+
 			displayMenu(map);
 			selection = getMenuSelection(map);
 			
 			if (selection != null) {
-				if (selection.doIt(data))
+				if (selection.doIt(data, state))
 					changesMade = true;
 			}
 		

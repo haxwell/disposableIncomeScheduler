@@ -1,1 +1,52 @@
-{"periodLength":"14","amountSavedPerPeriod":"500","items":[{"price":"6000","utilityImmediacy":"13","description":"Furnace","happinessImmediacy":"13","happinessLength":"25","utilityLength":"25","dateNeededBy":""},{"price":"6000","utilityImmediacy":"13","description":"Kitchen remodel","happinessImmediacy":"15","happinessLength":"25","utilityLength":"25","dateNeededBy":"6\/21\/2016"},{"price":"12500","utilityImmediacy":"15","description":"Trip To France","happinessImmediacy":"20","happinessLength":"7","dateNeededBy":"10\/31\/2016","utilityLength":"8"}],"totalInThePot":"1000"}
+{
+    "periodLength": "14",
+    "amountSavedPerPeriod": "500",
+    "goals_rootGroup": [
+        {
+            "goals_realEstate": [
+                {
+                    "goals_12880": [
+                        {
+                            "goals_outside": [
+                                {
+                                    "price": "1000",
+                                    "utilityImmediacy": "13",
+                                    "description": "Main Garage Door",
+                                    "happinessImmediacy": "13",
+                                    "happinessLength": "25",
+                                    "utilityLength": "25",
+                                    "dateNeededBy": ""
+                                },
+                                {
+                                    "price": "750",
+                                    "utilityImmediacy": "13",
+                                    "description": "Little Garage Door",
+                                    "happinessImmediacy": "13",
+                                    "happinessLength": "25",
+                                    "utilityLength": "25",
+                                    "dateNeededBy": ""
+                                }
+                            ]
+                        },
+                        {
+                            "goals_kitchen": [
+                                {
+                                    "price": "1000",
+                                    "utilityImmediacy": "13",
+                                    "description": "Kitchen floor",
+                                    "happinessImmediacy": "13",
+                                    "happinessLength": "25",
+                                    "utilityLength": "25",
+                                    "dateNeededBy": ""
+                                }
+                            ]
+                        },
+                        {
+                            "goals_HVAC": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

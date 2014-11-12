@@ -33,5 +33,27 @@
 
 	<bean id="ListTheScheduleMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.ListTheScheduleMenuItemHandler">
 	</bean>
+	
+	<bean id="MenuItemHandlerProviderCollection" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.MenuItemHandlerProviderCollection">
+		<property name="list">
+			<list>
+				<ref bean="SelectAGroupMenuItemHandlerProvider"/>
+				<ref bean="AddAGroupMenuItemHandlerProvider"/>
+				<ref bean="EditCurrentGroupMenuItemHandlerProvider"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="SelectAGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.SelectAGroupMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="AddAGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.AddAGroupMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="EditCurrentGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.EditCurrentGroupMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="RemoveSelectedGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.RemoveSelectedGroupMenuItemHandlerProvider">
+	</bean>
 
 </beans>

@@ -15,7 +15,7 @@ public class AddAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBe
 		return "Add An Entry";
 	}
 	
-	public boolean doIt(JSONObject data) {
+	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
 		JSONObject newObj = new JSONObject();

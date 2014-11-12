@@ -16,7 +16,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends Attribu
 		return "Add This Period's Saved Amount To Each Entry";
 	}
 	
-	public boolean doIt(JSONObject data) {
+	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
 		JSONArray items = (JSONArray)data.get("items");

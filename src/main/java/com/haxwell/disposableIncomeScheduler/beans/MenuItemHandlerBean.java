@@ -14,7 +14,7 @@ public class MenuItemHandlerBean {
 	 * @param data
 	 * @return true if changes were made to the data
 	 */
-	public boolean doIt(JSONObject data) {
+	public boolean doIt(JSONObject data, JSONObject state) {
 		return false;
 	}
 	

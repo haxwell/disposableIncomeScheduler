@@ -2,23 +2,39 @@ package com.haxwell.disposableIncomeScheduler;
 
 import net.minidev.json.JSONObject;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class Main {
-
-	// haven't added the ability to create a file yet.. so if its ever needed the format is:
-	// {"periodLength":"14","items":[{"price":"10000","utilityImmediacy":"5","description":"Trip to France","happinessImmediacy":"25","happinessLength":"13","previousSavedAmount":"100","dateNeededBy":"06\/21\/2016","utilityLength":"10"},{"price":"7000","utilityImmediacy":"5","description":"Kitchen remodel","happinessImmediacy":"25","happinessLength":"13","previousSavedAmount":"100","dateNeededBy":"09\/15\/2015","utilityLength":"25"},{"price":"6000","utilityImmediacy":"25","description":"Furnace","happinessImmediacy":"25","happinessLength":"13","previousSavedAmount":"100","dateNeededBy":"09\/15\/2016","utilityLength":"25"}],"amountSavedPerPeriod":"500","totalInThePot":"1000"}
 	
-	public static void main(String[] args) {
-		
-		JSONObject obj = DataFileManager.read(args[0]); // arg[0] = path to json data file
+	private static int count = 0;
 
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("/application-context.xml");
+	public static void main(String[] args) {
+	
 		
-		boolean changes = Processor.process((MenuItemHandlerBean)ctx.getBean("MenuItemHandlers"), obj);
+		/**
+		 * WHERE I LEFT OFF.. i think we'll need to create a MVC type structure, where the model is the JSON, along with some 
+		 * other state.. the Controller would then take the model, and determine, given the state, which MenuHandlers to return
+		 * as a collection to the View, which will then display those, and accept an input. Need to think about and create about
+		 * that idea more.
+		 */
+
+		
+		/**
+		 * WILO.. the controller has been created, processor now calls it in a loop.. need to create more handlerProviders which
+		 * check the state and the data to see if they can present their menu option, and fill out/create more handlers which 
+		 * actually modify the data.
+		 */
+		
+		// WILO : Spring taking a long time to load, and this shouldn't need an internet connection. get those files, and store
+		//  them locally. reference them locally. .. Other than that, menuitemutils is being built out, can get subgroups, and 
+		//  goals of groups now.. better understanding how the data model is working, and will be accessed.
+		
+		JSONObject state = new JSONObject();
+		JSONObject obj = DataFileManager.read(args[0]); // arg[0] = path to json data file
+		
+		MenuItemUtils.initializeState(state);
+		
+		boolean changes = Processor.process(obj, state);
 		
 		if (changes) {
 			System.out.println();
@@ -29,5 +45,7 @@ public class Main {
 				DataFileManager.write(args[0], obj);
 			}
 		}
+
+		boolean rtn = ("true".endsWith("dsfad"));
 	}
 }

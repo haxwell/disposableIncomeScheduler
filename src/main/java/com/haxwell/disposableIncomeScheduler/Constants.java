@@ -27,5 +27,13 @@ public class Constants {
 	
 	public static final String PREVIOUS_SAVED_AMT = "Previous Saved Amount";
 	public static final String PREVIOUS_SAVED_AMT_JSON = "previousSavedAmount";
+	
+	public static final String ROOT_GOAL_GROUP_NAME = "rootGroup";
+	public static final String GROUP_NAME_ATTR_KEY = "groupName";
+	public static final String GOALS_ATTR_KEY = "goals";
+	
+	public static final String STATE_ATTR_KEY_SELECTED_GROUP_NAME = "selectedGroupName";
+	public static final String STATE_ATTR_PATH_TO_SELECTED_GROUP = "pathToSelectedGroup";
+	public static final String STATE_ATTR_PATH_DELIMITER = "\\";
 
 }
