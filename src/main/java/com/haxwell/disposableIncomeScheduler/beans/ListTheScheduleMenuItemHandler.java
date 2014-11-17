@@ -13,6 +13,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
 
@@ -23,7 +24,7 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		JSONArray items = (JSONArray)data.get("items");
+		JSONArray items = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
 		
 		if (items == null || items.size() == 0) {
 			System.out.println("\nThere are no entries to list!\n");

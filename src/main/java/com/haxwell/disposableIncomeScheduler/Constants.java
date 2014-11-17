@@ -18,6 +18,7 @@ public class Constants {
 	public final static String UTILITY_LENGTH_JSON = "utilityLength";
 	public final static String DATE_NEEDED_JSON = "dateNeededBy";
 	
+	public static final String ARBITRARY_WEIGHTS = "arbitraryWeights";
 	public final static String PERIOD_LENGTH = "Period Length in Days";
 	public final static String PERIOD_LENGTH_JSON = "periodLength";
 	public final static String AMT_SAVED_PER_PERIOD = "Amount Saved per Period";

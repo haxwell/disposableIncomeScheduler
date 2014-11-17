@@ -28,6 +28,22 @@ public class Calculator {
 		
 		int totalOfHappinessAndUtilityScores = 0;
 		
+		/**
+		 * thinking about groups, and their calculation.
+		 * 
+		 * As it stands now, everything is in one group, and we add all the values up for each goal, and then
+		 * each goals weight is equal to its percentage of that whole.
+		 * 
+		 * Now that we have groups, the plan for the moment is to 
+		 * 
+		 * 1. add an arbitrary value to goals and groups. This will allow ranking one group or goal above another
+		 * even though its weight calculated otherwise may be lower than another group (and therefore get less money)
+		 * So something with an arbitrary value is ranked higher than something without that value set.
+		 * 
+		 * 2. ...and the rest, i decided i'm tired and need to think about later..
+		 */
+		
+		
 		int count = 0;
 		for (; count < items.size(); count++) {
 			JSONObject obj = (JSONObject)items.get(count);
