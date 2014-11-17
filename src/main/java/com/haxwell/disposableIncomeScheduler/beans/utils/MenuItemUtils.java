@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.minidev.json.JSONArray;
@@ -34,8 +33,6 @@ public class MenuItemUtils {
 			rtn = (String)state.get(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME);
 		else
 			rtn = getRootGroupName();
-		
-		System.out.println("getSelectedGroupName returning [" + rtn + "]");
 		
 		return rtn;
 	}
@@ -77,17 +74,39 @@ public class MenuItemUtils {
 						index++;
 					}
 				}
-
-				tokenListIndex++;
 			}
-			
+
+			tokenListIndex++;
 			
 		} while (tokenListIndex < tokenList.size());
 		
 		return arr;
 	}
 	
-	private static LinkedList<String> getTokenList(StringTokenizer tokenizer) {
+	public static JSONArray getParentOfSelectedGroup(JSONObject data, JSONObject state) {
+		StringTokenizer tokenizer = new StringTokenizer(state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP).toString(), Constants.STATE_ATTR_PATH_DELIMITER);
+		
+		LinkedList<String> list = getTokenList(tokenizer);
+		StringBuffer sb = new StringBuffer();
+		
+		int count = 0;
+		for (; count < list.size()-1; count++) {
+			sb.append(list.get(count));
+			
+			if (count < (list.size()-1)) {
+				sb.append(Constants.STATE_ATTR_PATH_DELIMITER);
+			}
+		}
+		
+		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, sb.toString());
+		
+		count = list.size() - 2;
+		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, list.get(count));
+		
+		return getSelectedGroup(data, state);
+	}
+
+	public static LinkedList<String> getTokenList(StringTokenizer tokenizer) {
 		LinkedList<String> list = new LinkedList<String>();
 		
 		while (tokenizer.hasMoreTokens()) {
@@ -97,18 +116,6 @@ public class MenuItemUtils {
 		return list;
 	}
 
-	public static JSONObject getJSONObjectByNameFromJSONArray(JSONArray arr, String name) {
-		int count = 0;
-		
-		for (; count < arr.size(); count++) {
-//			JSONArray arr2 = arr.get(count);
-			
-			
-		}
-		
-		return null;
-	}
-	
 	public static String getRootGroupName() {;
 		return Constants.GOALS_ATTR_KEY+"_"+Constants.ROOT_GOAL_GROUP_NAME;
 	}
@@ -148,4 +155,5 @@ public class MenuItemUtils {
 		
 		return rtn;
 	}
+
 }

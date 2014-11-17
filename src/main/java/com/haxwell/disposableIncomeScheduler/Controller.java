@@ -40,8 +40,9 @@ public class Controller {
 		while (iterator.hasNext()) {
 			MenuItemHandlerBean bean = iterator.next().getMenuItemHandler(data, state);
 			
-			if (bean != null)
+			if (bean != null) {
 				rtn.add(bean);
+			}
 		}
 		
 		return rtn;

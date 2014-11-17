@@ -6,9 +6,9 @@
 	<bean id="MenuItemHandlers" class="com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean">
 		<property name="children">
 			<list>
-				<ref bean="AddAnEntryMenuItemHandler"/>
-				<ref bean="RemoveAnEntryMenuItemHandler"/>
-				<ref bean="EditAnEntryMenuItemHandler"/>
+				<ref bean="AddAGoalMenuItemHandler"/>
+				<ref bean="RemoveAGoalMenuItemHandler"/>
+				<ref bean="EditAGoalMenuItemHandler"/>
 				<ref bean="EditCalculationVariablesMenuItemHandler"/>
 				<ref bean="AddThisPeriodsSavedAmountToEachEntryMenuItemHandler"/>
 				<ref bean="ListTheScheduleMenuItemHandler"/>
@@ -16,13 +16,13 @@
 		</property>
 	</bean>
 
-	<bean id="AddAnEntryMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.AddAnEntryMenuItemHandler">
+	<bean id="AddAGoalMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.AddAGoalMenuItemHandler">
 	</bean>
 
-	<bean id="RemoveAnEntryMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.RemoveAnEntryMenuItemHandler">
+	<bean id="RemoveAGoalMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.RemoveAGoalMenuItemHandler">
 	</bean>
 
-	<bean id="EditAnEntryMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.EditAnEntryMenuItemHandler">
+	<bean id="EditAGoalMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.EditAGoalMenuItemHandler">
 	</bean>
 
 	<bean id="EditCalculationVariablesMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.EditCalculationVariablesMenuItemHandler">
@@ -38,13 +38,24 @@
 		<property name="list">
 			<list>
 				<ref bean="SelectAGroupMenuItemHandlerProvider"/>
+				<ref bean="MoveToParentGroupMenuItemHandlerProvider"/>
 				<ref bean="AddAGroupMenuItemHandlerProvider"/>
 				<ref bean="EditCurrentGroupMenuItemHandlerProvider"/>
+				<ref bean="RemoveSelectedGroupMenuItemHandlerProvider"/>
+				<ref bean="AddAGoalMenuItemHandlerProvider"/>
+				<ref bean="RemoveAGoalMenuItemHandlerProvider"/>
+				<ref bean="EditAGoalMenuItemHandlerProvider"/>
+				<ref bean="EditCalculationVariablesMenuItemHandlerProvider"/>
+				<ref bean="ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider"/>
+				<ref bean="ListTheScheduleMenuItemHandlerProvider"/>
 			</list>
 		</property>
 	</bean>
 
 	<bean id="SelectAGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.SelectAGroupMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="MoveToParentGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.MoveToParentGroupMenuItemHandlerProvider">
 	</bean>
 
 	<bean id="AddAGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.AddAGroupMenuItemHandlerProvider">
@@ -54,6 +65,24 @@
 	</bean>
 
 	<bean id="RemoveSelectedGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.RemoveSelectedGroupMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="RemoveAGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.RemoveAGoalMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="AddAGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.AddAGoalMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="EditAGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.EditAGoalMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="EditCalculationVariablesMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.EditCalculationVariablesMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ListTheScheduleMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListTheScheduleMenuItemHandlerProvider">
 	</bean>
 
 </beans>

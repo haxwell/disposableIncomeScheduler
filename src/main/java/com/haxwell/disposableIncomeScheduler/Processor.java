@@ -7,6 +7,7 @@ import java.util.List;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class Processor {
 
@@ -27,6 +28,9 @@ public class Processor {
 			}
 
 			displayMenu(map);
+			
+			System.out.println("\nCurrent Group: " + MenuItemUtils.getSelectedGroupName(state) + "\n");
+			
 			selection = getMenuSelection(map);
 			
 			if (selection != null) {

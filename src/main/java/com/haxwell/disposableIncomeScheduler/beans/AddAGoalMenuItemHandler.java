@@ -5,14 +5,15 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class AddAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class AddAGoalMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
 
 	public String getMenuText() {
-		return "Add An Entry";
+		return "Add A Goal";
 	}
 	
 	public boolean doIt(JSONObject data, JSONObject state) {
@@ -42,8 +43,8 @@ public class AddAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBe
 		}
 
 		if (!lastEntryWasBlank) {
-			JSONArray items = (JSONArray)data.get("items");
-			items.add(newObj);
+			JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+			arr.add(newObj);
 			rtn = true;
 			
 			System.out.println("\nAdded entry '" + newObj.get(Constants.DESCRIPTION_JSON) + "'.");

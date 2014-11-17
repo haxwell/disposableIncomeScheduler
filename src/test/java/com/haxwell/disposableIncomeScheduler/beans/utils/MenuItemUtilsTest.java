@@ -1,6 +1,6 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;	
 
 import java.util.List;
 
@@ -146,6 +146,30 @@ public class MenuItemUtilsTest {
 		List<JSONObject> goalsOfAGroup = MenuItemUtils.getGoalsOfAGroup(arr);
 
 		assertTrue(goalsOfAGroup.size() == 0);
+	}
+	
+	@Test
+	public void testMovingFromAChildGroupToItsParent2() {
+		initializeState_Bathroom();
+
+		String groupName = MenuItemUtils.getSelectedGroupName(state);
+		assertTrue(groupName.equals(Constants.GOALS_ATTR_KEY + "_" + strBathroom));
+		
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+
+		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(arr);
+		
+		assertTrue(goals.size() == 2);
+		
+		arr = MenuItemUtils.getParentOfSelectedGroup(data, state);
+		groupName = MenuItemUtils.getSelectedGroupName(state);
+		assertTrue(groupName.equals(Constants.GOALS_ATTR_KEY + "_" + str12880));
+		
+		goals = MenuItemUtils.getGoalsOfAGroup(arr);
+		assertTrue(goals.size() == 0);
+		
+		List<String> subgrps = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
+		assertTrue(subgrps.size() == 3);
 	}
 	
 	private void initializeState_12880() {

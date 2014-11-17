@@ -4,30 +4,32 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class EditAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class EditAGoalMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
 
 	LinkedList<String> keys = getListOfKeys();
 	Map<String, Validator> validatorMap = getValidatorMap();
 	Map<String, String> displayToJSONMap = getMapOfDisplayNamesToJSONFieldNames();
 	
 	public String getMenuText() {
-		return "Edit An Entry";
+		return "Edit A Goal";
 	}
 	
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		JSONArray items = (JSONArray)data.get("items");
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 		String choice = "";
 		
 		do {
 			// list each item
 			int count = 0;
-			for (; count < items.size(); count++) {
-				String description = ((JSONObject)items.get(count)).get("description")+"";
+			for (; count < arr.size(); count++) {
+				String description = ((JSONObject)arr.get(count)).get("description")+"";
 				
 				System.out.println(count+1 + ". " + description);
 			}
@@ -36,7 +38,7 @@ public class EditAnEntryMenuItemHandler extends AttributeEditingMenuItemHandlerB
 				choice = System.console().readLine();
 				
 				if (choice != null && !choice.equals("")) {
-					JSONObject obj = (JSONObject)items.get(Integer.parseInt(choice) - 1);
+					JSONObject obj = (JSONObject)arr.get(Integer.parseInt(choice) - 1);
 					
 					rtn = doTheAttributeEditing(obj);
 				}
