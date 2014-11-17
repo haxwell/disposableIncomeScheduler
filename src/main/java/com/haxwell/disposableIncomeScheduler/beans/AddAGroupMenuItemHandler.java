@@ -1,5 +1,7 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
+import java.util.List;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -15,9 +17,18 @@ public class AddAGroupMenuItemHandler extends AttributeEditingMenuItemHandlerBea
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
 		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
 
+		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
+		
+		System.out.println(selectedGroupName + "'s children...");
+		System.out.println("-----===-----------------");
+		
+		for (String str : list) {
+			System.out.println(str);
+		}
+		
 		System.out.println("\nEnter the name of the new group to add to " + selectedGroupName + ": ");
 		
 		String input = System.console().readLine();
@@ -28,6 +39,8 @@ public class AddAGroupMenuItemHandler extends AttributeEditingMenuItemHandlerBea
 			arr.add(obj);
 			
 			rtn = true;
+
+			System.out.println("\n--> Added the group [" + input + "]");
 		}
 		
 		return rtn;
