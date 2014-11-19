@@ -37,4 +37,7 @@ public class Constants {
 	public static final String STATE_ATTR_PATH_TO_SELECTED_GROUP = "pathToSelectedGroup";
 	public static final String STATE_ATTR_PATH_DELIMITER = "\\";
 
+	public static final String WEIGHT_JSON = "weight";
+	public static final String WEIGHT_AS_PERCENTAGE_JSON = "weightAsPercentage";
+
 }
