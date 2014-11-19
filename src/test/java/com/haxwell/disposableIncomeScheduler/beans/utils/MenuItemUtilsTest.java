@@ -1,6 +1,6 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
-import static org.junit.Assert.assertTrue;	
+import static org.junit.Assert.assertTrue;		
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strRealEstate);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strKitchen);
 
@@ -117,14 +117,14 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	private void initializeState_12880() {
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strRealEstate);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
 	}
 
 	private void initializeState_Bathroom() {
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strRealEstate);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
 	}
