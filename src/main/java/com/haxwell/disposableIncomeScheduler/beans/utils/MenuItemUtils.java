@@ -123,7 +123,34 @@ public class MenuItemUtils {
 	public static void setSelectedGroupName(JSONObject state, String groupName) {
 		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
 	}
+	
+	public static boolean doesGroupHaveSubgroups(JSONObject group) {
+		boolean rtn = group.size() > 0;
+		
+		Iterator<String> iterator = group.keySet().iterator();
+		String key = iterator.next();
+		
+		rtn &= key.startsWith(Constants.GOALS_ATTR_KEY);
+		
+		return rtn;
+	}
 
+	public static List<String> getSubgroupNamesOfAGroup(JSONObject obj) {
+		List<String> rtn = new ArrayList<String>();
+
+		Iterator<String> iterator = obj.keySet().iterator();
+		
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			
+			if (obj.get(key) instanceof JSONArray)
+				rtn.add(key);
+		}
+		
+		return rtn;
+	}
+	
+	// TODO: Not sure this is returnin all the subgroup names of a group.. maybe. dunno.
 	public static List<String> getSubgroupNamesOfAGroup(JSONArray arr) {
 		List<String> rtn = new ArrayList<String>();
 		
