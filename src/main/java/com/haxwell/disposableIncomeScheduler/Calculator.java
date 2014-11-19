@@ -5,10 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class Calculator {
 	
@@ -19,7 +24,91 @@ public class Calculator {
 	protected static final String UTILITY_LENGTH_JSON = "utilityLength";
 	protected static final String DATE_NEEDED_JSON = "dateNeededBy";
 
-	public static Map<String, Double> getWeights(JSONObject data) {
+	public static JSONObject getWeights(JSONObject data) {
+		JSONArray arr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
+		return buildJSONWeightObject((JSONObject)arr.get(0));
+	}
+	
+	private static JSONObject buildJSONWeightObject(JSONObject element) {
+		JSONObject weights = new JSONObject();
+		
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
+		
+		if (list.size() > 0) {
+			
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				JSONArray groupElements = (JSONArray)element.get(key);
+				
+				if (groupElements.size() == 0) {
+					// this is an empty group.. it has no goals or subgroups
+					JSONArray arr = new JSONArray();
+					JSONObject obj = new JSONObject();
+					
+					obj.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
+					obj.put(Constants.WEIGHT_JSON, "0");
+					obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, "0.0");
+					
+					arr.add(obj);
+					weights.put(key, arr);
+				}
+				else {
+					int total = 0;
+					
+					for (int x=0; x < groupElements.size(); x++) {
+						JSONObject groupElement = (JSONObject)groupElements.get(x);
+						JSONObject weight = buildJSONWeightObject(groupElement);
+						
+						JSONArray arr = null;
+						if (weights.containsKey(key))
+							arr = (JSONArray)weights.get(key);
+						else {
+							arr = new JSONArray();
+							weights.put(key, arr);
+						}
+						
+						arr.add(weight);
+						
+						if (weight.containsKey(Constants.WEIGHT_JSON)) // if the weights we just got are the weights for a leaf...
+							total += Integer.parseInt(weight.get(Constants.WEIGHT_JSON)+"");
+					}
+					
+					JSONArray arr = (JSONArray)weights.get(key);
+					
+					for (int x=0; arr != null && x < arr.size(); x++) {
+						JSONObject obj = (JSONObject)arr.get(x);
+	
+						if (obj.containsKey(Constants.WEIGHT_JSON)) {
+							Object valueObj = obj.get(Constants.WEIGHT_JSON);
+							
+							int value = Integer.parseInt(valueObj+"");
+							obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, ((value*1.0)/total)+"");
+						}
+					}
+				}
+			}
+		} else {
+			// this is a goal, a leaf
+			int value = getValueForGoal(element); 
+			weights.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
+			weights.put(Constants.WEIGHT_JSON, value+"");
+		}
+
+		return weights;
+	}
+	
+	private static int getValueForGoal(JSONObject goal) {
+		Integer rtn = Integer.parseInt(goal.get(Constants.HAPPINESS_IMMEDIACY_JSON)+"");
+		
+		rtn += Integer.parseInt(goal.get(Constants.HAPPINESS_LENGTH_JSON)+"");
+		rtn += Integer.parseInt(goal.get(Constants.UTILITY_IMMEDIACY_JSON)+"");
+		rtn += Integer.parseInt(goal.get(Constants.UTILITY_LENGTH_JSON)+"");
+		
+		return rtn;
+	}
+	
+	
+	public static Map<String, Double> getWeights_old(JSONObject data) {
 		Map<String, Double> rtn = new HashMap<String, Double>();
 		JSONArray items = (JSONArray)data.get("items");
 		
