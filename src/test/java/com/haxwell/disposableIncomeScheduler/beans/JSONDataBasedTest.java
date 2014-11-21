@@ -47,8 +47,9 @@ public class JSONDataBasedTest {
 		
 		JSONObject bathroom = new JSONObject();
 		arr = new JSONArray();
-		arr.add(getGoal(strBathroom_sink, strBathroom_sink_price));
-		arr.add(getGoal(strBathroom_shower, strBathroom_shower_price));
+		
+		arr.add(getGoal(strBathroom_sink, strBathroom_sink_price, 10, 10, 10, 10, "06/21/2015"));
+		arr.add(getGoal(strBathroom_shower, strBathroom_shower_price, 10, 10, 10, 10, "06/21/2015"));
 		bathroom.put(getGoalGroupName(strBathroom), arr);
 
 		JSONObject outside = new JSONObject();
@@ -70,8 +71,8 @@ public class JSONDataBasedTest {
 		// -- trip to france
 		JSONObject tripToFrance = new JSONObject();
 		arr = new JSONArray();
-		arr.add(getGoal(strTripToFrance_airfare, strTripToFrance_airfare_price));
-		arr.add(getGoal(strTripToFrance_lodging, strTripToFrance_lodging_price));
+		arr.add(getGoal(strTripToFrance_airfare, strTripToFrance_airfare_price, 10, 10, 10, 10, "09/01/2016"));
+		arr.add(getGoal(strTripToFrance_lodging, strTripToFrance_lodging_price, 10, 10, 10, 10, "10/01/2016"));
 		tripToFrance.put(getGoalGroupName(strTripToFrance), arr);
 		
 		arr = new JSONArray();

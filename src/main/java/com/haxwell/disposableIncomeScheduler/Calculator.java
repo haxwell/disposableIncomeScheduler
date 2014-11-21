@@ -26,9 +26,131 @@ public class Calculator {
 
 	public static JSONObject getWeights(JSONObject data) {
 		JSONArray arr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
-		JSONObject rtn = buildJSONWeightObject((JSONObject)arr.get(0));
+		JSONObject rootElement = (JSONObject)arr.get(0);
+		int dateArr[] = getArrayToCalculateRelativeWeightOfDates(rootElement);
+		
+		JSONObject rtn = buildJSONWeightObject(rootElement, dateArr);
 		
 		rtn = addGroupWeightsToJSONWeightObject(rtn);
+		
+		return rtn;
+	}
+	
+	private static Date getFurthestNeededByDate(JSONObject element) {
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
+		Date rtn = null;
+		
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				JSONArray groupElements = (JSONArray)element.get(key);
+				
+				for (int x=0; x < groupElements.size(); x++) {
+					JSONObject groupElement = (JSONObject)groupElements.get(x);
+					Date date = getFurthestNeededByDate(groupElement);
+					
+					if (rtn == null || (date != null && date.after(rtn)))
+						rtn = date;
+				}				
+			}
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+			String dateStr = element.get(Constants.DATE_NEEDED_JSON)+"";
+			
+			try {
+				if (dateStr != null && dateStr.length() > 0)
+					rtn = sdf.parse(dateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return rtn;
+	}
+
+	private static JSONObject buildJSONWeightObject(JSONObject element, int[] dateArr) {
+		JSONObject weights = new JSONObject();
+		
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
+		
+		if (list.size() > 0) {
+			
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				JSONArray groupElements = (JSONArray)element.get(key);
+				
+				if (groupElements.size() == 0) {
+					// this is an empty group.. it has no goals or subgroups
+					JSONArray arr = new JSONArray();
+					JSONObject obj = new JSONObject();
+					
+					obj.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
+					obj.put(Constants.WEIGHT_JSON, "0");
+					obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, "0.0");
+					
+					arr.add(obj);
+					weights.put(key, arr);
+				}
+				else {
+					int total = 0;
+					
+					for (int x=0; x < groupElements.size(); x++) {
+						JSONObject groupElement = (JSONObject)groupElements.get(x);
+						JSONObject weight = buildJSONWeightObject(groupElement, dateArr);
+						
+						JSONArray arr = null;
+						if (weights.containsKey(key))
+							arr = (JSONArray)weights.get(key);
+						else {
+							arr = new JSONArray();
+							weights.put(key, arr);
+						}
+						
+						arr.add(weight);
+						
+						if (weight.containsKey(Constants.WEIGHT_JSON)) // if the weights we just got are the weights for a leaf...
+							total += Integer.parseInt(weight.get(Constants.WEIGHT_JSON)+"");
+					}
+					
+					JSONArray arr = (JSONArray)weights.get(key);
+					
+					for (int x=0; arr != null && x < arr.size(); x++) {
+						JSONObject obj = (JSONObject)arr.get(x);
+	
+						if (obj.containsKey(Constants.WEIGHT_JSON)) {
+							Object valueObj = obj.get(Constants.WEIGHT_JSON);
+							
+							int value = Integer.parseInt(valueObj+"");
+							obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, ((value*1.0)/total)+"");
+						}
+					}
+				}
+			}
+		} else {
+			// this is a goal, a leaf
+			int value = getValueForGoal(element, dateArr); 
+			weights.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
+			weights.put(Constants.WEIGHT_JSON, value+"");
+		}
+
+		return weights;
+	}
+	
+	private static int getValueForGoal(JSONObject goal, int[] dateArr) {
+		Integer rtn = Integer.parseInt(goal.get(Constants.HAPPINESS_IMMEDIACY_JSON)+"");
+		
+		rtn += Integer.parseInt(goal.get(Constants.HAPPINESS_LENGTH_JSON)+"");
+		rtn += Integer.parseInt(goal.get(Constants.UTILITY_IMMEDIACY_JSON)+"");
+		rtn += Integer.parseInt(goal.get(Constants.UTILITY_LENGTH_JSON)+"");
+		
+		int hsn = 0;
+		if (!goal.get(DATE_NEEDED_JSON).toString().equals("") && dateArr.length > 0) {
+			int days = getNumberOfDaysFromToday(goal);
+			hsn = dateArr[days - 1];
+		}
+
+		rtn += hsn;
 		
 		return rtn;
 	}
@@ -98,7 +220,7 @@ public class Calculator {
 					JSONObject jo3 = new JSONObject();
 					jo3.put(Constants.GROUP_WEIGHT_JSON, total+"");
 					
-					if (isRoot)
+					if (isRoot && list.size() == 1)
 						jo3.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, "1.0");
 					
 					groupElements.add(jo3);
@@ -122,146 +244,6 @@ public class Calculator {
 		return element;
 	}
 	
-	private static boolean isSubgroup(JSONArray arr) {
-		boolean b = (arr.size() > 0 && arr.get(0) instanceof JSONObject);
-		
-		return b;
-	}
-	
-	private static JSONObject buildJSONWeightObject(JSONObject element) {
-		JSONObject weights = new JSONObject();
-		
-		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
-		
-		if (list.size() > 0) {
-			
-			for (int i = 0; i < list.size(); i++) {
-				String key = list.get(i);
-				JSONArray groupElements = (JSONArray)element.get(key);
-				
-				if (groupElements.size() == 0) {
-					// this is an empty group.. it has no goals or subgroups
-					JSONArray arr = new JSONArray();
-					JSONObject obj = new JSONObject();
-					
-					obj.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
-					obj.put(Constants.WEIGHT_JSON, "0");
-					obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, "0.0");
-					
-					arr.add(obj);
-					weights.put(key, arr);
-				}
-				else {
-					int total = 0;
-					
-					for (int x=0; x < groupElements.size(); x++) {
-						JSONObject groupElement = (JSONObject)groupElements.get(x);
-						JSONObject weight = buildJSONWeightObject(groupElement);
-						
-						JSONArray arr = null;
-						if (weights.containsKey(key))
-							arr = (JSONArray)weights.get(key);
-						else {
-							arr = new JSONArray();
-							weights.put(key, arr);
-						}
-						
-						arr.add(weight);
-						
-						if (weight.containsKey(Constants.WEIGHT_JSON)) // if the weights we just got are the weights for a leaf...
-							total += Integer.parseInt(weight.get(Constants.WEIGHT_JSON)+"");
-					}
-					
-					JSONArray arr = (JSONArray)weights.get(key);
-					
-					for (int x=0; arr != null && x < arr.size(); x++) {
-						JSONObject obj = (JSONObject)arr.get(x);
-	
-						if (obj.containsKey(Constants.WEIGHT_JSON)) {
-							Object valueObj = obj.get(Constants.WEIGHT_JSON);
-							
-							int value = Integer.parseInt(valueObj+"");
-							obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, ((value*1.0)/total)+"");
-						}
-					}
-				}
-			}
-		} else {
-			// this is a goal, a leaf
-			int value = getValueForGoal(element); 
-			weights.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
-			weights.put(Constants.WEIGHT_JSON, value+"");
-		}
-
-		return weights;
-	}
-	
-	private static int getValueForGoal(JSONObject goal) {
-		Integer rtn = Integer.parseInt(goal.get(Constants.HAPPINESS_IMMEDIACY_JSON)+"");
-		
-		rtn += Integer.parseInt(goal.get(Constants.HAPPINESS_LENGTH_JSON)+"");
-		rtn += Integer.parseInt(goal.get(Constants.UTILITY_IMMEDIACY_JSON)+"");
-		rtn += Integer.parseInt(goal.get(Constants.UTILITY_LENGTH_JSON)+"");
-		
-		return rtn;
-	}
-	
-	
-	public static Map<String, Double> getWeights_old(JSONObject data) {
-		Map<String, Double> rtn = new HashMap<String, Double>();
-		JSONArray items = (JSONArray)data.get("items");
-		
-		int arr[] = getArrayToCalculateRelativeWeightOfDates(data);
-		int itemSums[] = new int[items.size()];
-		
-		int totalOfHappinessAndUtilityScores = 0;
-		
-		/**
-		 * thinking about groups, and their calculation.
-		 * 
-		 * As it stands now, everything is in one group, and we add all the values up for each goal, and then
-		 * each goals weight is equal to its percentage of that whole.
-		 * 
-		 * Now that we have groups, the plan for the moment is to 
-		 * 
-		 * 1. add an arbitrary value to goals and groups. This will allow ranking one group or goal above another
-		 * even though its weight calculated otherwise may be lower than another group (and therefore get less money)
-		 * So something with an arbitrary value is ranked higher than something without that value set.
-		 * 
-		 * 2. ...and the rest, i decided i'm tired and need to think about later..
-		 */
-		
-		
-		int count = 0;
-		for (; count < items.size(); count++) {
-			JSONObject obj = (JSONObject)items.get(count);
-			
-			int hi = Integer.parseInt(obj.get(HAPPINESS_IMMEDIACY_JSON)+"");
-			int ui = Integer.parseInt(obj.get(UTILITY_IMMEDIACY_JSON)+"");
-			int hl = Integer.parseInt(obj.get(HAPPINESS_LENGTH_JSON)+"");
-			int ul = Integer.parseInt(obj.get(UTILITY_LENGTH_JSON)+"");
-			
-			int hsn = 0;
-			if (!obj.get(DATE_NEEDED_JSON).toString().equals("") && arr.length > 0) {
-				int days = getNumberOfDaysFromToday(obj);
-				hsn = arr[days - 1];
-			}
-
-			itemSums[count] = (hi + ui + hl + ul + hsn);
-			
-			totalOfHappinessAndUtilityScores += itemSums[count];
-		}
-		
-		count = 0;
-		for (; count < items.size(); count++) {
-			JSONObject obj = (JSONObject)items.get(count);
-			
-			rtn.put(obj.get(DESCRIPTION_JSON).toString(), ((1.0 * itemSums[count]) / (1.0*totalOfHappinessAndUtilityScores)));
-		}
-		
-		return rtn;
-	}
-	
 	public static int getNumberOfDaysFromToday(JSONObject obj) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar cal = Calendar.getInstance();
@@ -279,17 +261,9 @@ public class Calculator {
 	}
 	
 	public static int[] getArrayToCalculateRelativeWeightOfDates(JSONObject data) {
-		JSONArray items = (JSONArray)data.get("items");
-		
-		if (items.size() <= 1)
-			return new int[0];
-		
-		Date furthestDate = getFurthestNeededByDate(items);
+		Date furthestDate = getFurthestNeededByDate(data);
 		
 		int rangeInDays = (int)(((((furthestDate.getTime() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
-		
-//		System.out.println(furthestDate.getTime() + ", " + Calendar.getInstance().getTimeInMillis());
-//		System.out.println("rangeInDays = " + rangeInDays);
 		
 		int scale = 25;
 		int maxSegmentSize = rangeInDays / scale;
@@ -314,27 +288,5 @@ public class Calculator {
 		}
 		
 		return arr;
-	}
-
-	private static Date getFurthestNeededByDate(JSONArray items) {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-		Calendar furthest = Calendar.getInstance();
-		
-		for (int i=0; i<items.size(); i++) {
-			String dateStr = ((JSONObject)items.get(i)).get(DATE_NEEDED_JSON).toString();
-			
-			try {
-				Date date = sdf.parse(dateStr);
-				
-				if (date.after(furthest.getTime())) {
-					furthest.setTime(date);
-				}
-				
-			} catch (ParseException e) {
-
-			}
-		}
-		
-		return furthest.getTime();
 	}
 }
