@@ -39,5 +39,8 @@ public class Constants {
 
 	public static final String WEIGHT_JSON = "weight";
 	public static final String WEIGHT_AS_PERCENTAGE_JSON = "weightAsPercentage";
+	
+	public static final String GROUP_WEIGHT_JSON = "groupWeight";
+	public static final String GROUP_WEIGHT_AS_PERCENTAGE_JSON = "groupWeightAsPercentage";
 
 }

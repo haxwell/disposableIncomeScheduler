@@ -26,7 +26,106 @@ public class Calculator {
 
 	public static JSONObject getWeights(JSONObject data) {
 		JSONArray arr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
-		return buildJSONWeightObject((JSONObject)arr.get(0));
+		JSONObject rtn = buildJSONWeightObject((JSONObject)arr.get(0));
+		
+		rtn = addGroupWeightsToJSONWeightObject(rtn);
+		
+		return rtn;
+	}
+	
+	private static JSONObject addGroupWeightsToJSONWeightObject(JSONObject element) {
+		return addGroupWeightsToJSONWeightObject(element, true);
+	}
+	
+	private static JSONObject addGroupWeightsToJSONWeightObject(JSONObject element, boolean isRoot) {
+		
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
+		
+		if (list.size() > 0) {
+			Integer outerGroupWeight = 0;
+			
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				JSONArray groupElements = (JSONArray)element.get(key);
+				
+				List<String> subgroupNames = MenuItemUtils.getSubgroupNamesOfAGroup(groupElements);
+				
+				if (subgroupNames.size() > 0) {
+					Integer total = 0;
+					
+					for (int x=0; x < groupElements.size(); x++) {
+						JSONObject groupElement = (JSONObject)groupElements.get(x);
+						JSONObject obj = addGroupWeightsToJSONWeightObject(groupElement, false);
+						
+						JSONArray arr = (JSONArray)obj.get(subgroupNames.get(x));
+						
+						// we should have a collection of goals with a group weight on it
+						//  add that weight to the total, comprised of it and its siblings weight
+						boolean found = false;
+						int count = 0;
+						
+						while (!found && count < arr.size()) {
+							JSONObject jo = (JSONObject)arr.get(count++);
+							if (jo.containsKey(Constants.GROUP_WEIGHT_JSON)) {
+								found = true;
+								total += Integer.parseInt(jo.get(Constants.GROUP_WEIGHT_JSON)+"");
+							}
+						}
+					}
+					
+					// now we need to go through each of the siblings and set a weight relative to
+					//  its portion of the total
+					for (int x=0; x < groupElements.size(); x++) {
+						JSONObject jo1 = (JSONObject)groupElements.get(x);
+						JSONArray arr = (JSONArray)jo1.get(subgroupNames.get(x));
+						
+						boolean found = false;
+						int count = 0;
+						
+						while (!found && count < arr.size()) {
+							JSONObject jo2 = (JSONObject)arr.get(count++);
+							if (jo2.containsKey(Constants.GROUP_WEIGHT_JSON)) {
+								found = true;
+								int weight = Integer.parseInt(jo2.get(Constants.GROUP_WEIGHT_JSON)+"");
+								double weightAsPercentage = (weight == 0) ? 0 : (weight*1.0)/total;
+								
+								jo2.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, weightAsPercentage+"");
+							}
+						}
+					}
+					
+					// now we need to save the total on this group, the parent of the siblings we edited above
+					JSONObject jo3 = new JSONObject();
+					jo3.put(Constants.GROUP_WEIGHT_JSON, total+"");
+					
+					if (isRoot)
+						jo3.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, "1.0");
+					
+					groupElements.add(jo3);
+					
+				} else {
+					// is collection of goals
+					Integer innerGroupWeight = 0;
+					for (int x=0; x < groupElements.size(); x++) {
+						JSONObject groupElement = (JSONObject)groupElements.get(x);
+						innerGroupWeight += Integer.parseInt(groupElement.get(Constants.WEIGHT_JSON)+"");
+					}
+					
+					JSONObject groupWeightObj = new JSONObject();
+					groupWeightObj.put(Constants.GROUP_WEIGHT_JSON, innerGroupWeight+"");
+					groupElements.add(groupWeightObj);
+					outerGroupWeight += innerGroupWeight;
+				}
+			}
+		} 
+		
+		return element;
+	}
+	
+	private static boolean isSubgroup(JSONArray arr) {
+		boolean b = (arr.size() > 0 && arr.get(0) instanceof JSONObject);
+		
+		return b;
 	}
 	
 	private static JSONObject buildJSONWeightObject(JSONObject element) {
