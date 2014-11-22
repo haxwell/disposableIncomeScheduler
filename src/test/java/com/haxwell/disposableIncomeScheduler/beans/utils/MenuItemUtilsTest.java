@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
-import com.haxwell.disposableIncomeScheduler.beans.JSONDataBasedTest;
+import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
 
 public class MenuItemUtilsTest extends JSONDataBasedTest {
 
