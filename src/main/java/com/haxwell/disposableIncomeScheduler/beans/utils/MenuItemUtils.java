@@ -1,9 +1,11 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.minidev.json.JSONArray;
@@ -150,7 +152,150 @@ public class MenuItemUtils {
 		return rtn;
 	}
 	
-	// TODO: Not sure this is returnin all the subgroup names of a group.. maybe. dunno.
+	public static LinkedList<String> getGoalsByWeight(JSONArray goals, JSONArray weights) {
+		LinkedList<String> rtn = new LinkedList<String>();
+		
+		Map<String, Double> map = new HashMap<>();
+		
+		for (int x=0; x < weights.size(); x++) {
+			JSONObject jo = (JSONObject)weights.get(x);
+			
+			if (!jo.containsKey(Constants.GROUP_WEIGHT_JSON)) {
+				Double d = Double.parseDouble(jo.get(Constants.WEIGHT_AS_PERCENTAGE_JSON)+"");
+				map.put(jo.get(Constants.DESCRIPTION_JSON)+"", d);
+			}
+		}
+		
+		int origMapSize = map.size();
+		
+		for (int x=0; x < origMapSize; x++) {
+
+			Iterator<String> iterator = map.keySet().iterator();
+			Double hi = null;
+			String hiKey = null;
+			
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				Double d = map.get(key);
+				
+				if (hi == null || d > hi) {
+					hi = d;
+					hiKey = key;
+				}
+			}
+			
+			rtn.add(hiKey);
+			map.remove(hiKey);
+		}
+		
+		return rtn;
+	}
+	
+	// TODO: the two versions of this method are practically the same.. figure out how to refactor them..
+	public static LinkedList<String> getSubgroupNamesOfAGroupByWeight(JSONArray grp, JSONArray weights) {
+		LinkedList<String> rtn = new LinkedList<String>();
+		
+		List<String> subgroupList = getSubgroupNamesOfAGroup(grp);
+
+		if (subgroupList.size() > 0) {
+			if (subgroupList.size() == 1) {
+				rtn.add(subgroupList.get(0));
+			} else {
+				Map<String, Double> map = new HashMap<>();
+				
+				for (int x=0; x < grp.size(); x++) {
+					String key = subgroupList.get(x);
+					JSONObject w = (JSONObject)weights.get(x);
+					JSONArray arr = (JSONArray)w.get(key);
+					
+					for (int y=0; y < arr.size(); y++) {
+						JSONObject jo = (JSONObject)arr.get(y);
+						
+						if (jo.containsKey(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)) {
+							Double d = Double.parseDouble(jo.get(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)+"");
+							
+							map.put(key, d);
+						}
+					}
+				}
+				
+				int origMapSize = map.size();
+				for (int x=0; x < origMapSize; x++) {
+					Double hi = null;
+					String hiKey = "";
+					
+					Iterator<String> iterator = map.keySet().iterator();
+					while (iterator.hasNext()) {
+						String key = iterator.next();
+						Double d = map.get(key);
+						
+						if (hi == null || d > hi) {
+							hi = d;
+							hiKey = key;
+						}
+					}
+					
+					rtn.add(hiKey);
+					map.remove(hiKey);
+				}
+			}
+		}
+		
+		return rtn;
+	}
+	
+	// TODO: the two versions of this method are practically the same.. figure out how to refactor them..
+	public static LinkedList<String> getSubgroupNamesOfAGroupByWeight(JSONObject grp, JSONObject weight) {
+		LinkedList<String> rtn = new LinkedList<String>();
+		
+		List<String> subgroupList = getSubgroupNamesOfAGroup(grp);
+
+		if (subgroupList.size() == 1) {
+			rtn.add(subgroupList.get(0));
+			return rtn;
+		} else {
+			Map<String, Double> map = new HashMap<>();
+			
+			for (int x=0; x < grp.size(); x++) {
+				String key = subgroupList.get(x);
+				JSONObject w = (JSONObject)weight.get(x);
+				JSONArray arr = (JSONArray)w.get(key);
+				
+				for (int y=0; y < arr.size(); y++) {
+					JSONObject jo = (JSONObject)arr.get(y);
+					
+					if (jo.containsKey(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)) {
+						Double d = Double.parseDouble(jo.get(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)+"");
+						
+						map.put(key, d);
+					}
+				}
+			}
+			
+			int origMapSize = map.size();
+			for (int x=0; x < origMapSize; x++) {
+				Double hi = 0.0;
+				String hiKey = "";
+				
+				Iterator<String> iterator = map.keySet().iterator();
+				while (iterator.hasNext()) {
+					String key = iterator.next();
+					Double d = map.get(key);
+					
+					if (d > hi) {
+						hi = d;
+						hiKey = key;
+					}
+				}
+				
+				rtn.add(hiKey);
+				map.remove(hiKey);
+			}
+		}
+
+		return rtn;
+	}
+	
 	public static List<String> getSubgroupNamesOfAGroup(JSONArray arr) {
 		List<String> rtn = new ArrayList<String>();
 		
