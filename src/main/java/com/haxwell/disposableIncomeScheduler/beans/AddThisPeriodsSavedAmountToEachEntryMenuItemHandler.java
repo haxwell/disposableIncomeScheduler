@@ -1,7 +1,5 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import java.util.Map;
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -45,27 +43,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends Attribu
 			
 			data.put(Constants.TOTAL_IN_THE_POT_JSON, (total + amt)+"");
 			
-			// for each item, calculate its weight, and add its share of the amount saved this month to its total
-			Map<String, Double> weights = Calculator.getWeights(data);
-
-			int count = 0;
-			for (; count < items.size(); count++) {
-				JSONObject obj = (JSONObject)items.get(count);
-				
-				Double objWeight = weights.get(obj.get(Constants.DESCRIPTION_JSON));
-				
-				Double objShare = objWeight * amt;
-				
-				Object psam = obj.get(Constants.PREVIOUS_SAVED_AMT_JSON);
-				Long objPrevSaved = 0l;
-				
-				if (psam != null)
-					objPrevSaved = Long.parseLong(psam.toString());
-				
-				objPrevSaved += Math.round(objShare);
-				
-				obj.put(Constants.PREVIOUS_SAVED_AMT_JSON, objPrevSaved+"");
-			}
+			Calculator.applyMoney(data);
 			
 			rtn = true;
 			amtHasAlreadyBeenAdded = true;
