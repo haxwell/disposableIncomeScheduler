@@ -21,6 +21,72 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 		return "List the Schedule";
 	}
 	
+	public void fooParent(JSONObject data) {
+		JSONObject weights = Calculator.getWeights(data);
+		
+		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
+		JSONObject grpRootElement = (JSONObject)grpArr.get(0);
+		
+		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
+		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
+		
+		foo(grpRootElement, weightsRootElement, 1);
+	}
+	
+	public void foo(JSONObject data, JSONObject weights, int depth) {
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroupByWeight(data, weights);
+		
+		for (int x=0; x < list.size(); x++) {
+			String key = list.get(x);
+			JSONArray dataArr = (JSONArray)data.get(key);
+			JSONArray weightArr = (JSONArray)weights.get(key);
+			
+			for (int y=0; y < depth; y++)
+				System.out.print("-");
+			
+			System.out.println(key);
+			
+			List<String> subgroups = MenuItemUtils.getSubgroupNamesOfAGroupByWeight(dataArr, weightArr);
+			
+			if (subgroups.size() > 0) {
+				for (int y=0; y<subgroups.size(); y++) {
+					String sg = subgroups.get(y);
+					
+					for (int z=0; z<dataArr.size(); z++) {
+						JSONObject dataObj = (JSONObject) dataArr.get(z);
+						JSONObject weightObj = (JSONObject) weightArr.get(z);
+						
+						if (dataObj.containsKey(sg))
+							foo(dataObj, weightObj, depth+1);
+					}
+				}
+			} else {
+				List<String> goals = MenuItemUtils.getGoalsByWeight(dataArr, weightArr);
+				
+				for (String goalKey : goals) {
+					for (int z=0; z<dataArr.size(); z++) {
+						JSONObject dataObj = (JSONObject) dataArr.get(z);
+						JSONObject weightObj = (JSONObject) weightArr.get(z);
+						
+						if (dataObj.get(Constants.DESCRIPTION_JSON).equals(goalKey))
+							printGoal(dataObj, weightObj);
+					}
+				}
+				
+			}
+		}
+	}
+	
+	private void printGoal(JSONObject goal, JSONObject weight) {
+//		Double w = Double.parseDouble(weight.get(Constants.WEIGHT_AS_PERCENTAGE_JSON)+"");
+		
+		Long dollarsClaimedInCurrentDeposit = -1l; //Math.round(getPercentageOfCurrentDepositClaimed(data, w));
+		Long daysToGoAtCurrentRateOfDeposit = -1l; //getDaysToGoAtCurrentRateOfDeposit(data, goal, dollarsClaimedInCurrentDeposit);
+		
+		System.out.format("%-35s%-11s%8s%16s%29s%27s", goal.get(Constants.DESCRIPTION_JSON), goal.get(Constants.DATE_NEEDED_JSON), goal.get(Constants.PRICE_JSON), goal.get(Constants.PREVIOUS_SAVED_AMT_JSON), dollarsClaimedInCurrentDeposit, getLongDaysToGoAsString(daysToGoAtCurrentRateOfDeposit));
+		System.out.println();
+	}
+	
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
@@ -31,9 +97,9 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 			return rtn;
 		}
 		
-		Map<String, Double> weights = Calculator.getWeights(data);
+		JSONObject weights = Calculator.getWeights(data);
 		
-		List list = getSortedEntryList(weights);
+//		List list = getSortedEntryList(data, weights);
 
 		System.out.println();
 		System.out.format("%-3s%-35s%-12s%-8s%-16s%-30s%-25s", "#","Description","Date", "Price","Prev. Saved Amt","$ of current deposit claimed","Days To Go @ Current Rate");
