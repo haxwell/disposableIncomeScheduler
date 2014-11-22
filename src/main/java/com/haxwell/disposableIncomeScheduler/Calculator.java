@@ -4,11 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -24,6 +20,71 @@ public class Calculator {
 	protected static final String UTILITY_LENGTH_JSON = "utilityLength";
 	protected static final String DATE_NEEDED_JSON = "dateNeededBy";
 
+	public static void applyMoney(JSONObject data) {
+		JSONObject weights = Calculator.getWeights(data);
+		int dollarAmount = Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+		
+		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
+		JSONObject grpRootElement = (JSONObject)grpArr.get(0);
+		
+		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
+		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
+		
+		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount);
+	}
+	
+	private static void applyMoneyHelper(JSONObject ge, JSONObject we, long dollarAmount) {
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(ge);
+		
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				JSONArray groupElements = (JSONArray)ge.get(key);
+				JSONArray weightElements = (JSONArray)we.get(key);
+				
+				assert groupElements.size() == weightElements.size() : "GroupElements and WeightElements must contain the same number of elements";
+				
+				for (int x=0; x < groupElements.size(); x++) {
+					JSONObject groupElement = (JSONObject)groupElements.get(x);
+					JSONObject weightElement = (JSONObject)weightElements.get(x);
+					
+					List<String> subgroupNames = MenuItemUtils.getSubgroupNamesOfAGroup(groupElement);
+					
+					if (subgroupNames.size() > 0) {
+						JSONArray arr = (JSONArray)weightElement.get(subgroupNames.get(0));
+						Double groupWeightAsPercentage = 0.0;
+						boolean found = false;
+						
+						for (int y=0; !found && y < arr.size(); y++) {
+							JSONObject obj = (JSONObject)arr.get(y);
+							
+							if (obj.containsKey(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)) {
+								found = true;
+								groupWeightAsPercentage = Double.parseDouble(obj.get(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)+"");
+							}
+						}
+						
+						long weightedDollarAmount = Math.round(dollarAmount * groupWeightAsPercentage);
+						
+					/*JSONObject obj =*/ applyMoneyHelper(groupElement, weightElement, weightedDollarAmount);
+					}
+					else {
+						// this is a goal.. we need to apply money here
+						long previousSavedAmount = Long.parseLong(groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
+						Double goalWeightAsPercentage = Double.parseDouble(weightElement.get(Constants.WEIGHT_AS_PERCENTAGE_JSON)+"");
+
+						previousSavedAmount += Math.round(dollarAmount * goalWeightAsPercentage);
+						
+						groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
+					}
+				}				
+			}
+		} else {
+			// this is a leaf, a goal
+			String str = "foo";
+		}
+	}
+	
 	public static JSONObject getWeights(JSONObject data) {
 		JSONArray arr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
 		JSONObject rootElement = (JSONObject)arr.get(0);
@@ -31,9 +92,15 @@ public class Calculator {
 		
 		JSONObject rtn = buildJSONWeightObject(rootElement, dateArr);
 		
-		rtn = addGroupWeightsToJSONWeightObject(rtn);
+		rtn = addGroupWeightsToJSONWeightObject(rtn, (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON));
 		
-		return rtn;
+		JSONArray rtnArr = new JSONArray();
+		rtnArr.add(rtn);
+		
+		JSONObject obj = new JSONObject();
+		obj.put(MenuItemUtils.getRootGroupName(), rtnArr);
+				
+		return obj;
 	}
 	
 	private static Date getFurthestNeededByDate(JSONObject element) {
@@ -155,11 +222,11 @@ public class Calculator {
 		return rtn;
 	}
 	
-	private static JSONObject addGroupWeightsToJSONWeightObject(JSONObject element) {
-		return addGroupWeightsToJSONWeightObject(element, true);
+	private static JSONObject addGroupWeightsToJSONWeightObject(JSONObject element, JSONObject overridingPercentages) {
+		return addGroupWeightsToJSONWeightObject(element, overridingPercentages, true);
 	}
 	
-	private static JSONObject addGroupWeightsToJSONWeightObject(JSONObject element, boolean isRoot) {
+	private static JSONObject addGroupWeightsToJSONWeightObject(JSONObject element, JSONObject overridingPercentages, boolean isRoot) {
 		
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
 		
@@ -177,7 +244,7 @@ public class Calculator {
 					
 					for (int x=0; x < groupElements.size(); x++) {
 						JSONObject groupElement = (JSONObject)groupElements.get(x);
-						JSONObject obj = addGroupWeightsToJSONWeightObject(groupElement, false);
+						JSONObject obj = addGroupWeightsToJSONWeightObject(groupElement, overridingPercentages, false);
 						
 						JSONArray arr = (JSONArray)obj.get(subgroupNames.get(x));
 						
@@ -220,8 +287,9 @@ public class Calculator {
 					JSONObject jo3 = new JSONObject();
 					jo3.put(Constants.GROUP_WEIGHT_JSON, total+"");
 					
-					if (isRoot && list.size() == 1)
+					if (isRoot && list.size() == 1) {
 						jo3.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, "1.0");
+					}
 					
 					groupElements.add(jo3);
 					
@@ -235,6 +303,10 @@ public class Calculator {
 					
 					JSONObject groupWeightObj = new JSONObject();
 					groupWeightObj.put(Constants.GROUP_WEIGHT_JSON, innerGroupWeight+"");
+					
+					if (overridingPercentages.containsKey(key))
+						groupWeightObj.put(Constants.OVERRIDING_PERCENTAGE_AMT_JSON, overridingPercentages.get(key));
+					
 					groupElements.add(groupWeightObj);
 					outerGroupWeight += innerGroupWeight;
 				}

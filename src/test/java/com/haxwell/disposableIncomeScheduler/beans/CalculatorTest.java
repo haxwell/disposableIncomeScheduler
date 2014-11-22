@@ -27,4 +27,11 @@ public class CalculatorTest extends JSONDataBasedTest {
 		
 		assertTrue(weights.size() > 0);
 	}
+	
+	@Test
+	public void testApplyMoney() {
+		Calculator.applyMoney(data);
+		
+		assertTrue(true);
+	}
 }

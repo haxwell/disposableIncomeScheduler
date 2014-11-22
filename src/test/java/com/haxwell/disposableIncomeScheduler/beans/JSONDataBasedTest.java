@@ -41,15 +41,15 @@ public class JSONDataBasedTest {
 		JSONArray arr = new JSONArray();
 
 		JSONObject iobj = new JSONObject();
-		iobj.put(getGoalGroupName(strBathroom), "15");
-		iobj.put(getGoalGroupName(strOutside), "20");
-		obj.put(Constants.ARBITRARY_WEIGHTS, iobj);
+		iobj.put(getGoalGroupName(strBathroom), "0.15");
+		iobj.put(getGoalGroupName(strOutside), "0.20");
+		obj.put(Constants.OVERRIDING_PERCENTAGE_AMT_JSON, iobj);
 		
 		JSONObject bathroom = new JSONObject();
 		arr = new JSONArray();
 		
-		arr.add(getGoal(strBathroom_sink, strBathroom_sink_price, 10, 10, 10, 10, "06/21/2015"));
-		arr.add(getGoal(strBathroom_shower, strBathroom_shower_price, 10, 10, 10, 10, "06/21/2015"));
+		arr.add(getGoal(strBathroom_sink, strBathroom_sink_price, 0, 10, 10, 10, 10, "06/21/2015"));
+		arr.add(getGoal(strBathroom_shower, strBathroom_shower_price, 0, 10, 10, 10, 10, "06/21/2015"));
 		bathroom.put(getGoalGroupName(strBathroom), arr);
 
 		JSONObject outside = new JSONObject();
@@ -71,8 +71,8 @@ public class JSONDataBasedTest {
 		// -- trip to france
 		JSONObject tripToFrance = new JSONObject();
 		arr = new JSONArray();
-		arr.add(getGoal(strTripToFrance_airfare, strTripToFrance_airfare_price, 10, 10, 10, 10, "09/01/2016"));
-		arr.add(getGoal(strTripToFrance_lodging, strTripToFrance_lodging_price, 10, 10, 10, 10, "10/01/2016"));
+		arr.add(getGoal(strTripToFrance_airfare, strTripToFrance_airfare_price, 0, 10, 10, 10, 10, "09/01/2016"));
+		arr.add(getGoal(strTripToFrance_lodging, strTripToFrance_lodging_price, 0, 10, 10, 10, 10, "10/01/2016"));
 		tripToFrance.put(getGoalGroupName(strTripToFrance), arr);
 		
 		arr = new JSONArray();
@@ -92,10 +92,10 @@ public class JSONDataBasedTest {
 	}
 	
 	private JSONObject getGoal(String name, Integer price) {
-		return getGoal(name, price, 10, 10, 10, 10, "");
+		return getGoal(name, price, 0, 10, 10, 10, 10, "");
 	}
 	
-	private JSONObject getGoal(String name, Integer price, Integer utilityImmediacy, Integer happinessImmediacy,
+	private JSONObject getGoal(String name, Integer price, Integer previouslySavedAmt, Integer utilityImmediacy, Integer happinessImmediacy,
 			Integer utilityLength, Integer happinessLength, String dateNeededBy) {
 		JSONObject obj = new JSONObject();
 		
@@ -106,6 +106,7 @@ public class JSONDataBasedTest {
 		obj.put("happinessLength", happinessLength+"");
 		obj.put("description", name);
 		obj.put("dateNeededBy", dateNeededBy);
+		obj.put(Constants.PREVIOUS_SAVED_AMT_JSON, previouslySavedAmt);
 		
 		return obj;
 	}
