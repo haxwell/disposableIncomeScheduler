@@ -5,6 +5,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
 
@@ -17,14 +18,14 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends Attribu
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		JSONArray items = (JSONArray)data.get("items");
+		JSONArray rootGroup = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
 		
-		if (items == null || items.size() == 0) {
+		if (rootGroup == null || rootGroup.size() == 0) {
 			System.out.println("\nThere are no entries!\n");
 			return rtn;
 		}
 		
-		if (amtHasAlreadyBeenAdded) {
+		if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED)) {
 			System.out.println("\nThe periodically saved amount has already been added!\n");
 			return rtn;
 		}
@@ -39,7 +40,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends Attribu
 			Integer amt = Integer.parseInt(amtStr);
 			
 			String totalInThePot = (String)data.get(Constants.TOTAL_IN_THE_POT_JSON);
-			Integer total = Integer.parseInt(totalInThePot);
+			Integer total = Integer.parseInt(totalInThePot == null ? "0" : totalInThePot);
 			
 			data.put(Constants.TOTAL_IN_THE_POT_JSON, (total + amt)+"");
 			
@@ -47,6 +48,8 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends Attribu
 			
 			rtn = true;
 			amtHasAlreadyBeenAdded = true;
+			
+			state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED, "true");
 		}
 		
 		return rtn;
