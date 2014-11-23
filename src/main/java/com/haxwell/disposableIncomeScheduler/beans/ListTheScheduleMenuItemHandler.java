@@ -15,13 +15,27 @@ import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
+/**
+ * Lists the goals, how much you've currently saved (how much has been applied to a goal), and how much of the NEXT
+ * deposit will go to this goal (given your current settings), and how long it will take at that rate to reach the
+ * savings goal.
+ * 
+ * @author jjames
+ *
+ */
 public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
 
+	private JSONObject data;
+	
 	public String getMenuText() {
 		return "List the Schedule";
 	}
 	
-	public void fooParent(JSONObject data) {
+	public boolean doIt(JSONObject data, JSONObject state) {
+		boolean rtn = false;
+
+		this.data = data;
+		
 		JSONObject weights = Calculator.getWeights(data);
 		
 		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
@@ -30,10 +44,22 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
 		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
 		
-		foo(grpRootElement, weightsRootElement, 1);
+		Map<String, Long> dollarAmountsToBeAppliedPerGroup = Calculator.getDollarAmountsToBeAppliedPerGroup(data);
+		
+		System.out.println();
+		System.out.format("%-35s%14s%8s%16s%29s%27s", Constants.DESCRIPTION, Constants.DATE_NEEDED, Constants.PRICE, "Prev Saved Amt", "$ From Curr Dep", "Time Remaining");
+		System.out.println();
+		
+		listGroupsAndGoalsByWeight(grpRootElement, weightsRootElement, 1, dollarAmountsToBeAppliedPerGroup);
+		
+		System.out.println();
+		System.out.println("Amount Saved per Period = " + data.get(Constants.AMT_SAVED_PER_PERIOD_JSON));
+		System.out.println("Total in the Pot = " + data.get(Constants.TOTAL_IN_THE_POT_JSON));
+		
+		return rtn;
 	}
 	
-	public void foo(JSONObject data, JSONObject weights, int depth) {
+	public void listGroupsAndGoalsByWeight(JSONObject data, JSONObject weights, int depth, Map<String, Long> dollarAmountsToBeAppliedPerGroup) {
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroupByWeight(data, weights);
 		
 		for (int x=0; x < list.size(); x++) {
@@ -57,7 +83,7 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 						JSONObject weightObj = (JSONObject) weightArr.get(z);
 						
 						if (dataObj.containsKey(sg))
-							foo(dataObj, weightObj, depth+1);
+							listGroupsAndGoalsByWeight(dataObj, weightObj, depth+1, dollarAmountsToBeAppliedPerGroup);
 					}
 				}
 			} else {
@@ -69,64 +95,22 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 						JSONObject weightObj = (JSONObject) weightArr.get(z);
 						
 						if (dataObj.get(Constants.DESCRIPTION_JSON).equals(goalKey))
-							printGoal(dataObj, weightObj);
+							printGoal(dataObj, weightObj, depth, dollarAmountsToBeAppliedPerGroup);
 					}
 				}
-				
 			}
 		}
 	}
 	
-	private void printGoal(JSONObject goal, JSONObject weight) {
-//		Double w = Double.parseDouble(weight.get(Constants.WEIGHT_AS_PERCENTAGE_JSON)+"");
-		
-		Long dollarsClaimedInCurrentDeposit = -1l; //Math.round(getPercentageOfCurrentDepositClaimed(data, w));
-		Long daysToGoAtCurrentRateOfDeposit = -1l; //getDaysToGoAtCurrentRateOfDeposit(data, goal, dollarsClaimedInCurrentDeposit);
+	private void printGoal(JSONObject goal, JSONObject weight, int depth, Map<String, Long> dollarAmountsToBeAppliedPerGroup) {
+		Long dollarsClaimedInCurrentDeposit = dollarAmountsToBeAppliedPerGroup.get(goal.get(Constants.DESCRIPTION_JSON));
+		Long daysToGoAtCurrentRateOfDeposit = getDaysToGoAtCurrentRateOfDeposit(goal, dollarsClaimedInCurrentDeposit);
+
+		for (int y=0; y < depth+1; y++)
+			System.out.print("-");
 		
 		System.out.format("%-35s%-11s%8s%16s%29s%27s", goal.get(Constants.DESCRIPTION_JSON), goal.get(Constants.DATE_NEEDED_JSON), goal.get(Constants.PRICE_JSON), goal.get(Constants.PREVIOUS_SAVED_AMT_JSON), dollarsClaimedInCurrentDeposit, getLongDaysToGoAsString(daysToGoAtCurrentRateOfDeposit));
 		System.out.println();
-	}
-	
-	public boolean doIt(JSONObject data, JSONObject state) {
-		boolean rtn = false;
-
-		JSONArray items = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
-		
-		if (items == null || items.size() == 0) {
-			System.out.println("\nThere are no entries to list!\n");
-			return rtn;
-		}
-		
-		JSONObject weights = Calculator.getWeights(data);
-		
-//		List list = getSortedEntryList(data, weights);
-
-		System.out.println();
-		System.out.format("%-3s%-35s%-12s%-8s%-16s%-30s%-25s", "#","Description","Date", "Price","Prev. Saved Amt","$ of current deposit claimed","Days To Go @ Current Rate");
-		System.out.println();
-		System.out.format("%-3s%-35s%-12s%-8s%-16s%-30s%-25s", "-","-----------","-----------","-------","---------------","----------------------------","-------------------------");
-		System.out.println();
-		
-		int count = 0;
-		for (; count < items.size(); count++) {
-			// rank, description, price, previously saved, $ of current deposit claimed, days to go at this rate of deposit, 
-			// last line: amount being saved per period, total in the pot
-			
-			JSONObject item = (JSONObject)items.get(count);
-			Double weight = ((Entry<String, Double>)list.get(count)).getValue();
-			
-			Long dollarsClaimedInCurrentDeposit = Math.round(getPercentageOfCurrentDepositClaimed(data, weight));
-			Long daysToGoAtCurrentRateOfDeposit = getDaysToGoAtCurrentRateOfDeposit(data, item, dollarsClaimedInCurrentDeposit);
-			
-			System.out.format("%-3d%-35s%-11s%8s%16s%29s%27s", count+1, item.get(Constants.DESCRIPTION_JSON), item.get(Constants.DATE_NEEDED_JSON), item.get(Constants.PRICE_JSON), item.get(Constants.PREVIOUS_SAVED_AMT_JSON), dollarsClaimedInCurrentDeposit, getLongDaysToGoAsString(daysToGoAtCurrentRateOfDeposit));
-			System.out.println();
-		}
-		
-		System.out.println();
-		System.out.println("Amount Saved per Period = " + data.get(Constants.AMT_SAVED_PER_PERIOD_JSON));
-		System.out.println("Total in the Pot = " + data.get(Constants.TOTAL_IN_THE_POT_JSON));
-		
-		return rtn;
 	}
 	
 	private String getLongDaysToGoAsString(Long l) {
@@ -156,8 +140,8 @@ public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHand
 		return rtn;
 	}
 	
-	private long getDaysToGoAtCurrentRateOfDeposit(JSONObject data, JSONObject item, Long depositPerPeriod) {
-		Integer daysPerPeriod = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON).toString());
+	private long getDaysToGoAtCurrentRateOfDeposit(JSONObject item, Long depositPerPeriod) {
+		Integer daysPerPeriod = Integer.parseInt(this.data.get(Constants.PERIOD_LENGTH_JSON).toString());
 		Integer price = Integer.parseInt(item.get(Constants.PRICE_JSON).toString());
 		Integer alreadySaved;
 		
