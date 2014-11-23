@@ -126,39 +126,6 @@ public class Calculator {
 		return obj;
 	}
 	
-	private static Date getFurthestNeededByDate(JSONObject element) {
-		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
-		Date rtn = null;
-		
-		if (list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
-				String key = list.get(i);
-				JSONArray groupElements = (JSONArray)element.get(key);
-				
-				for (int x=0; x < groupElements.size(); x++) {
-					JSONObject groupElement = (JSONObject)groupElements.get(x);
-					Date date = getFurthestNeededByDate(groupElement);
-					
-					if (rtn == null || (date != null && date.after(rtn)))
-						rtn = date;
-				}				
-			}
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-			String dateStr = element.get(Constants.DATE_NEEDED_JSON)+"";
-			
-			try {
-				if (dateStr != null && dateStr.length() > 0)
-					rtn = sdf.parse(dateStr);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return rtn;
-	}
-
 	private static JSONObject buildJSONWeightObject(JSONObject element, int[] dateArr) {
 		JSONObject weights = new JSONObject();
 		
@@ -386,5 +353,38 @@ public class Calculator {
 		}
 		
 		return arr;
+	}
+	
+	private static Date getFurthestNeededByDate(JSONObject element) {
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
+		Date rtn = null;
+		
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				JSONArray groupElements = (JSONArray)element.get(key);
+				
+				for (int x=0; x < groupElements.size(); x++) {
+					JSONObject groupElement = (JSONObject)groupElements.get(x);
+					Date date = getFurthestNeededByDate(groupElement);
+					
+					if (rtn == null || (date != null && date.after(rtn)))
+						rtn = date;
+				}				
+			}
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+			String dateStr = element.get(Constants.DATE_NEEDED_JSON)+"";
+			
+			try {
+				if (dateStr != null && dateStr.length() > 0)
+					rtn = sdf.parse(dateStr);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return rtn;
 	}
 }
