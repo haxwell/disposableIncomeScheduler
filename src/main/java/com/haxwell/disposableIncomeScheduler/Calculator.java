@@ -54,7 +54,8 @@ public class Calculator {
 		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount, new CalculatedPreviousSavedAmountHandler() {
 			@Override
 			public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
-				long previousSavedAmount = Long.parseLong(groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
+				Object object = groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON);
+				long previousSavedAmount = Long.parseLong((object == null) ? "0" : object.toString());
 				previousSavedAmount += dollarAmountToBeApplied;
 				groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
 			}
