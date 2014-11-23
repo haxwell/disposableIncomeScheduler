@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -13,13 +15,32 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class Calculator {
 	
-	protected static final String DESCRIPTION_JSON = "description";
-	protected static final String HAPPINESS_IMMEDIACY_JSON = "happinessImmediacy";
-	protected static final String UTILITY_IMMEDIACY_JSON = "utilityImmediacy";
-	protected static final String HAPPINESS_LENGTH_JSON = "happinessLength";
-	protected static final String UTILITY_LENGTH_JSON = "utilityLength";
-	protected static final String DATE_NEEDED_JSON = "dateNeededBy";
+	public interface CalculatedPreviousSavedAmountHandler {
+		public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied);
+	}
 
+	public static Map<String, Long> getDollarAmountsToBeAppliedPerGroup(JSONObject data) {
+		JSONObject weights = Calculator.getWeights(data);
+		int dollarAmount = Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+		
+		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
+		JSONObject grpRootElement = (JSONObject)grpArr.get(0);
+		
+		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
+		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
+		
+		final Map<String, Long> map = new HashMap<>();
+		
+		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount, new CalculatedPreviousSavedAmountHandler() {
+			@Override
+			public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
+				map.put(groupElement.get(Constants.DESCRIPTION_JSON)+"", dollarAmountToBeApplied);
+			}
+		});
+		
+		return map;
+	}
+	
 	public static void applyMoney(JSONObject data) {
 		JSONObject weights = Calculator.getWeights(data);
 		int dollarAmount = Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
@@ -30,10 +51,17 @@ public class Calculator {
 		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
 		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
 		
-		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount);
+		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount, new CalculatedPreviousSavedAmountHandler() {
+			@Override
+			public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
+				long previousSavedAmount = Long.parseLong(groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
+				previousSavedAmount += dollarAmountToBeApplied;
+				groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
+			}
+		});
 	}
 	
-	private static void applyMoneyHelper(JSONObject ge, JSONObject we, long dollarAmount) {
+	private static void applyMoneyHelper(JSONObject ge, JSONObject we, long dollarAmount, CalculatedPreviousSavedAmountHandler func) {
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(ge);
 		
 		if (list.size() > 0) {
@@ -42,7 +70,8 @@ public class Calculator {
 				JSONArray groupElements = (JSONArray)ge.get(key);
 				JSONArray weightElements = (JSONArray)we.get(key);
 				
-				assert groupElements.size() == weightElements.size() : "GroupElements and WeightElements must contain the same number of elements";
+//				if (groupElements.size() != weightElements.size())
+//					throw new IllegalStateException("GroupElements and WeightElements must contain the same number of elements");
 				
 				for (int x=0; x < groupElements.size(); x++) {
 					JSONObject groupElement = (JSONObject)groupElements.get(x);
@@ -66,23 +95,16 @@ public class Calculator {
 						
 						long weightedDollarAmount = Math.round(dollarAmount * groupWeightAsPercentage);
 						
-					/*JSONObject obj =*/ applyMoneyHelper(groupElement, weightElement, weightedDollarAmount);
+						applyMoneyHelper(groupElement, weightElement, weightedDollarAmount, func);
 					}
 					else {
 						// this is a goal.. we need to apply money here
-						long previousSavedAmount = Long.parseLong(groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
 						Double goalWeightAsPercentage = Double.parseDouble(weightElement.get(Constants.WEIGHT_AS_PERCENTAGE_JSON)+"");
-
-						previousSavedAmount += Math.round(dollarAmount * goalWeightAsPercentage);
-						
-						groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
+						func.handleIt(groupElement, Math.round(dollarAmount * goalWeightAsPercentage));
 					}
 				}				
 			}
-		} else {
-			// this is a leaf, a goal
-			String str = "foo";
-		}
+		} 
 	}
 	
 	public static JSONObject getWeights(JSONObject data) {
@@ -212,7 +234,7 @@ public class Calculator {
 		rtn += Integer.parseInt(goal.get(Constants.UTILITY_LENGTH_JSON)+"");
 		
 		int hsn = 0;
-		if (!goal.get(DATE_NEEDED_JSON).toString().equals("") && dateArr.length > 0) {
+		if (!goal.get(Constants.DATE_NEEDED_JSON).toString().equals("") && dateArr.length > 0) {
 			int days = getNumberOfDaysFromToday(goal);
 			hsn = dateArr[days - 1];
 		}
@@ -304,7 +326,7 @@ public class Calculator {
 					JSONObject groupWeightObj = new JSONObject();
 					groupWeightObj.put(Constants.GROUP_WEIGHT_JSON, innerGroupWeight+"");
 					
-					if (overridingPercentages.containsKey(key))
+					if (overridingPercentages != null && overridingPercentages.containsKey(key))
 						groupWeightObj.put(Constants.OVERRIDING_PERCENTAGE_AMT_JSON, overridingPercentages.get(key));
 					
 					groupElements.add(groupWeightObj);
@@ -322,7 +344,7 @@ public class Calculator {
 		int rtn = -1;
 		
 		try {
-			cal.setTime(sdf.parse(obj.get(DATE_NEEDED_JSON).toString()));
+			cal.setTime(sdf.parse(obj.get(Constants.DATE_NEEDED_JSON).toString()));
 			rtn = (int)(((((cal.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -333,30 +355,33 @@ public class Calculator {
 	}
 	
 	public static int[] getArrayToCalculateRelativeWeightOfDates(JSONObject data) {
+		int[] arr = new int[0];
+		
 		Date furthestDate = getFurthestNeededByDate(data);
 		
-		int rangeInDays = (int)(((((furthestDate.getTime() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
-		
-		int scale = 25;
-		int maxSegmentSize = rangeInDays / scale;
-		int currSegmentSize = 0;
-		int segmentIndex = rangeInDays / maxSegmentSize;
-		
-		int[] arr = new int[rangeInDays];
-		
-		for (int i = 0; i < rangeInDays; i++) {
+		if (furthestDate != null) {
+			int rangeInDays = (int)(((((furthestDate.getTime() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
+			arr = new int[rangeInDays];
 			
-			if (currSegmentSize < maxSegmentSize)
-				arr[i] = segmentIndex;
-			else {
+			int scale = 25;
+			int maxSegmentSize = rangeInDays / scale;
+			int currSegmentSize = 0;
+			int segmentIndex = rangeInDays / maxSegmentSize;
+			
+			for (int i = 0; i < rangeInDays; i++) {
 				
-				segmentIndex--;
-				arr[i] = segmentIndex;
+				if (currSegmentSize < maxSegmentSize)
+					arr[i] = segmentIndex;
+				else {
+					
+					segmentIndex--;
+					arr[i] = segmentIndex;
+					
+					currSegmentSize = -1;
+				}
 				
-				currSegmentSize = -1;
+				currSegmentSize++;
 			}
-			
-			currSegmentSize++;
 		}
 		
 		return arr;
