@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
 
 public class ListTheScheduleMenuItemHandlerTest extends JSONDataBasedTest {
@@ -23,7 +22,6 @@ public class ListTheScheduleMenuItemHandlerTest extends JSONDataBasedTest {
 	public void testFoo() {
 		ListTheScheduleMenuItemHandler sut = new ListTheScheduleMenuItemHandler();
 		
-		sut.fooParent(data);
-		
+		sut.doIt(data, null);
 	}
 }
