@@ -2,9 +2,11 @@ package com.haxwell.disposableIncomeScheduler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +119,8 @@ public class Calculator {
 		
 		rtn = addGroupWeightsToJSONWeightObject(rtn, (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON));
 		
+		rtn = applyOverridingPercentagesToJSONWeightObject(rtn);
+		
 		JSONArray rtnArr = new JSONArray();
 		rtnArr.add(rtn);
 		
@@ -126,6 +130,225 @@ public class Calculator {
 		return obj;
 	}
 	
+	private static JSONObject applyOverridingPercentagesToJSONWeightObject(JSONObject weightElement) {
+		return applyOverridingPercentagesToJSONWeightObject(weightElement, new JSONObject());
+	}
+	
+	private static JSONObject applyOverridingPercentagesToJSONWeightObject(JSONObject weightElement, JSONObject state) {
+		final String GOAL_PARENT_LEVEL = "foo1";
+		final String GOAL_GRANDPARENT_LEVEL = "foo2";
+		
+		JSONObject rtn = weightElement;
+		
+		// get the names of the groups on the level of weightElement's highest group
+		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(weightElement);
+		
+		// if the list is empty, then weightElement represents a goal, and not a group..
+		//  otherwise, lets process the group
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				String key = list.get(i);
+				
+				// get the groups contained within this group
+				JSONArray arr = (JSONArray)weightElement.get(key);
+				
+				Map<String, Double> groupToOPMap = new HashMap<>();
+				
+				for (int x = 0; x < arr.size(); x++) {
+					JSONObject obj = (JSONObject)arr.get(x);
+					
+					if (!obj.containsKey(Constants.GROUP_WEIGHT_JSON)) {
+						applyOverridingPercentagesToJSONWeightObject(obj, state);
+						
+						if (state.containsKey(GOAL_PARENT_LEVEL)) {
+							// then the children of this level are the individual goals, with no subgroups
+							state.remove(GOAL_PARENT_LEVEL);
+							state.put(GOAL_GRANDPARENT_LEVEL, GOAL_GRANDPARENT_LEVEL);
+							return rtn;
+						}
+						
+						if (state.containsKey(GOAL_GRANDPARENT_LEVEL)) {
+							groupToOPMap.clear();
+							
+							// first go over the grandchildren groups, and get their overriding percentages mapped to their group names
+							for (int y = 0; y < list.size(); y++) {
+								String currentLevelGroupName = list.get(y);
+								JSONArray childrenGroupsOfTheCurrentLevel = (JSONArray)weightElement.get(currentLevelGroupName);
+								
+								List<String> listOfGrandchildGroupNames = MenuItemUtils.getSubgroupNamesOfAGroup(childrenGroupsOfTheCurrentLevel);
+								for (int z = 0; z < listOfGrandchildGroupNames.size(); z++) {
+									String grandchildGroupName = listOfGrandchildGroupNames.get(z);
+									
+									Iterator<Object> iterator = childrenGroupsOfTheCurrentLevel.iterator();
+									boolean found = false;
+									
+									while (iterator.hasNext() && !found) {
+										JSONObject grandchildGroup = (JSONObject)iterator.next();
+										
+										if (grandchildGroup.containsKey(grandchildGroupName)) {
+											JSONArray grandchildGroupGoalWeights = (JSONArray)grandchildGroup.get(grandchildGroupName);
+											
+											for (int xx=0; xx < grandchildGroupGoalWeights.size(); xx++) {
+												JSONObject grandchildGroupGoalWeight = (JSONObject)grandchildGroupGoalWeights.get(xx);
+												if (grandchildGroupGoalWeight.containsKey(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)) {
+													if (groupToOPMap.size() == 0) {
+														Double d = Double.parseDouble(grandchildGroupGoalWeight.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)+"");
+														groupToOPMap.put(grandchildGroupName, d);
+													}
+													else {
+														/**
+														 * We set a rule saying there can only be one group with an overriding percentage 
+														 * set, because there are so many corner cases that arise when multiple groups have 
+														 * an overriding percentage set, that my mind is currently boggled. The problem 
+														 * lies in the apparent need to account for the difference in the original percentage 
+														 * weight of the group and the overridden percentage. the sum of the sibling group's 
+														 * percentages must equal 1.0. so if you override one, the others must adjust as well.
+														 * 
+														 * Its easy enough with one group changed, but if two groups change, how do you 
+														 * handle that? the way it is done now is to spread the difference over the sibling 
+														 * groups .01% at a time. .01 of the difference is added/subtracted to the weight of 
+														 * the first sibling group, and .01 is added/subtracted to the next. In that way the 
+														 * difference is spread over each of the siblings, and you still come up with 1.0 
+														 * total for all. But if a second is overridden, what do you do? Do you exclude the 
+														 * first group from being adjusted? Then what if there are only two groups? Only the 
+														 * second group remains, and to adjust it would change the overridden percentage set 
+														 * on it. What if there are three? well, it depends on whether the overriding values 
+														 * in the first two groups are positive or negative adjustments. I think it may be 
+														 * possible if they are both negative. Haven't worked it out, it just feels like it 
+														 * would work. But there are, as I said, a lot more corner cases, possibilities, 
+														 * and I don't see the benefit now. And if you don't exclude the first group, 
+														 * then its overriding value changes when the second is applied. So thats a dead end 
+														 * I believe. Anyway, this is a difficult problem, and I leave it to my future self 
+														 * to think about, if it turns out setting only one overriden percentage per sibling 
+														 * group doesn't work out.
+														 */
+														
+														throw new IllegalStateException("Only one group in a set of sibling groups can have an overridden percentage!");
+													}
+												}
+											}
+											
+											found = true;
+										}
+									}
+								}
+							}
+							
+							// then, in order of OP, calc difference between GWP and OP => Diff
+							List<String> listOfGrandchildGroupNamesSortedByOP = MenuItemUtils.getOrderedListOfStrings(groupToOPMap);
+							Map<String, Double> grandchildGroupsToPercentageDiffMap = new HashMap<>();
+							
+							for (int y = 0; y < list.size(); y++) {
+								String currentLevelGroupName = list.get(y);
+								JSONArray childrenGroupsOfTheCurrentLevel = (JSONArray)weightElement.get(currentLevelGroupName);
+								
+								// for each grandchild group that we found that has an OP,
+								//  iterate over the children groups on this level to find the grandchild with the same name as the OP group
+								//  then on that grandchild, set the OP as the GWP, and save the difference between the two values in a map keyed by the child's name
+								for (int z=0; z < listOfGrandchildGroupNamesSortedByOP.size(); z++) {
+									String grandchildGroupName = listOfGrandchildGroupNamesSortedByOP.get(z);
+									Iterator<Object> iterator = childrenGroupsOfTheCurrentLevel.iterator();
+									boolean found = false;
+									while (iterator.hasNext() && !found) {
+										JSONObject grandchildGroup = (JSONObject)iterator.next();
+										
+										if (grandchildGroup.containsKey(grandchildGroupName)) {
+											JSONArray grandchildGroupGoals = (JSONArray)grandchildGroup.get(grandchildGroupName);
+											
+											for (int xx=0; xx < grandchildGroupGoals.size(); xx++) {
+												JSONObject grandchildGroupGoal = (JSONObject)grandchildGroupGoals.get(xx);
+												if (grandchildGroupGoal.containsKey(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)) {
+													Double op = Double.parseDouble(grandchildGroupGoal.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)+"");
+													Double gwp = Double.parseDouble(grandchildGroupGoal.get(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)+"");
+													
+													grandchildGroupsToPercentageDiffMap.put(grandchildGroupName, op - gwp);
+	
+													//		set the group weight percentage to the OP
+													grandchildGroupGoal.remove(Constants.OVERRIDING_PERCENTAGE_AMT_JSON);
+													grandchildGroupGoal.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, op);
+												}
+											}
+											
+											found = true;
+										}
+									}
+								}
+							}
+	
+							// now that we know the difference between the original GWP for each group, and the OP,
+							//  spread the difference over each of the sibling groups by adjusting their GWP up or
+							//  down by .01 until the difference is fully spread. This is to keep the GWP for all
+							//  the siblings equaling 1.00
+							for (String str : grandchildGroupsToPercentageDiffMap.keySet()) {
+								List<String> excludeList = new ArrayList<>();
+								
+								excludeList.add(str);
+								
+								// get a list of all the siblings that are NOT the group who's difference we are spreading
+								List<JSONObject> listOfFilteredJSONObjects = MenuItemUtils.getSubgroups(arr, excludeList);
+	
+								// get the amount of difference we are spreading
+								Double diff = grandchildGroupsToPercentageDiffMap.get(str);
+								
+								// if the difference is negative (the overriding percent is less than the original GWP) then
+								//  we'll need to effectively add to the GWPs of the other groups. If its positive, we subtract.
+								//  we multiply by -1 to make that happen either way, and we set that up here.
+								int multiplier = 1;
+								if (diff > 0) {
+									multiplier = -1;
+									diff = diff * -1;
+								}
+								
+								Double offset = ((multiplier * 0.01) * multiplier);
+								
+								// while the difference has not been completely spread...
+								while (diff != 0.0) {
+									// then for each group whos GWP we are adjusting
+									for (JSONObject grandchildGroup : listOfFilteredJSONObjects) {
+										String grandchildGroupName = grandchildGroup.keySet().iterator().next();
+										JSONArray grandchildGroupGoals = (JSONArray)grandchildGroup.get(grandchildGroupName);
+										
+										// iterate over the weights set for each goal in it...
+										for (int y = 0; y < grandchildGroupGoals.size(); y++) {
+											JSONObject grandchildGroupGoal = (JSONObject)grandchildGroupGoals.get(y);
+											
+											// ...until we find the one with the GWP info in it
+											if (grandchildGroupGoal.containsKey(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)) {
+												// then do the adjustment to it.
+												Double d = Double.parseDouble(grandchildGroupGoal.get(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)+"");
+												
+												if (d > 0.0) {
+													// apply the inc/dec to Double d
+													d = getTwoDecimalPlaceDouble(d + offset);
+													grandchildGroupGoal.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, d);
+													
+													// adjust diff
+													diff = getTwoDecimalPlaceDouble(diff + offset);
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							state.remove(GOAL_GRANDPARENT_LEVEL);
+						}
+					}
+				}
+			}
+		} else {
+			state.put(GOAL_PARENT_LEVEL, GOAL_PARENT_LEVEL);
+		}
+		
+		
+		return rtn;
+	}
+	
+	private static Double getOverridingPercentage(JSONArray sg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private static JSONObject buildJSONWeightObject(JSONObject element, int[] dateArr) {
 		JSONObject weights = new JSONObject();
 		
@@ -266,7 +489,7 @@ public class Calculator {
 							if (jo2.containsKey(Constants.GROUP_WEIGHT_JSON)) {
 								found = true;
 								int weight = Integer.parseInt(jo2.get(Constants.GROUP_WEIGHT_JSON)+"");
-								double weightAsPercentage = (weight == 0) ? 0 : (weight*1.0)/total;
+								double weightAsPercentage = getTwoDecimalPlaceDouble((weight == 0) ? 0 : (weight*1.0)/total);
 								
 								jo2.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, weightAsPercentage+"");
 							}
@@ -306,6 +529,10 @@ public class Calculator {
 		return element;
 	}
 	
+	private static double getTwoDecimalPlaceDouble(double d) {
+		return (Math.round(d*100.0)) / 100.0;
+	}
+
 	public static int getNumberOfDaysFromToday(JSONObject obj) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar cal = Calendar.getInstance();
