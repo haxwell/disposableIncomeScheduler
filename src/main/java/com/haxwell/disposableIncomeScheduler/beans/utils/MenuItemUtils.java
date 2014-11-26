@@ -108,6 +108,49 @@ public class MenuItemUtils {
 		return getSelectedGroup(data, state);
 	}
 
+	public static List<JSONArray> getSubgroups(JSONObject element) {
+		return getSubgroups(element, null);
+	}
+	
+	public static List<JSONArray> getSubgroups(JSONObject element, List<String> excludedList) {
+		ArrayList<JSONArray> rtn = new ArrayList<>();
+		
+		List<String> subgroupNames = getSubgroupNamesOfAGroup(element);
+		
+		for (String str : subgroupNames) {
+			if (excludedList != null) {
+				if (!excludedList.contains(str)) {
+					rtn.add((JSONArray)element.get(str));
+				}
+			} else {
+				rtn.add((JSONArray)element.get(str));
+			}
+		}
+		
+		return rtn;
+	}
+	
+	public static List<JSONObject> getSubgroups(JSONArray arr, List<String> excludedList) {
+		ArrayList<JSONObject> rtn = new ArrayList<>();
+		
+		for (int y =0; y < arr.size(); y++) {
+			JSONObject jo = (JSONObject)arr.get(y);
+			String joKey = jo.keySet().iterator().next();
+			
+			if (!jo.containsKey(Constants.GROUP_WEIGHT_JSON)) {
+				if (excludedList != null) {
+					if (!excludedList.contains(joKey)) {
+						rtn.add(jo);
+					}
+				} else {
+					rtn.add(jo);
+				}
+			}
+		}
+		
+		return rtn;
+	}
+	
 	public static LinkedList<String> getTokenList(StringTokenizer tokenizer) {
 		LinkedList<String> list = new LinkedList<String>();
 		
@@ -153,8 +196,6 @@ public class MenuItemUtils {
 	}
 	
 	public static LinkedList<String> getGoalsByWeight(JSONArray goals, JSONArray weights) {
-		LinkedList<String> rtn = new LinkedList<String>();
-		
 		Map<String, Double> map = new HashMap<>();
 		
 		for (int x=0; x < weights.size(); x++) {
@@ -165,18 +206,30 @@ public class MenuItemUtils {
 				map.put(jo.get(Constants.DESCRIPTION_JSON)+"", d);
 			}
 		}
+	
+		return getOrderedListOfStrings(map);
+	}
+	
+	public static LinkedList<String> getOrderedListOfStrings(Map<String, Double> map) {
+		LinkedList<String> rtn = new LinkedList<String>();
 		
-		int origMapSize = map.size();
+		Map<String, Double> mapCopy = new HashMap<String, Double>();
+		
+		for (String str : map.keySet()) {
+			mapCopy.put(str, map.get(str));
+		}
+		
+		int origMapSize = mapCopy.size();
 		
 		for (int x=0; x < origMapSize; x++) {
 
-			Iterator<String> iterator = map.keySet().iterator();
+			Iterator<String> iterator = mapCopy.keySet().iterator();
 			Double hi = null;
 			String hiKey = null;
 			
 			while (iterator.hasNext()) {
 				String key = iterator.next();
-				Double d = map.get(key);
+				Double d = mapCopy.get(key);
 				
 				if (hi == null || d > hi) {
 					hi = d;
@@ -185,7 +238,7 @@ public class MenuItemUtils {
 			}
 			
 			rtn.add(hiKey);
-			map.remove(hiKey);
+			mapCopy.remove(hiKey);
 		}
 		
 		return rtn;
