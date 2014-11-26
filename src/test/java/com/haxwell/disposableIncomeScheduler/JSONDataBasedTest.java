@@ -42,7 +42,7 @@ public class JSONDataBasedTest {
 
 		JSONObject iobj = new JSONObject();
 		iobj.put(getGoalGroupName(strBathroom), "0.15");
-		iobj.put(getGoalGroupName(strOutside), "0.20");
+//		iobj.put(getGoalGroupName(strOutside), "0.20");
 		obj.put(Constants.OVERRIDING_PERCENTAGE_AMT_JSON, iobj);
 		
 		JSONObject bathroom = new JSONObject();
