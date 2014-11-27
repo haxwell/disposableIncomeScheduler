@@ -128,13 +128,4 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
 	}
-	
-	private void simulateSelectingAGroup(JSONObject state, String groupName) {
-		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
-		
-		String pathToGroup = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
-		pathToGroup += Constants.STATE_ATTR_PATH_DELIMITER + groupName;
-		
-		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, pathToGroup);
-	}
 }

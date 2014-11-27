@@ -35,8 +35,8 @@ public class JSONDataBasedTest {
 	protected void createDataAndStateObjects() {
 		JSONObject obj = new JSONObject();
 		
-		obj.put("periodLength", "14");
-		obj.put("amountSavedPerPeriod", "500");
+		obj.put(Constants.PERIOD_LENGTH_JSON, "14");
+		obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "500");
 		
 		JSONArray arr = new JSONArray();
 
@@ -99,13 +99,13 @@ public class JSONDataBasedTest {
 			Integer utilityLength, Integer happinessLength, String dateNeededBy) {
 		JSONObject obj = new JSONObject();
 		
-		obj.put("price", price+"");
-		obj.put("utilityImmediacy", utilityImmediacy+"");
-		obj.put("happinessImmediacy", happinessImmediacy+"");
-		obj.put("utilityLength", utilityLength+"");
-		obj.put("happinessLength", happinessLength+"");
-		obj.put("description", name);
-		obj.put("dateNeededBy", dateNeededBy);
+		obj.put(Constants.PRICE_JSON, price+"");
+		obj.put(Constants.UTILITY_IMMEDIACY_JSON, utilityImmediacy+"");
+		obj.put(Constants.HAPPINESS_IMMEDIACY_JSON, happinessImmediacy+"");
+		obj.put(Constants.UTILITY_LENGTH_JSON, utilityLength+"");
+		obj.put(Constants.HAPPINESS_LENGTH_JSON, happinessLength+"");
+		obj.put(Constants.DESCRIPTION_JSON, name);
+		obj.put(Constants.DATE_NEEDED_JSON, dateNeededBy);
 		obj.put(Constants.PREVIOUS_SAVED_AMT_JSON, previouslySavedAmt);
 		
 		return obj;
@@ -113,5 +113,14 @@ public class JSONDataBasedTest {
 	
 	private String getGoalGroupName(String str) {
 		return Constants.GOALS_ATTR_KEY+"_"+str;
+	}
+	
+	protected void simulateSelectingAGroup(JSONObject state, String groupName) {
+		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
+		
+		String pathToGroup = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
+		pathToGroup += Constants.STATE_ATTR_PATH_DELIMITER + groupName;
+		
+		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, pathToGroup);
 	}
 }
