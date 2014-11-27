@@ -54,7 +54,7 @@ public class SelectAGroupMenuItemHandler extends AttributeEditingMenuItemHandler
 		}
 
 		// if valid, set the associated selected group in the state
-		if (!NaN) {
+		if (!NaN && (i != 0 && i <= list.size())) {
 			
 			// 
 			// this is not in a util, because I think this is the only place
