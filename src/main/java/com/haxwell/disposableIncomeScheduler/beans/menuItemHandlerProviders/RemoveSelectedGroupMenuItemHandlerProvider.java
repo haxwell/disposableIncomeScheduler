@@ -12,7 +12,7 @@ public class RemoveSelectedGroupMenuItemHandlerProvider extends AbstractMenuItem
 	public MenuItemHandlerBean getMenuItemHandler(JSONObject data, JSONObject state) {
 		String selGroupName = MenuItemUtils.getSelectedGroupName(state);
 		
-		if (!selGroupName.equals(MenuItemUtils.getRootGroupName())) {
+		if (selGroupName != null && !selGroupName.equals(MenuItemUtils.getRootGroupName())) {
 			return new RemoveSelectedGroupMenuItemHandler();
 		}
 
