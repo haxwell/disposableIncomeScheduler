@@ -4,6 +4,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class JSONDataBasedTest {
 
@@ -89,6 +90,8 @@ public class JSONDataBasedTest {
 		
 		data = obj;
 		state = new JSONObject();
+		
+		MenuItemUtils.initializeState(state);
 	}
 	
 	private JSONObject getGoal(String name, Integer price) {
