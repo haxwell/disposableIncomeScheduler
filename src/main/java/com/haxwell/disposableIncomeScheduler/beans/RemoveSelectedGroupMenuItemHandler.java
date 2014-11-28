@@ -3,6 +3,9 @@ package com.haxwell.disposableIncomeScheduler.beans;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+
 public class RemoveSelectedGroupMenuItemHandler extends MenuItemHandlerBean {
 
 	public String getMenuText() {
@@ -11,28 +14,30 @@ public class RemoveSelectedGroupMenuItemHandler extends MenuItemHandlerBean {
 	
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
+		
+		String selectedGroupParentName = MenuItemUtils.getSelectedGroupParentName(state);
+		String selectedGroupParentPath = MenuItemUtils.getSelectedGroupParentPath(state);
+		
+		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
 
-		JSONArray items = (JSONArray)data.get("items");
+		JSONArray arrParent = MenuItemUtils.getParentOfSelectedGroup(data, state);
 		
-		// list each item
-		int count = 0;
-		for (; count < items.size(); count++) {
-			String description = ((JSONObject)items.get(count)).get("description")+"";
-			System.out.println(count+1 + ". " + description);
-		}
-		
-		if (count > 0) {
-			String choice = System.console().readLine();
+		boolean found = false;
+		for (int i = 0; i < arrParent.size() && !found; i++) {
+			JSONObject obj = (JSONObject)arrParent.get(i);
 			
-			if (choice != null && !choice.equals("")) {
-				JSONObject removedObj = (JSONObject)items.remove(Integer.parseInt(choice) - 1);
+			if (obj.containsKey(selectedGroupName)) {
+				arrParent.remove(i);
 				
-				System.out.println(removedObj.get("description") + " removed.");
+				MenuItemUtils.setSelectedGroupName(state, selectedGroupParentName);
+				MenuItemUtils.setSelectedGroupPath(state, selectedGroupParentPath);
+
+				found = true;
 				rtn = true;
 			}
 		}
-		else
-			System.out.println("\nNo Items to Remove!\n");
+
+		System.out.println(selectedGroupName + " removed.");
 		
 		return rtn;
 	}
