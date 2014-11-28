@@ -91,27 +91,60 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	}
 	
 	@Test
-	public void testMovingFromAChildGroupToItsParent2() {
+	public void testGetSelectedParentGroupName_withOneLevelPath() {
+		MenuItemUtils.initializeState(state);
+		
+		String str = MenuItemUtils.getSelectedGroupParentName(state);
+		
+		assertTrue(str.equals(MenuItemUtils.getRootGroupName()));
+	}
+	
+	@Test
+	public void testGetSelectedParentGroupName_withTwoLevelPath() {
+		initializeState_12880();
+		
+		String str = MenuItemUtils.getSelectedGroupParentName(state);
+		
+		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals));
+	}
+	
+	@Test
+	public void testGetSelectedParentGroupName_withThreeLevelPath() {
 		initializeState_Bathroom();
-
-		String groupName = MenuItemUtils.getSelectedGroupName(state);
-		assertTrue(groupName.equals(Constants.GOALS_ATTR_KEY + "_" + strBathroom));
 		
-		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
-
-		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(arr);
+		String str = MenuItemUtils.getSelectedGroupParentName(state);
 		
-		assertTrue(goals.size() == 2);
+		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_"+str12880));
+	}
+	
+	@Test
+	public void testGetSelectedParentGroupPath_withOneLevelPath() {
+		MenuItemUtils.initializeState(state);
 		
-		arr = MenuItemUtils.getParentOfSelectedGroup(data, state);
-		groupName = MenuItemUtils.getSelectedGroupName(state);
-		assertTrue(groupName.equals(Constants.GOALS_ATTR_KEY + "_" + str12880));
+		String str = MenuItemUtils.getSelectedGroupParentPath(state);
 		
-		goals = MenuItemUtils.getGoalsOfAGroup(arr);
-		assertTrue(goals.size() == 0);
+		assertTrue(str.equals(MenuItemUtils.getRootGroupName()));
+	}
+	
+	@Test
+	public void testGetSelectedParentGroupPath_withTwoLevelPath() {
+		initializeState_12880();
 		
-		List<String> subgrps = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
-		assertTrue(subgrps.size() == 3);
+		String str = MenuItemUtils.getSelectedGroupParentPath(state);
+		
+		assertTrue(str.equals(MenuItemUtils.getRootGroupName()+Constants.STATE_ATTR_PATH_DELIMITER+
+				Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals));
+	}
+	
+	@Test
+	public void testGetSelectedParentGroupPath_withThreeLevelPath() {
+		initializeState_Bathroom();
+		
+		String str = MenuItemUtils.getSelectedGroupParentPath(state);
+		
+		assertTrue(str.equals(MenuItemUtils.getRootGroupName()+Constants.STATE_ATTR_PATH_DELIMITER+
+				Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals+Constants.STATE_ATTR_PATH_DELIMITER+
+				Constants.GOALS_ATTR_KEY+"_"+str12880));
 	}
 	
 	private void initializeState_12880() {
