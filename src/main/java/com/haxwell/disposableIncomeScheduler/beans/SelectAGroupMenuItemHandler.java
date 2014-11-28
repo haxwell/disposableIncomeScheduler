@@ -56,18 +56,13 @@ public class SelectAGroupMenuItemHandler extends AttributeEditingMenuItemHandler
 		// if valid, set the associated selected group in the state
 		if (!NaN && (i != 0 && i <= list.size())) {
 			
-			// 
-			// this is not in a util, because I think this is the only place
-			//  that should be doing the state setting
-			//
-			
 			String groupName = map.get(i); 
-			state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
+			MenuItemUtils.setSelectedGroupName(state, groupName);
 			
 			String pathToGroup = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
 			pathToGroup += Constants.STATE_ATTR_PATH_DELIMITER + groupName;
 			
-			state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, pathToGroup);
+			MenuItemUtils.setSelectedGroupPath(state, pathToGroup);
 		}
 
 		return rtn;
