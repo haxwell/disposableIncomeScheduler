@@ -39,9 +39,22 @@ public class MenuItemUtils {
 		return rtn;
 	}
 	
-	public static JSONArray getSelectedGroup(JSONObject data, JSONObject state) {
-		String path = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
+	public static String getSelectedGroupPath(JSONObject state) {
+		String rtn = null;
 		
+		if (state.containsKey(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP))
+			rtn = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
+		else
+			rtn = getRootGroupName();
+		
+		return rtn;
+	}
+
+	public static JSONArray getSelectedGroup(JSONObject data, JSONObject state) {
+		return getSelectedGroup(data, state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP)+"");
+	}
+	
+	public static JSONArray getSelectedGroup(JSONObject data, String path) {
 		LinkedList<String> tokenList = getTokenList(new StringTokenizer(path, Constants.STATE_ATTR_PATH_DELIMITER));
 		
 		JSONArray arr = null;
@@ -100,12 +113,14 @@ public class MenuItemUtils {
 			}
 		}
 		
-		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, sb.toString());
+//		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, sb.toString());
+//		
+//		count = list.size() - 2;
+//		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, list.get(count));
+//		
+//		String path = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
 		
-		count = list.size() - 2;
-		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, list.get(count));
-		
-		return getSelectedGroup(data, state);
+		return getSelectedGroup(data, sb.toString());
 	}
 
 	public static List<JSONArray> getSubgroups(JSONObject element) {
@@ -165,6 +180,43 @@ public class MenuItemUtils {
 		return Constants.GOALS_ATTR_KEY+"_"+Constants.ROOT_GOAL_GROUP_NAME;
 	}
 
+	public static void setSelectedGroupPath(JSONObject state, String path) {
+		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, path);
+	}
+	
+	public static String getSelectedGroupParentPath(JSONObject state) {
+		String rtn = getRootGroupName();
+		String str = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
+		String delim = Constants.STATE_ATTR_PATH_DELIMITER;
+		
+		int indexOfLastSlash = str.lastIndexOf(delim);
+		
+		if (indexOfLastSlash > 0) {
+			rtn = str.substring(0, indexOfLastSlash);
+		}
+		
+		return rtn;
+	}
+	
+	public static String getSelectedGroupParentName(JSONObject state) {
+		String rtn = getRootGroupName();
+		String str = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
+		String delim = Constants.STATE_ATTR_PATH_DELIMITER;
+		
+		int indexOfLastSlash = str.lastIndexOf(delim);
+		
+		if (indexOfLastSlash > 0) {
+			rtn = str.substring(0, indexOfLastSlash);
+			indexOfLastSlash = rtn.lastIndexOf(delim);
+			
+			if (indexOfLastSlash > 0) {
+				rtn = rtn.substring(indexOfLastSlash+1, rtn.length());
+			}
+		}
+		
+		return rtn;
+	}
+	
 	public static void setSelectedGroupName(JSONObject state, String groupName) {
 		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
 	}
