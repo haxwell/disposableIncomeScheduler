@@ -12,7 +12,7 @@ import net.minidev.json.JSONObject;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
-public class SelectAGroupMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class SelectAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	public String getMenuText() {
 		return "Select A Group";

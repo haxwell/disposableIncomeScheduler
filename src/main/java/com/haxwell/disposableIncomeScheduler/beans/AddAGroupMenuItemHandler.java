@@ -8,7 +8,7 @@ import net.minidev.json.JSONObject;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
-public class AddAGroupMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class AddAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	public String getMenuText() {
 		return "Add A Group";

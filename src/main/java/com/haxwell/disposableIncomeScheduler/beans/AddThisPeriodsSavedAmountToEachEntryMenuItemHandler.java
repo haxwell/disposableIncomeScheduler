@@ -7,7 +7,7 @@ import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
-public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	private boolean amtHasAlreadyBeenAdded = false;
 	

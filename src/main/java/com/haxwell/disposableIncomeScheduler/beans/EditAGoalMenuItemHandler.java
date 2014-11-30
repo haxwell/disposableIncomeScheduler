@@ -9,7 +9,7 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class EditAGoalMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class EditAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	LinkedList<String> keys = getListOfKeys();
 	Map<String, Validator> validatorMap = getValidatorMap();

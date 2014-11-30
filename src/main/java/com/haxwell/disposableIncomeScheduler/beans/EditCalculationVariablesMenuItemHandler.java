@@ -8,7 +8,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
 
-public class EditCalculationVariablesMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	LinkedList<String> keys = getListOfKeys();
 	Map<String, Validator> validatorMap = getValidatorMap();

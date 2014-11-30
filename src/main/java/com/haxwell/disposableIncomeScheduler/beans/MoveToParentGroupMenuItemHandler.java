@@ -4,7 +4,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
-public class MoveToParentGroupMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class MoveToParentGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	public String getMenuText() {
 		return "Move to Parent Group";

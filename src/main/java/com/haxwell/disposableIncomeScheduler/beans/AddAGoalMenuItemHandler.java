@@ -10,7 +10,7 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class AddAGoalMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	public String getMenuText() {
 		return "Add A Goal";
