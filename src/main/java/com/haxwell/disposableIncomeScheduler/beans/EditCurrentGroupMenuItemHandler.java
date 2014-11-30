@@ -17,14 +17,13 @@ public class EditCurrentGroupMenuItemHandler extends MenuItemHandlerBean {
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		JSONArray currSelGroup = MenuItemUtils.getSelectedGroup(data, state);
 		String choice = "";
 		
 		LinkedList<MenuItemHandlerBean> menuOptions = getMenuOptions();
 		
 		do {
 			// list each item
-			for (int count = 0; count < currSelGroup.size(); count++) {
+			for (int count = 0; count < menuOptions.size(); count++) {
 				String option = menuOptions.get(count).getMenuText();
 				System.out.println(count+1 + ". " + option);
 			}
@@ -45,7 +44,7 @@ public class EditCurrentGroupMenuItemHandler extends MenuItemHandlerBean {
 		LinkedList<MenuItemHandlerBean> linkedList = new LinkedList<MenuItemHandlerBean>();
 		
 		linkedList.add(new ChangeSelectedGroupNameMenuItemHandler());
-		linkedList.add(new SetCurrentGroupOverridePercentageMenuItem());
+		linkedList.add(new SetCurrentGroupOverridePercentageMenuItemHandler());
 		
 		return linkedList;
 	}
