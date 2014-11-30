@@ -1,12 +1,7 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -155,32 +150,32 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 		return Math.round((price - alreadySaved) / depositPerPeriod) * daysPerPeriod;
 	}
 	
-	private Double getPercentageOfCurrentDepositClaimed(JSONObject data, Double weight) {
-		return weight * (Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON).toString()));
-	}
+//	private Double getPercentageOfCurrentDepositClaimed(JSONObject data, Double weight) {
+//		return weight * (Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON).toString()));
+//	}
 
-	private List getSortedEntryList(Map<String, Double> weights) {
-		List list = new ArrayList<>(Arrays.asList(weights.entrySet().toArray()));
-
-		Comparator comp = new Comparator() {
-
-			@Override
-			public int compare(Object o1, Object o2) {
-				Entry<String, Double> e1 = (Entry<String, Double>)o1;
-				Entry<String, Double> e2 = (Entry<String, Double>)o2;
-				
-				if (e1.getValue() > e2.getValue())
-					return -1;
-				if (e1.getValue() < e2.getValue())
-					return 1;
-				
-				return 0;
-			}
-		};
-		
-		Collections.sort(list, comp);
-		
-		return list;
-	}
+//	private List getSortedEntryList(Map<String, Double> weights) {
+//		List list = new ArrayList<>(Arrays.asList(weights.entrySet().toArray()));
+//
+//		Comparator comp = new Comparator() {
+//
+//			@Override
+//			public int compare(Object o1, Object o2) {
+//				Entry<String, Double> e1 = (Entry<String, Double>)o1;
+//				Entry<String, Double> e2 = (Entry<String, Double>)o2;
+//				
+//				if (e1.getValue() > e2.getValue())
+//					return -1;
+//				if (e1.getValue() < e2.getValue())
+//					return 1;
+//				
+//				return 0;
+//			}
+//		};
+//		
+//		Collections.sort(list, comp);
+//		
+//		return list;
+//	}
 
 }
