@@ -23,7 +23,7 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
  * @author jjames
  *
  */
-public class ListTheScheduleMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	private JSONObject data;
 	
