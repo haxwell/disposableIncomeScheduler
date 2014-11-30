@@ -1,9 +1,17 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import net.minidev.json.JSONObject;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.InputGetter;
 import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
 
 public class SetCurrentGroupOverridePercentageMenuItemHandlerTest extends JSONDataBasedTest {
@@ -20,6 +28,24 @@ public class SetCurrentGroupOverridePercentageMenuItemHandlerTest extends JSONDa
 
 	@Test
 	public void testFoo() {
+		SetCurrentGroupOverridePercentageMenuItemHandler sut = new SetCurrentGroupOverridePercentageMenuItemHandler();
 		
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strOutside);
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn("0.255");
+		
+		sut.setInputGetter(mockedInputGetter);
+		
+		JSONObject op = (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON);
+		
+		assertTrue(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
+		
+		sut.doIt(data, state);
+		
+		assertFalse(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
+		assertTrue(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strOutside));
 	}
 }
