@@ -529,7 +529,7 @@ public class Calculator {
 		return element;
 	}
 	
-	private static double getTwoDecimalPlaceDouble(double d) {
+	public static double getTwoDecimalPlaceDouble(double d) {
 		return (Math.round(d*100.0)) / 100.0;
 	}
 
