@@ -113,13 +113,6 @@ public class MenuItemUtils {
 			}
 		}
 		
-//		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, sb.toString());
-//		
-//		count = list.size() - 2;
-//		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, list.get(count));
-//		
-//		String path = (String)state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
-		
 		return getSelectedGroup(data, sb.toString());
 	}
 
@@ -431,6 +424,17 @@ public class MenuItemUtils {
 		}
 		
 		return rtn;
+	}
+
+	public static List<JSONObject> getSiblingsOfSelectedGroup(JSONObject data, JSONObject state) {
+		JSONArray arr = getParentOfSelectedGroup(data, state);
+		
+		String str = getSelectedGroupName(state);
+		List<String> list = new ArrayList<>();
+		
+		list.add(str);
+		
+		return getSubgroups(arr, list);
 	}
 
 }
