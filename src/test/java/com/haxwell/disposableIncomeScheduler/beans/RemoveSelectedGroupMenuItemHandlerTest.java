@@ -22,8 +22,10 @@ public class RemoveSelectedGroupMenuItemHandlerTest extends JSONDataBasedTest {
 		
 	}
 
+	// TODO: Test One Level (selected group is root) and Two Level (selected group is child of root) 
+	
 	@Test
-	public void testFoo() {
+	public void testRemoveSelectedGroup_andPathAndSelectedGroupAreCorrectlyUpdated_ThreeLevels() {
 		RemoveSelectedGroupMenuItemHandler sut = new RemoveSelectedGroupMenuItemHandler();
 		
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
