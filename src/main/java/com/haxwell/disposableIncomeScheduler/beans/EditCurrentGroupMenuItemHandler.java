@@ -1,18 +1,15 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class EditCurrentGroupMenuItemHandler extends AttributeEditingMenuItemHandlerBean {
+import com.haxwell.disposableIncomeScheduler.InputGetter;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
-	LinkedList<String> keys = getListOfKeys();
-	Map<String, Validator> validatorMap = getValidatorMap();
-	Map<String, String> displayToJSONMap = getMapOfDisplayNamesToJSONFieldNames();
-	
+public class EditCurrentGroupMenuItemHandler extends MenuItemHandlerBean {
+
 	public String getMenuText() {
 		return "Edit Selected Group";
 	}
@@ -20,76 +17,36 @@ public class EditCurrentGroupMenuItemHandler extends AttributeEditingMenuItemHan
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		JSONArray items = (JSONArray)data.get("items");
+		JSONArray currSelGroup = MenuItemUtils.getSelectedGroup(data, state);
 		String choice = "";
+		
+		LinkedList<MenuItemHandlerBean> menuOptions = getMenuOptions();
 		
 		do {
 			// list each item
-			int count = 0;
-			for (; count < items.size(); count++) {
-				String description = ((JSONObject)items.get(count)).get("description")+"";
-				
-				System.out.println(count+1 + ". " + description);
+			for (int count = 0; count < currSelGroup.size(); count++) {
+				String option = menuOptions.get(count).getMenuText();
+				System.out.println(count+1 + ". " + option);
 			}
 			
-			if (count > 0) {
-				choice = System.console().readLine();
-				
-				if (choice != null && !choice.equals("")) {
-					JSONObject obj = (JSONObject)items.get(Integer.parseInt(choice) - 1);
-					
-					rtn = doTheAttributeEditing(obj);
-				}
+			choice = getInputGetter().readInput();
+			
+			if (choice != null && !choice.equals("")) {
+				MenuItemHandlerBean mi = menuOptions.get(Integer.parseInt(choice) - 1);
+				mi.doIt(data, state);
 			}
-			else
-				System.out.println("\nNo Items to Edit!\n");
+
 		} while (choice != null && !choice.equals(""));
 		
 		return rtn;
 	}
 
-	private boolean doTheAttributeEditing(JSONObject obj) {
-		Map<Integer, String> map = new HashMap<>();
-		boolean rtn = false;
+	private LinkedList<MenuItemHandlerBean> getMenuOptions() {
+		LinkedList<MenuItemHandlerBean> linkedList = new LinkedList<MenuItemHandlerBean>();
 		
-		System.out.println();
+		linkedList.add(new ChangeSelectedGroupNameMenuItemHandler());
+		linkedList.add(new SetCurrentGroupOverridePercentageMenuItem());
 		
-		// list each attr and its value
-		int count = 0;
-		for (String key : keys) {
-			System.out.println(++count + ". " + key + " -> " + obj.get(displayToJSONMap.get(key)));
-			map.put(count, key);
-		}
-
-		// they select an attribute
-		String choice = System.console().readLine();
-		
-		if (choice != null && !choice.equals("")) {
-			boolean NaN = false;
-			Integer choiceAsInt = null;
-			
-			try {
-				choiceAsInt = Integer.parseInt(choice);
-			}
-			catch (NumberFormatException nfe) {
-				NaN = true;
-			}
-			
-			if (!NaN) {
-				System.out.println();
-				System.out.print("New value: ");
-				
-				String val = System.console().readLine();
-				
-				String key = map.get(choiceAsInt);
-				Validator v = validatorMap.get(key);
-				val = v.getValidValue(val);
-				
-				obj.put(displayToJSONMap.get(key), val);
-				rtn = true;
-			}
-		}
-		
-		return rtn;
+		return linkedList;
 	}
 }
