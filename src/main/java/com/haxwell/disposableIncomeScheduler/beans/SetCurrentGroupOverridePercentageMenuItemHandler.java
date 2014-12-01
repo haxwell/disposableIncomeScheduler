@@ -61,7 +61,7 @@ public class SetCurrentGroupOverridePercentageMenuItemHandler extends MenuItemHa
 		if (currentWeight != null)
 			System.out.println("\nThe current percentage weight for [" + selectedGroupName + "] is " + currentWeight);
 		
-		System.out.print("Enter a new weight for " + selectedGroupName);
+		System.out.print("Enter a new weight for " + selectedGroupName + " > ");
 		String newWeight = getInputGetter().readInput();
 		
 		try {

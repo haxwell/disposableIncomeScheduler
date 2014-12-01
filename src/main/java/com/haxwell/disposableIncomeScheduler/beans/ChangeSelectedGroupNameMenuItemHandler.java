@@ -33,8 +33,9 @@ public class ChangeSelectedGroupNameMenuItemHandler extends MenuItemHandlerBean 
 					
 					String parentPath = MenuItemUtils.getSelectedGroupParentPath(state);
 					
+					newName = MenuItemUtils.setSelectedGroupName(state, newName);
 					MenuItemUtils.setSelectedGroupPath(state, parentPath+Constants.STATE_ATTR_PATH_DELIMITER+newName);
-					MenuItemUtils.setSelectedGroupName(state, newName);
+
 					found = true;
 				}
 			}

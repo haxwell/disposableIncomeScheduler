@@ -6,6 +6,8 @@ import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
+import net.minidev.json.JSONArray;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +48,7 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 		
 		assertFalse(b);
 		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
-		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith(strBathroom));
+		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
 	}
 	
 	@Test
@@ -66,7 +68,7 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 		
 		assertTrue(b);
 		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom"));
-		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith("UpstairsBathroom"));
+		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom"));
 		
 		List<String> subgroupNamesOfAGroup = MenuItemUtils.getSubgroupNamesOfAGroup(MenuItemUtils.getParentOfSelectedGroup(data, state));
 		

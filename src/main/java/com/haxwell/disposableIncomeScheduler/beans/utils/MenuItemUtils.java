@@ -210,11 +210,13 @@ public class MenuItemUtils {
 		return rtn;
 	}
 	
-	public static void setSelectedGroupName(JSONObject state, String groupName) {
+	public static String setSelectedGroupName(JSONObject state, String groupName) {
 		if (!groupName.startsWith(Constants.GOALS_ATTR_KEY+"_"))
 			groupName = Constants.GOALS_ATTR_KEY+"_"+groupName;
 		
 		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
+		
+		return groupName;
 	}
 	
 	public static boolean doesGroupHaveSubgroups(JSONObject group) {
@@ -406,7 +408,7 @@ public class MenuItemUtils {
 			Iterator<String> iterator = obj.keySet().iterator();
 			String key = iterator.next();
 			
-			if (obj.get(key) instanceof JSONArray)
+			if (obj.get(key) instanceof JSONArray) 
 				rtn.add(key);
 		}
 		
