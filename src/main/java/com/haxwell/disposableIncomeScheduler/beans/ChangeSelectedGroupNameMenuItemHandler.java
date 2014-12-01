@@ -23,21 +23,23 @@ public class ChangeSelectedGroupNameMenuItemHandler extends MenuItemHandlerBean 
 		
 		boolean found = false;
 		
-		for (int i = 0; i < parentOfSelectedGroup.size() && !found; i++) {
-			JSONObject jo = (JSONObject)parentOfSelectedGroup.get(i);
-			
-			if (jo.containsKey(selectedGroupName)) {
-				Object remove = jo.remove(selectedGroupName);
-				jo.put(newName, remove);
+		if (newName != null && !newName.equals("")) {
+			for (int i = 0; i < parentOfSelectedGroup.size() && !found; i++) {
+				JSONObject jo = (JSONObject)parentOfSelectedGroup.get(i);
 				
-				String parentPath = MenuItemUtils.getSelectedGroupParentPath(state);
-				
-				MenuItemUtils.setSelectedGroupPath(state, parentPath+Constants.STATE_ATTR_PATH_DELIMITER+newName);
-				MenuItemUtils.setSelectedGroupName(state, newName);
-				found = true;
+				if (jo.containsKey(selectedGroupName)) {
+					Object remove = jo.remove(selectedGroupName);
+					jo.put(Constants.GOALS_ATTR_KEY+"_"+newName, remove);
+					
+					String parentPath = MenuItemUtils.getSelectedGroupParentPath(state);
+					
+					MenuItemUtils.setSelectedGroupPath(state, parentPath+Constants.STATE_ATTR_PATH_DELIMITER+newName);
+					MenuItemUtils.setSelectedGroupName(state, newName);
+					found = true;
+				}
 			}
 		}
-		
+
 		return found;
 	}
 }

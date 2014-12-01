@@ -2,6 +2,7 @@ package com.haxwell.disposableIncomeScheduler.beans;
 
 import static org.mockito.Mockito.*;	
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -29,6 +30,26 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 	}
 
 	@Test
+	public void testFoo2() {
+		ChangeSelectedGroupNameMenuItemHandler sut = new ChangeSelectedGroupNameMenuItemHandler();
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn("");
+		
+		sut.setInputGetter(mockedInputGetter);
+		
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+		
+		boolean b = sut.doIt(data, state);
+		
+		assertFalse(b);
+		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
+		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith(strBathroom));
+	}
+	
+	@Test
 	public void testFoo() {
 		ChangeSelectedGroupNameMenuItemHandler sut = new ChangeSelectedGroupNameMenuItemHandler();
 		
@@ -44,14 +65,14 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 		boolean b = sut.doIt(data, state);
 		
 		assertTrue(b);
-		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals("UpstairsBathroom"));
+		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom"));
 		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith("UpstairsBathroom"));
 		
 		List<String> subgroupNamesOfAGroup = MenuItemUtils.getSubgroupNamesOfAGroup(MenuItemUtils.getParentOfSelectedGroup(data, state));
 		
 		boolean found = false;
 		for (int i = 0; !found && i< subgroupNamesOfAGroup.size(); i++) {
-			found = subgroupNamesOfAGroup.get(i).equals("UpstairsBathroom");
+			found = subgroupNamesOfAGroup.get(i).equals(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom");
 		}
 		
 		assertTrue(found);
