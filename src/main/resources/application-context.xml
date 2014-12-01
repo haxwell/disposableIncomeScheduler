@@ -42,6 +42,7 @@
 				<ref bean="AddAGroupMenuItemHandlerProvider"/>
 				<ref bean="EditCurrentGroupMenuItemHandlerProvider"/>
 				<ref bean="RemoveSelectedGroupMenuItemHandlerProvider"/>
+				<ref bean="ListGoalsMenuItemHandlerProvider"/>
 				<ref bean="AddAGoalMenuItemHandlerProvider"/>
 				<ref bean="RemoveAGoalMenuItemHandlerProvider"/>
 				<ref bean="EditAGoalMenuItemHandlerProvider"/>
@@ -74,6 +75,9 @@
 	</bean>
 	
 	<bean id="EditAGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.EditAGoalMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ListGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListGoalsMenuItemHandlerProvider">
 	</bean>
 
 	<bean id="ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider">
