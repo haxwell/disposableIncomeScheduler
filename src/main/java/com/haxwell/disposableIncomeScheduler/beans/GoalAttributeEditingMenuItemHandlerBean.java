@@ -17,6 +17,7 @@ public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean
 		
 		map.put(Constants.DESCRIPTION, Constants.DESCRIPTION_JSON);
 		map.put(Constants.PRICE, Constants.PRICE_JSON);
+		map.put(Constants.PREVIOUS_SAVED_AMT, Constants.PREVIOUS_SAVED_AMT_JSON);
 		map.put(Constants.HAPPINESS_IMMEDIACY, Constants.HAPPINESS_IMMEDIACY_JSON);
 		map.put(Constants.UTILITY_IMMEDIACY, Constants.UTILITY_IMMEDIACY_JSON);
 		map.put(Constants.HAPPINESS_LENGTH, Constants.HAPPINESS_LENGTH_JSON);
@@ -30,6 +31,7 @@ public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean
 		Map<String, Validator> validatorMap = new HashMap<>();
 		validatorMap.put(Constants.DESCRIPTION, new Validator());
 		validatorMap.put(Constants.PRICE, new PriceValidator());
+		validatorMap.put(Constants.PREVIOUS_SAVED_AMT, new PriceValidator());
 		validatorMap.put(Constants.HAPPINESS_IMMEDIACY, new HappinessUtilityValueValidator());
 		validatorMap.put(Constants.UTILITY_IMMEDIACY, new HappinessUtilityValueValidator());
 		validatorMap.put(Constants.HAPPINESS_LENGTH, new HappinessUtilityValueValidator());
@@ -42,6 +44,7 @@ public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean
 		LinkedList<String> keys = new LinkedList<>();
 		keys.add(Constants.DESCRIPTION);
 		keys.add(Constants.PRICE);
+		keys.add(Constants.PREVIOUS_SAVED_AMT);
 		keys.add(Constants.HAPPINESS_IMMEDIACY);
 		keys.add(Constants.UTILITY_IMMEDIACY);
 		keys.add(Constants.HAPPINESS_LENGTH);
