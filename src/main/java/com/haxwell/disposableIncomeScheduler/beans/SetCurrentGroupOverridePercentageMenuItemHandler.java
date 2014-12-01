@@ -18,7 +18,7 @@ public class SetCurrentGroupOverridePercentageMenuItemHandler extends MenuItemHa
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 		
-		JSONObject op = (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON);
+		JSONObject op = MenuItemUtils.getOverridingPercentages(data);
 		
 		// check to see if their is an overriding percentage set on a sibling group
 		List<JSONObject> siblingsOfSelectedGroup = MenuItemUtils.getSiblingsOfSelectedGroup(data, state);

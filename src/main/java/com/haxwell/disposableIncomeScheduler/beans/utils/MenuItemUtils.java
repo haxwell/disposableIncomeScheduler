@@ -439,5 +439,13 @@ public class MenuItemUtils {
 		
 		return getSubgroups(arr, list);
 	}
+	
+	public static JSONObject getOverridingPercentages(JSONObject data) {
+		JSONObject rtn = (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON);
+		
+		if (rtn == null) rtn = new JSONObject();
+		
+		return rtn;
+	}
 
 }

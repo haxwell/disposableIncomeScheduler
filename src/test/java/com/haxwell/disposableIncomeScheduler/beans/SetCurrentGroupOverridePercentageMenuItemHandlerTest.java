@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.InputGetter;
 import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class SetCurrentGroupOverridePercentageMenuItemHandlerTest extends JSONDataBasedTest {
 
@@ -39,7 +40,7 @@ public class SetCurrentGroupOverridePercentageMenuItemHandlerTest extends JSONDa
 		
 		sut.setInputGetter(mockedInputGetter);
 		
-		JSONObject op = (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON);
+		JSONObject op = MenuItemUtils.getOverridingPercentages(data);
 		
 		assertTrue(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
 		

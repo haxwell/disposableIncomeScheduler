@@ -117,7 +117,7 @@ public class Calculator {
 		
 		JSONObject rtn = buildJSONWeightObject(rootElement, dateArr);
 		
-		rtn = addGroupWeightsToJSONWeightObject(rtn, (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON));
+		rtn = addGroupWeightsToJSONWeightObject(rtn, MenuItemUtils.getOverridingPercentages(data));
 		
 		rtn = applyOverridingPercentagesToJSONWeightObject(rtn);
 		
