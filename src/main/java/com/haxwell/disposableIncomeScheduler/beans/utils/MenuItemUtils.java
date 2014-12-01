@@ -211,6 +211,9 @@ public class MenuItemUtils {
 	}
 	
 	public static void setSelectedGroupName(JSONObject state, String groupName) {
+		if (!groupName.startsWith(Constants.GOALS_ATTR_KEY+"_"))
+			groupName = Constants.GOALS_ATTR_KEY+"_"+groupName;
+		
 		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
 	}
 	
