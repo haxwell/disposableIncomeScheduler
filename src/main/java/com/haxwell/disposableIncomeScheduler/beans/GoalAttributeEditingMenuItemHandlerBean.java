@@ -2,6 +2,8 @@ package com.haxwell.disposableIncomeScheduler.beans;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -94,7 +96,12 @@ public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
 			try {
-				sdf.parse(str);
+				Date parse = sdf.parse(str);
+				
+				Calendar cal = Calendar.getInstance();
+				if (parse.before(cal.getTime()))
+					str = "";
+				
 			} catch (ParseException e) {
 				str = "";
 			}
