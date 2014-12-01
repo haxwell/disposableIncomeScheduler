@@ -442,6 +442,10 @@ public class MenuItemUtils {
 		return getSubgroups(arr, list);
 	}
 	
+	public static void setOverridingPercentages(JSONObject data, JSONObject overrides) {
+		data.put(Constants.OVERRIDING_PERCENTAGE_AMT_JSON, overrides);
+	}
+	
 	public static JSONObject getOverridingPercentages(JSONObject data) {
 		JSONObject rtn = (JSONObject)data.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON);
 		

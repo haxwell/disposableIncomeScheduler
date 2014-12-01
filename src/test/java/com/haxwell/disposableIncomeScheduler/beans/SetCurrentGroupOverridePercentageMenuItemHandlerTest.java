@@ -46,7 +46,34 @@ public class SetCurrentGroupOverridePercentageMenuItemHandlerTest extends JSONDa
 		
 		sut.doIt(data, state);
 		
+		op = MenuItemUtils.getOverridingPercentages(data);
+		
 		assertFalse(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
 		assertTrue(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strOutside));
+	}
+
+	@Test
+	public void testFoo_NoPreviouslyExistingOverride() {
+		SetCurrentGroupOverridePercentageMenuItemHandler sut = new SetCurrentGroupOverridePercentageMenuItemHandler();
+		
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn("0.75");
+		
+		sut.setInputGetter(mockedInputGetter);
+		
+		JSONObject op = MenuItemUtils.getOverridingPercentages(data);
+		
+		assertTrue(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
+		
+		sut.doIt(data, state);
+		
+		op = MenuItemUtils.getOverridingPercentages(data);
+		
+		assertTrue(op.containsKey(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
+		assertTrue(op.get(Constants.GOALS_ATTR_KEY+"_"+strBathroom).equals("0.75"));
 	}
 }

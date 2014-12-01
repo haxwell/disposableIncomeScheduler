@@ -45,6 +45,7 @@ public class SetCurrentGroupOverridePercentageMenuItemHandler extends MenuItemHa
 		JSONObject weights = Calculator.getWeights(data);
 		
 		JSONArray selectedGroupWeights = MenuItemUtils.getSelectedGroup(weights, state);
+		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
 		
 		String currentWeight = null;
 		Iterator<Object> iterator1 = selectedGroupWeights.iterator();
@@ -56,11 +57,10 @@ public class SetCurrentGroupOverridePercentageMenuItemHandler extends MenuItemHa
 			}
 		}
 		
-		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
-		
-		if (currentWeight != null)
+		if (currentWeight != null) {
 			System.out.println("\nThe current percentage weight for [" + selectedGroupName + "] is " + currentWeight);
-		
+		}
+
 		System.out.print("Enter a new weight for " + selectedGroupName + " > ");
 		String newWeight = getInputGetter().readInput();
 		
@@ -68,12 +68,18 @@ public class SetCurrentGroupOverridePercentageMenuItemHandler extends MenuItemHa
 			Double d = Double.parseDouble(newWeight);
 			d = Calculator.getTwoDecimalPlaceDouble(d);
 			
-			if (foundStr != null)
-				op.remove(foundStr);
-			
-			op.put(selectedGroupName, d);
-			
-			rtn = true;
+			if (d < 1) {
+				if (foundStr != null)
+					op.remove(foundStr);
+				
+				op.put(selectedGroupName, d+"");
+				
+				MenuItemUtils.setOverridingPercentages(data, op);
+				
+				rtn = true;
+			} else {
+				System.out.println("\nThe value you enter must be below 1.0");
+			}
 		} catch (NumberFormatException nfe) {
 			
 		}
