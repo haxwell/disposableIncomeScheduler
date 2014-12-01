@@ -1,6 +1,7 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
-import static org.junit.Assert.assertTrue;		
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -24,6 +25,31 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	@After
 	public void teardown() {
 		
+	}
+	
+	@Test
+	public void testSetSelectedGroupName_withoutPrefix() {
+		MenuItemUtils.initializeState(state);
+		
+		MenuItemUtils.setSelectedGroupName(state, "foo");
+		
+		String str = MenuItemUtils.getSelectedGroupName(state);
+		
+		assertTrue(str.startsWith(Constants.GOALS_ATTR_KEY+"_"));
+		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_foo"));
+	}
+	
+	@Test
+	public void testSetSelectedGroupName_withPrefix() {
+		MenuItemUtils.initializeState(state);
+		
+		MenuItemUtils.setSelectedGroupName(state, Constants.GOALS_ATTR_KEY+"_"+"foo");
+		
+		String str = MenuItemUtils.getSelectedGroupName(state);
+		
+		assertTrue(str.startsWith(Constants.GOALS_ATTR_KEY+"_"));
+		assertFalse(str.startsWith(Constants.GOALS_ATTR_KEY+"_"+Constants.GOALS_ATTR_KEY));
+		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_foo"));
 	}
 	
 	@Test
