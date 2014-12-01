@@ -6,28 +6,22 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class Main {
 	
-	private static int count = 0;
-
 	public static void main(String[] args) {
-	
-		
-		/**
-		 * WHERE I LEFT OFF.. i think we'll need to create a MVC type structure, where the model is the JSON, along with some 
-		 * other state.. the Controller would then take the model, and determine, given the state, which MenuHandlers to return
-		 * as a collection to the View, which will then display those, and accept an input. Need to think about and create about
-		 * that idea more.
-		 */
 
-		
 		/**
-		 * WILO.. the controller has been created, processor now calls it in a loop.. need to create more handlerProviders which
-		 * check the state and the data to see if they can present their menu option, and fill out/create more handlers which 
-		 * actually modify the data.
+		 * WILO: Need to add functionality for Expenses, and Short Term Goals.. Expenses are items paid monthly. There should be a 
+		 * title and price for each one. STGs, have a title, amount saved per month, and total amt saved. Need menu options to add 
+		 * an expense, remove an expense, add an STG, edit an STG, remove an STG, and reset an STG (when its money is spent, but the STG should
+		 * stay for next month).
+		 * 
+		 * Need to add functionality to list a report, which should take into account the date, and therefore which check of the month
+		 * has been deposited already. It should show how much of the money in the account is claimed by each expense and STG, and 
+		 * how the remaining money is spread over the long term goals. 
+		 * 
+		 * Need to add a starting date to the JSON file, a date of first paycheck, so a utility can then determine when the next check
+		 * is, given the amtPerPeriod variable, and therefore which check of the month has already been deposited, given the current date.
+		 * 
 		 */
-		
-		// WILO : Spring taking a long time to load, and this shouldn't need an internet connection. get those files, and store
-		//  them locally. reference them locally. .. Other than that, menuitemutils is being built out, can get subgroups, and 
-		//  goals of groups now.. better understanding how the data model is working, and will be accessed.
 		
 		JSONObject state = new JSONObject();
 		JSONObject obj = DataFileManager.read(args[0]); // arg[0] = path to json data file
