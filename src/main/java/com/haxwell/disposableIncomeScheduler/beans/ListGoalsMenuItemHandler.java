@@ -1,8 +1,5 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import java.util.LinkedList;
-import java.util.Map;
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -10,10 +7,6 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class ListGoalsMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
-	LinkedList<String> keys = getListOfKeys();
-	Map<String, Validator> validatorMap = getValidatorMap();
-	Map<String, String> displayToJSONMap = getMapOfDisplayNamesToJSONFieldNames();
-	
 	public String getMenuText() {
 		return "List All Goals";
 	}

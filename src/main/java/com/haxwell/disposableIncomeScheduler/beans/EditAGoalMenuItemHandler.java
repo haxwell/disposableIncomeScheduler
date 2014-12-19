@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.validators.Validator;
 
 public class EditAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
