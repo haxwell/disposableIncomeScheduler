@@ -1,6 +1,7 @@
 package com.haxwell.disposableIncomeScheduler;
 
 import net.minidev.json.JSONObject;
+import net.minidev.json.parser.ParseException;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
@@ -24,7 +25,15 @@ public class Main {
 		 */
 		
 		JSONObject state = new JSONObject();
-		JSONObject obj = DataFileManager.read(args[0]); // arg[0] = path to json data file
+		JSONObject obj = null;
+		
+		try {
+			obj = DataFileManager.read(args[0]); // arg[0] = path to json data file
+		}
+		catch (ParseException pe) {
+			pe.printStackTrace();
+			return;
+		}
 		
 		MenuItemUtils.initializeState(state);
 		
