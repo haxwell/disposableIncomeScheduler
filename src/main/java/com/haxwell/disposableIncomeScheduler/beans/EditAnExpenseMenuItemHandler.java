@@ -17,6 +17,7 @@ public class EditAnExpenseMenuItemHandler extends GoalAttributeEditingMenuItemHa
 		return "Edit An Expense";
 	}
 	
+	// TODO: This and EditAShortTermGoal are very similar.. refactor
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 		JSONArray arr = MenuItemUtils.getExpenses(data);
@@ -52,7 +53,7 @@ public class EditAnExpenseMenuItemHandler extends GoalAttributeEditingMenuItemHa
 			}
 		}
 		else
-			System.out.println("\nNo Items to Remove!\n");
+			System.out.println("\nNo Items to Edit!\n");
 		
 		return rtn;
 	}
