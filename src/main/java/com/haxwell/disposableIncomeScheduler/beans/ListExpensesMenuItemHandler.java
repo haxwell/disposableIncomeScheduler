@@ -16,11 +16,16 @@ public class ListExpensesMenuItemHandler extends GoalAttributeEditingMenuItemHan
 		boolean rtn = false;
 		JSONArray arr = MenuItemUtils.getExpenses(data);
 		
+		if (arr.size() > 0)
+			System.out.println("Expenses\n-------------");
+		
 		// list each item
 		int count = 0;
 		for (; count < arr.size(); count++) {
-			String description = ((JSONObject)arr.get(count)).get(Constants.DESCRIPTION_JSON)+"";
-			System.out.println(count+1 + ". " + description);
+			JSONObject jobj = (JSONObject)arr.get(count);
+			String description = jobj.get(Constants.DESCRIPTION_JSON)+"";
+			String cost = jobj.get(Constants.PRICE_JSON)+"";
+			System.out.println(count+1 + ". " + description + "( " + cost + ")");
 		}
 		
 		System.out.println("-------\n");
