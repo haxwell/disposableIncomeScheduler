@@ -45,4 +45,6 @@ public class Constants {
 	
 	public static final String PERIODIC_AMT_HAS_BEEN_APPLIED = "periodicAmtHasBeenApplied";
 
+	public static final Object EXPENSES_JSON = "expenses";
+
 }

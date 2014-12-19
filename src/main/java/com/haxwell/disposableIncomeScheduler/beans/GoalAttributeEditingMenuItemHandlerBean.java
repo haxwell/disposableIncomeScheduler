@@ -1,14 +1,14 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.validators.DateNeededValueValidator;
+import com.haxwell.disposableIncomeScheduler.validators.HappinessUtilityValueValidator;
+import com.haxwell.disposableIncomeScheduler.validators.PriceValidator;
+import com.haxwell.disposableIncomeScheduler.validators.Validator;
 
 public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean {
 
@@ -51,65 +51,5 @@ public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean
 		keys.add(Constants.UTILITY_LENGTH);
 		keys.add(Constants.DATE_NEEDED);
 		return keys;
-	}
-	
-	protected class Validator {
-		public String getValidValue(String str) {
-			return str;
-		}
-	}
-	
-	protected class PriceValidator extends Validator {
-		public String getValidValue(String str) {
-			try {
-				int i = Integer.parseInt(str);
-
-				if (i < 1)
-					str ="1";
-			}
-			catch (NumberFormatException nfe)
-			{
-				str = "1";
-			}
-			
-			return str;
-		}
-	}
-	
-	protected class HappinessUtilityValueValidator extends Validator {
-		public String getValidValue(String str) {
-			String rtn = str; 
-			
-			try {
-				int i = Integer.parseInt(str);
-				
-				if (i < 1) rtn = "1";
-				else if (i > 25) rtn = "25";
-			}
-			catch (NumberFormatException nfe) {
-				rtn = "1";
-			}
-			
-			return rtn;
-		}
-	}
-
-	protected class DateNeededValueValidator extends Validator {
-		public String getValidValue(String str) {
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-
-			try {
-				Date parse = sdf.parse(str);
-				
-				Calendar cal = Calendar.getInstance();
-				if (parse.before(cal.getTime()))
-					str = "";
-				
-			} catch (ParseException e) {
-				str = "";
-			}
-			
-			return str;
-		}
 	}
 }

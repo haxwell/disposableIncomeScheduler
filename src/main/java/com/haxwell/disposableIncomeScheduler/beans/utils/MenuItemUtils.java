@@ -454,4 +454,7 @@ public class MenuItemUtils {
 		return rtn;
 	}
 
+	public static JSONArray getExpenses(JSONObject data) {
+		return (JSONArray)data.get(Constants.EXPENSES_JSON);
+	}
 }

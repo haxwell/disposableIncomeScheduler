@@ -46,6 +46,10 @@
 				<ref bean="AddAGoalMenuItemHandlerProvider"/>
 				<ref bean="RemoveAGoalMenuItemHandlerProvider"/>
 				<ref bean="EditAGoalMenuItemHandlerProvider"/>
+				<ref bean="AddAnExpenseMenuItemHandlerProvider"/>
+				<ref bean="EditAnExpenseMenuItemHandlerProvider"/>
+				<ref bean="RemoveAnExpenseMenuItemHandlerProvider"/>
+				<ref bean="ListExpensesMenuItemHandlerProvider"/>
 				<ref bean="EditCalculationVariablesMenuItemHandlerProvider"/>
 				<ref bean="ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider"/>
 				<ref bean="ListTheScheduleMenuItemHandlerProvider"/>
@@ -87,6 +91,18 @@
 	</bean>
 
 	<bean id="ListTheScheduleMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListTheScheduleMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="AddAnExpenseMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.AddAnExpenseMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="EditAnExpenseMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.EditAnExpenseMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="RemoveAnExpenseMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.RemoveAnExpenseMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ListExpensesMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListExpensesMenuItemHandlerProvider">
 	</bean>
 
 </beans>
