@@ -28,6 +28,16 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	}
 	
 	@Test
+	public void testGetExpenses_Populated() {
+		
+	}
+	
+	@Test
+	public void testGetExpenses_Empty() {
+		// TODO: test when 'nonexistent' needed too?
+	}
+	
+	@Test
 	public void testSetSelectedGroupName_withoutPrefix() {
 		MenuItemUtils.initializeState(state);
 		
