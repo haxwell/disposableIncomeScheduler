@@ -29,12 +29,9 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	
 	@Test
 	public void testGetExpenses_Populated() {
+		JSONArray expenses = MenuItemUtils.getExpenses(data);
 		
-	}
-	
-	@Test
-	public void testGetExpenses_Empty() {
-		// TODO: test when 'nonexistent' needed too?
+		assertTrue(expenses.size() == 2);
 	}
 	
 	@Test
