@@ -12,6 +12,7 @@ public class MenuItemHandlerBean {
 	List<MenuItemHandlerBean> children;
 	
 	InputGetter inputGetter;
+	Println println;
 	
 	/**
 	 * 
@@ -45,5 +46,18 @@ public class MenuItemHandlerBean {
 	
 	public void setInputGetter(InputGetter ig) {
 		inputGetter = ig;
+	}
+	
+	public Println getPrintlner() {
+		Println rtn = println;
+		
+		if (rtn == null)
+			rtn = new Println();
+		
+		return rtn;
+	}
+	
+	public void setPrintlner(Println p) {
+		println = p; 
 	}
 }
