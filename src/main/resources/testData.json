@@ -1,6 +1,34 @@
 {
     "periodLength": "14",
     "amountSavedPerPeriod": "500",
+    "expenses" : [
+	    {
+			"price" : "1025",
+			"description" : "mortgage"
+		},
+		{
+			"price":"112",
+			"description" : "car insurance"
+		}
+    ],
+    "shortTermGoals" : [
+    	{
+    		"totalAmountSaved":"0",
+    		"amountSavedPerPeriod":"150",
+    		"description":"groceries"
+    			
+    	},
+    	{
+    		"totalAmountSaved":"0",
+    		"amountSavedPerPeriod":"120",
+    		"description":"gas"
+    	},
+    	{
+    		"totalAmountSaved":"0",
+    		"amountSavedPerPeriod":"75",
+    		"description":"clothing"
+    	}
+    ],
     "goals_rootGroup": [
         {
             "goals_realEstate": [
