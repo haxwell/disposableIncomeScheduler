@@ -50,6 +50,10 @@
 				<ref bean="EditAnExpenseMenuItemHandlerProvider"/>
 				<ref bean="RemoveAnExpenseMenuItemHandlerProvider"/>
 				<ref bean="ListExpensesMenuItemHandlerProvider"/>
+				<ref bean="AddAShortTermGoalMenuItemHandlerProvider"/>
+				<ref bean="EditAShortTermGoalMenuItemHandlerProvider"/>
+				<ref bean="RemoveAShortTermGoalMenuItemHandlerProvider"/>
+				<ref bean="ListShortTermGoalsMenuItemHandlerProvider"/>
 				<ref bean="EditCalculationVariablesMenuItemHandlerProvider"/>
 				<ref bean="ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider"/>
 				<ref bean="ListTheScheduleMenuItemHandlerProvider"/>
@@ -103,6 +107,18 @@
 	</bean>
 
 	<bean id="ListExpensesMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListExpensesMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="AddAShortTermGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.AddAShortTermGoalMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="EditAShortTermGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.EditAShortTermGoalMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="RemoveAShortTermGoalMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.RemoveAShortTermGoalMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ListShortTermGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListShortTermGoalsMenuItemHandlerProvider">
 	</bean>
 
 </beans>

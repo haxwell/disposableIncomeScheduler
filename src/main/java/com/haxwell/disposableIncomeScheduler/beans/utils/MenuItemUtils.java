@@ -457,4 +457,38 @@ public class MenuItemUtils {
 	public static JSONArray getExpenses(JSONObject data) {
 		return (JSONArray)data.get(Constants.EXPENSES_JSON);
 	}
+	
+	public static JSONObject getExpense(JSONObject data, String name) {
+		JSONArray arr = getExpenses(data);
+		JSONObject rtn = null;
+		
+		for (int i = 0; rtn == null && i < arr.size(); i++) {
+			JSONObject obj = (JSONObject)arr.get(i);
+			
+			if (obj.get(Constants.DESCRIPTION_JSON).equals(name)) {
+				rtn = obj;
+			}
+		}
+		
+		return rtn;
+	}
+
+	public static JSONArray getShortTermGoals(JSONObject data) {
+		return (JSONArray)data.get(Constants.SHORT_TERM_GOALS_JSON);
+	}
+	
+	public static JSONObject getShortTermGoal(JSONObject data, String name) {
+		JSONArray arr = getShortTermGoals(data);
+		JSONObject rtn = null;
+		
+		for (int i = 0; rtn == null && i < arr.size(); i++) {
+			JSONObject obj = (JSONObject)arr.get(i);
+			
+			if (obj.get(Constants.DESCRIPTION_JSON).equals(name)) {
+				rtn = obj;
+			}
+		}
+		
+		return rtn;
+	}
 }

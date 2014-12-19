@@ -41,6 +41,45 @@ public class JSONDataBasedTest {
 		
 		JSONArray arr = new JSONArray();
 
+		JSONObject eobj = new JSONObject();
+		eobj.put(Constants.DESCRIPTION_JSON, "mortgage");
+		eobj.put(Constants.PRICE_JSON, "1025");
+		
+		arr.add(eobj);
+		
+		eobj = new JSONObject();
+		eobj.put(Constants.DESCRIPTION_JSON, "cellphone");
+		eobj.put(Constants.PRICE_JSON, "100");
+		
+		arr.add(eobj);
+		
+		obj.put(Constants.EXPENSES_JSON, arr);
+		
+		arr = new JSONArray();
+		
+		JSONObject stgobj = new JSONObject();
+		stgobj.put(Constants.DESCRIPTION_JSON, "clothing");
+		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
+		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "75");
+		
+		arr.add(stgobj);
+		
+		stgobj = new JSONObject();
+		stgobj.put(Constants.DESCRIPTION_JSON, "groceries");
+		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
+		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "150");
+		
+		arr.add(stgobj);
+		
+		stgobj = new JSONObject();
+		stgobj.put(Constants.DESCRIPTION_JSON, "gas");
+		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
+		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "120");
+		
+		arr.add(stgobj);
+
+		obj.put(Constants.SHORT_TERM_GOALS_JSON, arr);
+		
 		JSONObject iobj = new JSONObject();
 		iobj.put(getGoalGroupName(strBathroom), "0.15");
 //		iobj.put(getGoalGroupName(strOutside), "0.20");
