@@ -9,11 +9,12 @@ import java.io.IOException;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
+import net.minidev.json.parser.ParseException;
 
 public class DataFileManager {
 
 	// reads JSON from a text file, returns a JSONObject or collection..
-	public static JSONObject read(String filepath) {
+	public static JSONObject read(String filepath) throws ParseException {
 		JSONObject rtn = new JSONObject();
 
 		File file = new File(filepath);
@@ -32,7 +33,7 @@ public class DataFileManager {
 			e.printStackTrace();
 		}
 		
-		rtn = (JSONObject)JSONValue.parse(sb.toString());
+		rtn = (JSONObject)JSONValue.parseWithException(sb.toString());
 		
 		return rtn;
 	}
