@@ -35,6 +35,17 @@ public class PaycheckUtils {
 		return rtn;
 	}
 	
+	public String getPaycheckNumberAsString(JSONObject data, Date date) {
+		int pn = getPaycheckNumber(data, date);
+		String rtn = "";
+		
+		if (pn == 1) rtn = "1st";
+		if (pn == 2) rtn = "2nd";
+		if (pn == 3) rtn = "3rd";
+		
+		return rtn;
+	}
+	
 	public Date getMostRecentPaydate(JSONObject data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Date rtn = null;
