@@ -18,6 +18,7 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 		LinkedList<String> rtn = new LinkedList<>();
 		
 		rtn.add(Constants.PERIOD_LENGTH);
+		rtn.add(Constants.AMT_PAID_PER_PERIOD);
 		rtn.add(Constants.AMT_SAVED_PER_PERIOD);
 		rtn.add(Constants.TOTAL_IN_THE_POT);
 		
@@ -28,6 +29,7 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 		Map<String, String> map = new HashMap<>();
 		
 		map.put(Constants.PERIOD_LENGTH, Constants.PERIOD_LENGTH_JSON);
+		map.put(Constants.AMT_PAID_PER_PERIOD, Constants.AMT_PAID_PER_PERIOD_JSON);
 		map.put(Constants.AMT_SAVED_PER_PERIOD, Constants.AMT_SAVED_PER_PERIOD_JSON);
 		map.put(Constants.TOTAL_IN_THE_POT, Constants.TOTAL_IN_THE_POT_JSON);
 		
@@ -49,13 +51,13 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 		String choice = "";
 		
 		do {
-			System.out.println();
+			getPrintlner().println("");
 			
 			count = 0;
 			for (String str : attrList)
-				System.out.println(++count + ". " + str + " = " + data.get(displayToJSONMap.get(str)));
+				getPrintlner().println(++count + ". " + str + " = " + data.get(displayToJSONMap.get(str)));
 			
-			choice = System.console().readLine();
+			choice = getInputGetter().readInput();
 			
 			if (choice != null && !choice.equals("")) {
 				boolean NaN = false;
@@ -68,10 +70,10 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 				}
 				
 				if (!NaN) {
-					System.out.println();
-					System.out.print("New value: ");
+					getPrintlner().println("");
+					getPrintlner().print("New value: ");
 					
-					String val = System.console().readLine();
+					String val = getInputGetter().readInput();
 					
 					try {
 						Integer.parseInt(val);
@@ -79,7 +81,7 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 						rtn = true;
 					}
 					catch (NumberFormatException nfe) {
-						System.out.println("\nNot A Number!\n");
+						getPrintlner().println("\nNot A Number!\n");
 					}
 				}
 			}

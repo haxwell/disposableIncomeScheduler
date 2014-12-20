@@ -21,6 +21,8 @@ public class Constants {
 	public static final String OVERRIDING_PERCENTAGE_AMT_JSON = "overridingPercentageAmount";
 	public final static String PERIOD_LENGTH = "Period Length in Days";
 	public final static String PERIOD_LENGTH_JSON = "periodLength";
+	public final static String AMT_PAID_PER_PERIOD = "Amount Paid per Period";
+	public final static String AMT_PAID_PER_PERIOD_JSON = "amountPaidPerPeriod";
 	public final static String AMT_SAVED_PER_PERIOD = "Amount Saved per Period";
 	public final static String AMT_SAVED_PER_PERIOD_JSON = "amountSavedPerPeriod";
 	public final static String TOTAL_IN_THE_POT = "Total in the Pot";
