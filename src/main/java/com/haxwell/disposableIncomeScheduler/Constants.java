@@ -48,5 +48,7 @@ public class Constants {
 	public static final String EXPENSES_JSON = "expenses";
 	public static final String TOTAL_AMOUNT_SAVED_JSON = "totalAmountSaved";
 	public static final String SHORT_TERM_GOALS_JSON = "shortTermGoals";
-
+	public static final String MOST_RECENT_PAYDATE = "mostRecentPaydate";
+	public static final String MOST_RECENT_PAYDATE_PERIOD_NUMBER = "mostRecentPaydatePeriodNumber";
+	
 }

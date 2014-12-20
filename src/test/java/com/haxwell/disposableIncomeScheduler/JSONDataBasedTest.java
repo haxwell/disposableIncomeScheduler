@@ -38,6 +38,8 @@ public class JSONDataBasedTest {
 		
 		obj.put(Constants.PERIOD_LENGTH_JSON, "14");
 		obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "500");
+		obj.put(Constants.MOST_RECENT_PAYDATE, "12/19/2014");
+		obj.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "2");
 		
 		JSONArray arr = new JSONArray();
 

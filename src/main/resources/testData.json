@@ -1,6 +1,9 @@
 {
     "periodLength": "14",
     "amountSavedPerPeriod": "500",
+    "mostRecentPaydate": "12/29/2014",
+    "mostRecentPaydatePeriodNumber":"2"
+    "totalInThePot":"1000",
     "expenses" : [
 	    {
 			"price" : "1025",
