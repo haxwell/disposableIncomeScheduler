@@ -11,34 +11,51 @@ import com.haxwell.disposableIncomeScheduler.Constants;
 
 public class PaycheckUtils {
 	
-	// Given date, get the number of the most recent paycheck in the month.
-	//
-	// So if the first paycheck date is Jan 2 2015, and the given date is
-	//  Jan 20 2015, this would return 2, because the second check was on
-	//  Jan 16 2015.
-	public static int getPaycheckNumber(JSONObject data) {
-		int[] arr = getPaycheckNumberArray(data);
-		
-		return -1;
+	int[] paycheckNumberArray = null;
+	
+	public PaycheckUtils(JSONObject data) {
+		paycheckNumberArray = getPaycheckNumberArray(data);
 	}
 	
-	public static int[] getPaycheckNumberArray(JSONObject data) {
-		final int ARRAY_SIZE = 365;
-		int[] rtn = null;
+	/**
+	 * Given a date, returns the number of the paycheck in the month that the date is being covered by
+	 */
+	public int getPaycheckNumber(JSONObject data, Date date) {
+		int rtn = -1;
+		Date mrpDate = getMostRecentPaydate(data);
 		
+		if (date.equals(mrpDate) || date.after(mrpDate)) {
+			long diff = date.getTime() - mrpDate.getTime();
+			
+			diff /= 1000 * 60 * 60 * 24;
+			
+			return paycheckNumberArray[(int)diff];
+		}
+		
+		return rtn;
+	}
+	
+	public Date getMostRecentPaydate(JSONObject data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-		Calendar cal = null;
+		Date rtn = null;
 		
 		try {
-			Date date = sdf.parse(data.get(Constants.MOST_RECENT_PAYDATE)+"");
-			
-			cal = Calendar.getInstance();
-			cal.setTime(date);
- 
+			rtn = sdf.parse(data.get(Constants.MOST_RECENT_PAYDATE)+"");
 		} catch (ParseException pe) {
 			pe.printStackTrace();
 		}
 		
+		return rtn; 
+	}
+	
+	private int[] getPaycheckNumberArray(JSONObject data) {
+		final int ARRAY_SIZE = 365;
+		int[] rtn = null;
+		Calendar cal = Calendar.getInstance();
+		Date date = getMostRecentPaydate(data);
+		
+		cal.setTime(date);
+ 
 		if (cal != null) {
 			rtn = new int[ARRAY_SIZE];
 			int periodLength = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
