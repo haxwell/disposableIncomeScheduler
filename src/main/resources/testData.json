@@ -1,9 +1,11 @@
 {
-    "periodLength": "14",
-    "amountSavedPerPeriod": "500",
-    "mostRecentPaydate": "12/29/2014",
-    "mostRecentPaydatePeriodNumber":"2"
     "totalInThePot":"1000",
+	"periodLength": "14",
+	"amountPaidPerPeriod":"2400",
+    "amountSavedPerPeriod": "500",
+    "amtSavedForRainyDay":"500",
+    "mostRecentPaydate": "12/19/2014",
+    "mostRecentPaydatePeriodNumber":"2",
     "expenses" : [
 	    {
 			"price" : "1025",
