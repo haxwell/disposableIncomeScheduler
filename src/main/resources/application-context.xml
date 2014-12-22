@@ -3,37 +3,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="MenuItemHandlers" class="com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean">
-		<property name="children">
-			<list>
-				<ref bean="AddAGoalMenuItemHandler"/>
-				<ref bean="RemoveAGoalMenuItemHandler"/>
-				<ref bean="EditAGoalMenuItemHandler"/>
-				<ref bean="EditCalculationVariablesMenuItemHandler"/>
-				<ref bean="AddThisPeriodsSavedAmountToEachEntryMenuItemHandler"/>
-				<ref bean="ListTheScheduleMenuItemHandler"/>
-			</list>
-		</property>
-	</bean>
-
-	<bean id="AddAGoalMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.AddAGoalMenuItemHandler">
-	</bean>
-
-	<bean id="RemoveAGoalMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.RemoveAGoalMenuItemHandler">
-	</bean>
-
-	<bean id="EditAGoalMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.EditAGoalMenuItemHandler">
-	</bean>
-
-	<bean id="EditCalculationVariablesMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.EditCalculationVariablesMenuItemHandler">
-	</bean>
-
-	<bean id="AddThisPeriodsSavedAmountToEachEntryMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.AddThisPeriodsSavedAmountToEachEntryMenuItemHandler">
-	</bean>
-
-	<bean id="ListTheScheduleMenuItemHandler" class="com.haxwell.disposableIncomeScheduler.beans.ListTheScheduleMenuItemHandler">
-	</bean>
-	
 	<bean id="MenuItemHandlerProviderCollection" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.MenuItemHandlerProviderCollection">
 		<property name="list">
 			<list>
@@ -57,6 +26,7 @@
 				<ref bean="EditCalculationVariablesMenuItemHandlerProvider"/>
 				<ref bean="ApplyThisPeriodsSavedAmountToGoalsMenuItemHandlerProvider"/>
 				<ref bean="ListTheScheduleMenuItemHandlerProvider"/>
+				<ref bean="DisplayTheReportMenuItemHandlerProvider"/>
 			</list>
 		</property>
 	</bean>
@@ -119,6 +89,9 @@
 	</bean>
 
 	<bean id="ListShortTermGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ListShortTermGoalsMenuItemHandlerProvider">
+	</bean>
+	
+	<bean id="DisplayTheReportMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.DisplayTheReportMenuItemHandlerProvider">
 	</bean>
 
 </beans>
