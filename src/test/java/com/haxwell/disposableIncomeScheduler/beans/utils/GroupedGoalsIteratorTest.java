@@ -36,7 +36,7 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 		List<String> list = new ArrayList<>();
 		
 		while (sut.hasNext())
-			list.add(sut.next()+"");
+			list.add(sut.next());
 		
 		assertTrue(list.size() == 11);
 		
