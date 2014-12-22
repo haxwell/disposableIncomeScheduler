@@ -8,7 +8,7 @@ import java.util.Stack;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class GroupedGoalsIterator implements Iterator {
+public class GroupedGoalsIterator implements Iterator<String> {
 
 	Stack<InnerDataObj> stack;
 	
@@ -72,7 +72,7 @@ public class GroupedGoalsIterator implements Iterator {
 	}
 
 	@Override
-	public Object next() {
+	public String next() {
 		String rtn = null;
 		
 		InnerDataObj ido = stack.peek();
