@@ -1,6 +1,6 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;	
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
