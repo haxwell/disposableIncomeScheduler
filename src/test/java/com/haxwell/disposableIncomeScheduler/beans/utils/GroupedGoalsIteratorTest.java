@@ -1,10 +1,13 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
+import static org.junit.Assert.assertTrue;	
+import static org.junit.Assert.assertFalse;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,6 +38,15 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 		while (sut.hasNext())
 			list.add(sut.next()+"");
 		
-		String str = "";
+		assertTrue(list.size() == 11);
+		
+		String expectedElements = "goals_johnathans goals, goals_12880, goals_bathroom, sink, shower, goals_outside, garage door, goals_kitchen, goals_trip to France, airfare, lodging";
+		StringTokenizer tokenizer = new StringTokenizer(expectedElements, ",");
+		int index = 0;
+		
+		while (tokenizer.hasMoreElements()) {
+			String token = tokenizer.nextToken().trim();
+			assertTrue(list.get(index++).equals(token));
+		}
 	}
 }
