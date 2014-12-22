@@ -58,7 +58,8 @@ public class ReportScreenPrinter {
 
 				total += amt;
 				
-				println.println(amt + " " + acmd.getDescription());
+				println.format("%-8d%-20s", amt, acmd.getDescription());
+				println.println();
 			}
 			
 			if (cmd instanceof SubtractCommand) {
@@ -80,7 +81,8 @@ public class ReportScreenPrinter {
 				
 				total -= amt;
 				
-				println.println(amt + " " + scmd.getDescription());
+				println.format("%-8d%-20s", amt, scmd.getDescription());
+				println.println();
 			}
 			
 			if (cmd instanceof SubtotalCommand) {
@@ -99,7 +101,8 @@ public class ReportScreenPrinter {
 					println.println("-------");
 				}
 				
-				println.println(amt + " " + scmd.getDescription());
+				println.format("%-8d%20s", amt, scmd.getDescription());
+				println.println();
 				
 				if (grp == null)
 					println.println("");

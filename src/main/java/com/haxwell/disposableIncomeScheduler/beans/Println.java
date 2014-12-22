@@ -6,7 +6,15 @@ public class Println {
 		System.out.println(str);
 	}
 	
+	public void println() {
+		System.out.println("");
+	}
+	
 	public void print(String str) {
 		System.out.print(str);
+	}
+	
+	public void format(String format, Object ... args) {
+		System.out.format(format, args);
 	}
 }
