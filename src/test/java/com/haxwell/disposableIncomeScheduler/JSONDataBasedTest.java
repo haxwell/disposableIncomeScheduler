@@ -36,7 +36,10 @@ public class JSONDataBasedTest {
 	protected void createDataAndStateObjects() {
 		JSONObject obj = new JSONObject();
 		
+		obj.put(Constants.TOTAL_IN_THE_POT_JSON, "2000");
 		obj.put(Constants.PERIOD_LENGTH_JSON, "14");
+		obj.put(Constants.AMT_PAID_PER_PERIOD_JSON, "2400");
+		obj.put(Constants.AMT_SAVED_FOR_RAINY_DAY_JSON, "500");		
 		obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "500");
 		obj.put(Constants.MOST_RECENT_PAYDATE, "12/19/2014");
 		obj.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "2");
