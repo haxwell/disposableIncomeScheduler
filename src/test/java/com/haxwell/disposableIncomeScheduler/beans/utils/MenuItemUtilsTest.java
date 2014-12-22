@@ -104,6 +104,26 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	}
 	
 	@Test
+	public void testGetSubgroupNamesOfAGroup_Arr_ExpectThreeChildren() {
+		initializeState_12880();
+		
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<String> children = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
+		
+		assertTrue(children.size() == 3);
+	}
+	
+	@Test
+	public void testGetSubgroupNamesOfAGroup_Arr_ExpectEmptySet() {
+		initializeState_Bathroom();
+		
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<String> children = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
+		
+		assertTrue(children.size() == 0);
+	}
+	
+	@Test
 	public void testGetGoalsOfAGroup_ExpectTwo() {
 		initializeState_Bathroom();
 		
@@ -122,7 +142,27 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 
 		assertTrue(goalsOfAGroup.size() == 0);
 	}
+
+	@Test
+	public void testGetGoalNamesOfAGroup_ExpectZero() {
+		initializeState_12880();
+		
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<String> goalNamesOfAGroup = MenuItemUtils.getGoalNamesOfAGroup(arr);
+
+		assertTrue(goalNamesOfAGroup.size() == 0);
+	}
 	
+	@Test
+	public void testGetGoalNamesOfAGroup_ExpectTwo() {
+		initializeState_Bathroom();
+		
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<String> goalNamesOfAGroup = MenuItemUtils.getGoalNamesOfAGroup(arr);
+
+		assertTrue(goalNamesOfAGroup.size() == 2);
+	}
+
 	@Test
 	public void testGetSelectedParentGroupName_withOneLevelPath() {
 		MenuItemUtils.initializeState(state);
@@ -180,6 +220,27 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 				Constants.GOALS_ATTR_KEY+"_"+str12880));
 	}
 	
+	@Test
+	public void testDoesGroupHaveSubgroups_whenSelectedGroupHasSubgroups() {
+		initializeState_12880();
+		
+		assertTrue(MenuItemUtils.doesGroupHaveSubgroups(MenuItemUtils.getSelectedGroup(data, state)));
+	}
+	
+	@Test
+	public void testDoesGroupHaveSubgroups_whenSelectedGroupDoesNotHaveSubgroups() {
+		initializeState_Bathroom();
+		
+		assertFalse(MenuItemUtils.doesGroupHaveSubgroups(MenuItemUtils.getSelectedGroup(data, state)));
+	}
+	
+	@Test
+	public void testDoesGroupHaveSubgroups_whenSelectedGroupIsEmpty() {
+		initializeState_Kitchen();
+		
+		assertFalse(MenuItemUtils.doesGroupHaveSubgroups(MenuItemUtils.getSelectedGroup(data, state)));
+	}
+	
 	private void initializeState_12880() {
 		MenuItemUtils.initializeState(state);
 
@@ -193,5 +254,13 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
 		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+	}
+
+	private void initializeState_Kitchen() {
+		MenuItemUtils.initializeState(state);
+
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
+		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strKitchen);
 	}
 }

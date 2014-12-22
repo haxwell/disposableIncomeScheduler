@@ -6,12 +6,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.utils.StringUtils;
 
 public class MenuItemUtils {
 
@@ -138,6 +140,10 @@ public class MenuItemUtils {
 		return rtn;
 	}
 	
+	public static List<JSONObject> getSubgroups(JSONArray arr) {
+		return getSubgroups(arr, null);
+	}
+	
 	public static List<JSONObject> getSubgroups(JSONArray arr, List<String> excludedList) {
 		ArrayList<JSONObject> rtn = new ArrayList<>();
 		
@@ -219,32 +225,25 @@ public class MenuItemUtils {
 		return groupName;
 	}
 	
-	public static boolean doesGroupHaveSubgroups(JSONObject group) {
-		boolean rtn = group.size() > 0;
-		
-		Iterator<String> iterator = group.keySet().iterator();
-		String key = iterator.next();
-		
-		rtn &= key.startsWith(Constants.GOALS_ATTR_KEY);
-		
-		return rtn;
-	}
+	public static boolean doesGroupHaveSubgroups(JSONArray group) {
+		boolean rtn = false;
 
-	public static List<String> getSubgroupNamesOfAGroup(JSONObject obj) {
-		List<String> rtn = new ArrayList<String>();
-
-		Iterator<String> iterator = obj.keySet().iterator();
-		
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-			
-			if (obj.get(key) instanceof JSONArray)
-				rtn.add(key);
+		if (group.size() > 0) {
+			JSONObject object = (JSONObject)group.get(0);
+			Set<String> keySet = object.keySet();
+	
+			// if it has subgroups, keySet should only contain one key: the subgroup name. 
+			//  Otherwise, keySet is all the keys of a goal.
+			rtn = (keySet.size() == 1);
 		}
-		
+
 		return rtn;
 	}
 	
+	public static boolean doesGroupHaveSubgroups(JSONObject obj) {
+		return obj.keySet().size() == 1;
+	}
+
 	public static LinkedList<String> getGoalsByWeight(JSONArray goals, JSONArray weights) {
 		Map<String, Double> map = new HashMap<>();
 		
@@ -399,6 +398,21 @@ public class MenuItemUtils {
 		return rtn;
 	}
 	
+	public static List<String> getSubgroupNamesOfAGroup(JSONObject obj) {
+		List<String> rtn = new ArrayList<String>();
+
+		Iterator<String> iterator = obj.keySet().iterator();
+		
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			
+			if (obj.get(key) instanceof JSONArray)
+				rtn.add(key);
+		}
+		
+		return rtn;
+	}
+	
 	public static List<String> getSubgroupNamesOfAGroup(JSONArray arr) {
 		List<String> rtn = new ArrayList<String>();
 		
@@ -410,6 +424,21 @@ public class MenuItemUtils {
 			
 			if (obj.get(key) instanceof JSONArray) 
 				rtn.add(key);
+		}
+		
+		return rtn;
+	}
+
+	public static List<String> getGoalNamesOfAGroup(JSONArray arr) {
+		List<String> rtn = new ArrayList<>();
+		
+		for (int count=0; count < arr.size(); count++) {
+			JSONObject obj = (JSONObject)arr.get(count);
+			
+			String str = (String)obj.get(Constants.DESCRIPTION_JSON);
+			
+			if (!StringUtils.isNullOrEmpty(str))
+				rtn.add(str);
 		}
 		
 		return rtn;
