@@ -344,21 +344,18 @@ public class Calculator {
 		return rtn;
 	}
 	
-	private static Double getOverridingPercentage(JSONArray sg) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	private static JSONObject buildJSONWeightObject(JSONObject element, int[] dateArr) {
 		JSONObject weights = new JSONObject();
 		
+		// get the names of the children of this group
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(element);
 		
 		if (list.size() > 0) {
 			
+			// for each of the children
 			for (int i = 0; i < list.size(); i++) {
-				String key = list.get(i);
-				JSONArray groupElements = (JSONArray)element.get(key);
+				String subgroupName = list.get(i); // get the name
+				JSONArray groupElements = (JSONArray)element.get(subgroupName); // get the group elements
 				
 				if (groupElements.size() == 0) {
 					// this is an empty group.. it has no goals or subgroups
@@ -370,34 +367,45 @@ public class Calculator {
 					obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, "0.0");
 					
 					arr.add(obj);
-					weights.put(key, arr);
+					weights.put(subgroupName, arr);
 				}
 				else {
 					int total = 0;
 					
+					// step into each of the children, recursively build the overall JSON weight object
 					for (int x=0; x < groupElements.size(); x++) {
 						JSONObject groupElement = (JSONObject)groupElements.get(x);
 						JSONObject weight = buildJSONWeightObject(groupElement, dateArr);
 						
 						JSONArray arr = null;
-						if (weights.containsKey(key))
-							arr = (JSONArray)weights.get(key);
+						if (weights.containsKey(subgroupName)) {
+							// it has more than one goal, and we've already been over it
+							// and created a weights object. Use the one we've already created
+							arr = (JSONArray)weights.get(subgroupName);
+						}
 						else {
+							// a new weights object is needed
 							arr = new JSONArray();
-							weights.put(key, arr);
+							weights.put(subgroupName, arr);
 						}
 						
+						// add the child JSON weight object to this level's....
 						arr.add(weight);
 						
-						if (weight.containsKey(Constants.WEIGHT_JSON)) // if the weights we just got are the weights for a leaf...
+						// if the weights we just got from the child are the weights for a leaf...
+						if (weight.containsKey(Constants.WEIGHT_JSON)) 
 							total += Integer.parseInt(weight.get(Constants.WEIGHT_JSON)+"");
 					}
 					
-					JSONArray arr = (JSONArray)weights.get(key);
+					JSONArray arr = (JSONArray)weights.get(subgroupName);
 					
 					for (int x=0; arr != null && x < arr.size(); x++) {
 						JSONObject obj = (JSONObject)arr.get(x);
 	
+						// the weights object has the same structure as the groups object which comes from the data file..
+						//  except the weights object has a summary JSON object with the key WEIGHT_JSON in it. This is
+						//  the total weight of the level, and is where we put the weight as a percentage (which is a portion
+						//  relative to its siblings)
 						if (obj.containsKey(Constants.WEIGHT_JSON)) {
 							Object valueObj = obj.get(Constants.WEIGHT_JSON);
 							
@@ -549,6 +557,16 @@ public class Calculator {
 		return rtn;
 	}
 	
+	/**
+	 * Calculates the number of days from now to the furthest dateNeededBy of any of the goals. Then
+	 * creates an array with that many elements in it, and spreads over all of them an even distribution
+	 * of the numbers 25 to 1. Elements at the lower end have higher numbers than the higher end of the
+	 * array. Think of the 0 element as being today, and the farthest element being the date of the 
+	 * furthest needed by date. The closer the needed by date is to today, the greater weight it has.
+	 * 
+	 * @param data
+	 * @return
+	 */
 	public static int[] getArrayToCalculateRelativeWeightOfDates(JSONObject data) {
 		int[] arr = new int[0];
 		
