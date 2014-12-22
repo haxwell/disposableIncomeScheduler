@@ -34,13 +34,13 @@
     		"description":"clothing"
     	}
     ],
-    "goals_rootGroup": [
+    "longTermGoals": [
         {
-            "goals_realEstate": [
+            "realEstate": [
                 {
-                    "goals_12880": [
+                    "12880": [
                         {
-                            "goals_outside": [
+                            "outside": [
                                 {
                                     "price": "1000",
                                     "utilityImmediacy": "13",
@@ -62,7 +62,7 @@
                             ]
                         },
                         {
-                            "goals_kitchen": [
+                            "kitchen": [
                                 {
                                     "price": "1000",
                                     "utilityImmediacy": "13",
@@ -75,7 +75,7 @@
                             ]
                         },
                         {
-                            "goals_HVAC": []
+                            "HVAC": []
                         }
                     ]
                 }

@@ -33,9 +33,7 @@ public class Constants {
 	public static final String PREVIOUS_SAVED_AMT = "Previous Saved Amount";
 	public static final String PREVIOUS_SAVED_AMT_JSON = "previousSavedAmount";
 	
-	public static final String ROOT_GOAL_GROUP_NAME = "rootGroup";
-	public static final String GROUP_NAME_ATTR_KEY = "groupName";
-	public static final String GOALS_ATTR_KEY = "goals";
+//	public static final String GROUP_NAME_ATTR_KEY = "groupName";
 	
 	public static final String STATE_ATTR_KEY_SELECTED_GROUP_NAME = "selectedGroupName";
 	public static final String STATE_ATTR_PATH_TO_SELECTED_GROUP = "pathToSelectedGroup";
@@ -52,6 +50,7 @@ public class Constants {
 	public static final String EXPENSES_JSON = "expenses";
 	public static final String TOTAL_AMOUNT_SAVED_JSON = "totalAmountSaved";
 	public static final String SHORT_TERM_GOALS_JSON = "shortTermGoals";
+	public static final String LONG_TERM_GOALS_JSON = "longTermGoals";
 	public static final String MOST_RECENT_PAYDATE = "mostRecentPaydate";
 	public static final String MOST_RECENT_PAYDATE_PERIOD_NUMBER = "mostRecentPaydatePeriodNumber";
 	

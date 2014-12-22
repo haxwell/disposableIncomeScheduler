@@ -130,7 +130,7 @@ public class JSONDataBasedTest {
 		arr = new JSONArray();
 		arr.add(johnathansGoals);
 
-		obj.put(getGoalGroupName(Constants.ROOT_GOAL_GROUP_NAME), arr);
+		obj.put(getGoalGroupName(Constants.LONG_TERM_GOALS_JSON), arr);
 		
 		data = obj;
 		state = new JSONObject();
@@ -159,7 +159,7 @@ public class JSONDataBasedTest {
 	}
 	
 	private String getGoalGroupName(String str) {
-		return Constants.GOALS_ATTR_KEY+"_"+str;
+		return /*Constants.GOALS_ATTR_KEY+"_"+*/str;
 	}
 	
 	protected void simulateSelectingAGroup(JSONObject state, String groupName) {

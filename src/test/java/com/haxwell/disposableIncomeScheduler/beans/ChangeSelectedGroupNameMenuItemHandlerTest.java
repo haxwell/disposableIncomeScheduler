@@ -32,7 +32,7 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 	}
 
 	@Test
-	public void testFoo2() {
+	public void testSelectedGroupNameIsNOTChanged() {
 		ChangeSelectedGroupNameMenuItemHandler sut = new ChangeSelectedGroupNameMenuItemHandler();
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
@@ -40,19 +40,18 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 		
 		sut.setInputGetter(mockedInputGetter);
 		
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strBathroom);
 		
 		boolean b = sut.doIt(data, state);
 		
 		assertFalse(b);
-		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
-		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith(Constants.GOALS_ATTR_KEY+"_"+strBathroom));
+		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(strBathroom));
 	}
 	
 	@Test
-	public void testFoo() {
+	public void testSelectedGroupNameIsChanged() {
 		ChangeSelectedGroupNameMenuItemHandler sut = new ChangeSelectedGroupNameMenuItemHandler();
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
@@ -60,21 +59,20 @@ public class ChangeSelectedGroupNameMenuItemHandlerTest extends JSONDataBasedTes
 		
 		sut.setInputGetter(mockedInputGetter);
 		
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strBathroom);
 		
 		boolean b = sut.doIt(data, state);
 		
 		assertTrue(b);
-		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom"));
-		assertTrue(MenuItemUtils.getSelectedGroupPath(state).endsWith(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom"));
+		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals("UpstairsBathroom"));
 		
 		List<String> subgroupNamesOfAGroup = MenuItemUtils.getSubgroupNamesOfAGroup(MenuItemUtils.getParentOfSelectedGroup(data, state));
 		
 		boolean found = false;
 		for (int i = 0; !found && i< subgroupNamesOfAGroup.size(); i++) {
-			found = subgroupNamesOfAGroup.get(i).equals(Constants.GOALS_ATTR_KEY+"_"+"UpstairsBathroom");
+			found = subgroupNamesOfAGroup.get(i).equals("UpstairsBathroom");
 		}
 		
 		assertTrue(found);

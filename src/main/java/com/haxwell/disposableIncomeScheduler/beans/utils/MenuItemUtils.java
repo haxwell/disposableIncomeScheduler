@@ -176,7 +176,7 @@ public class MenuItemUtils {
 	}
 
 	public static String getRootGroupName() {;
-		return Constants.GOALS_ATTR_KEY+"_"+Constants.ROOT_GOAL_GROUP_NAME;
+		return Constants.LONG_TERM_GOALS_JSON;
 	}
 
 	public static void setSelectedGroupPath(JSONObject state, String path) {
@@ -217,9 +217,6 @@ public class MenuItemUtils {
 	}
 	
 	public static String setSelectedGroupName(JSONObject state, String groupName) {
-		if (!groupName.startsWith(Constants.GOALS_ATTR_KEY+"_"))
-			groupName = Constants.GOALS_ATTR_KEY+"_"+groupName;
-		
 		state.put(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME, groupName);
 		
 		return groupName;

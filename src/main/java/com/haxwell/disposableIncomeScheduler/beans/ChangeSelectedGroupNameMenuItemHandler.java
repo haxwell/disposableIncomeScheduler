@@ -29,7 +29,7 @@ public class ChangeSelectedGroupNameMenuItemHandler extends MenuItemHandlerBean 
 				
 				if (jo.containsKey(selectedGroupName)) {
 					Object remove = jo.remove(selectedGroupName);
-					jo.put(Constants.GOALS_ATTR_KEY+"_"+newName, remove);
+					jo.put(newName, remove);
 					
 					String parentPath = MenuItemUtils.getSelectedGroupParentPath(state);
 					

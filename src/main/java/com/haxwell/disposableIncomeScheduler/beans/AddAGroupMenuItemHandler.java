@@ -35,7 +35,7 @@ public class AddAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandle
 
 		if (input != null && input.length() > 0) {
 			JSONObject obj = new JSONObject();
-			obj.put(Constants.GOALS_ATTR_KEY+"_"+input, new JSONArray());
+			obj.put(input, new JSONArray());
 			arr.add(obj);
 			
 			rtn = true;

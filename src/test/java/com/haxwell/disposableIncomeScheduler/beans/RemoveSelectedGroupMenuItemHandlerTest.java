@@ -28,16 +28,16 @@ public class RemoveSelectedGroupMenuItemHandlerTest extends JSONDataBasedTest {
 	public void testRemoveSelectedGroup_andPathAndSelectedGroupAreCorrectlyUpdated_ThreeLevels() {
 		RemoveSelectedGroupMenuItemHandler sut = new RemoveSelectedGroupMenuItemHandler();
 		
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
 		
 		String path12880 = MenuItemUtils.getSelectedGroupPath(state);
 		
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+		simulateSelectingAGroup(state, strBathroom);
 		
 		sut.doIt(data, state);
 		
-		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(Constants.GOALS_ATTR_KEY+"_"+str12880));
+		assertTrue(MenuItemUtils.getSelectedGroupName(state).equals(str12880));
 		assertTrue(MenuItemUtils.getSelectedGroupPath(state).equals(path12880));
 	}
 }

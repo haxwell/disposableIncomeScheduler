@@ -40,7 +40,7 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 		
 		assertTrue(list.size() == 11);
 		
-		String expectedElements = "goals_johnathans goals, goals_12880, goals_bathroom, sink, shower, goals_outside, garage door, goals_kitchen, goals_trip to France, airfare, lodging";
+		String expectedElements = "johnathans goals, 12880, bathroom, sink, shower, outside, garage door, kitchen, trip to France, airfare, lodging";
 		StringTokenizer tokenizer = new StringTokenizer(expectedElements, ",");
 		int index = 0;
 		

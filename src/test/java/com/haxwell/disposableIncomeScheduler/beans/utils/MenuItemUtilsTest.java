@@ -35,28 +35,14 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	}
 	
 	@Test
-	public void testSetSelectedGroupName_withoutPrefix() {
+	public void testSetSelectedGroupName() {
 		MenuItemUtils.initializeState(state);
 		
 		MenuItemUtils.setSelectedGroupName(state, "foo");
 		
 		String str = MenuItemUtils.getSelectedGroupName(state);
 		
-		assertTrue(str.startsWith(Constants.GOALS_ATTR_KEY+"_"));
-		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_foo"));
-	}
-	
-	@Test
-	public void testSetSelectedGroupName_withPrefix() {
-		MenuItemUtils.initializeState(state);
-		
-		MenuItemUtils.setSelectedGroupName(state, Constants.GOALS_ATTR_KEY+"_"+"foo");
-		
-		String str = MenuItemUtils.getSelectedGroupName(state);
-		
-		assertTrue(str.startsWith(Constants.GOALS_ATTR_KEY+"_"));
-		assertFalse(str.startsWith(Constants.GOALS_ATTR_KEY+"_"+Constants.GOALS_ATTR_KEY));
-		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_foo"));
+		assertTrue(str.equals("foo"));
 	}
 	
 	@Test
@@ -64,9 +50,9 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strKitchen);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strKitchen);
 
 		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 		
@@ -178,7 +164,7 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		
 		String str = MenuItemUtils.getSelectedGroupParentName(state);
 		
-		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals));
+		assertTrue(str.equals(strJohnathansGoals));
 	}
 	
 	@Test
@@ -187,7 +173,7 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		
 		String str = MenuItemUtils.getSelectedGroupParentName(state);
 		
-		assertTrue(str.equals(Constants.GOALS_ATTR_KEY+"_"+str12880));
+		assertTrue(str.equals(str12880));
 	}
 	
 	@Test
@@ -206,7 +192,7 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		String str = MenuItemUtils.getSelectedGroupParentPath(state);
 		
 		assertTrue(str.equals(MenuItemUtils.getRootGroupName()+Constants.STATE_ATTR_PATH_DELIMITER+
-				Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals));
+				strJohnathansGoals));
 	}
 	
 	@Test
@@ -216,8 +202,8 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		String str = MenuItemUtils.getSelectedGroupParentPath(state);
 		
 		assertTrue(str.equals(MenuItemUtils.getRootGroupName()+Constants.STATE_ATTR_PATH_DELIMITER+
-				Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals+Constants.STATE_ATTR_PATH_DELIMITER+
-				Constants.GOALS_ATTR_KEY+"_"+str12880));
+				strJohnathansGoals+Constants.STATE_ATTR_PATH_DELIMITER+
+				str12880));
 	}
 	
 	@Test
@@ -244,23 +230,23 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 	private void initializeState_12880() {
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
 	}
 
 	private void initializeState_Bathroom() {
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strBathroom);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strBathroom);
 	}
 
 	private void initializeState_Kitchen() {
 		MenuItemUtils.initializeState(state);
 
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strJohnathansGoals);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+str12880);
-		simulateSelectingAGroup(state, Constants.GOALS_ATTR_KEY+"_"+strKitchen);
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strKitchen);
 	}
 }
