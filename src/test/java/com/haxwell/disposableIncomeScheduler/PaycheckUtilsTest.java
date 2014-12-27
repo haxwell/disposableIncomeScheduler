@@ -3,6 +3,7 @@ package com.haxwell.disposableIncomeScheduler;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +40,60 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		assertTrue(sdf.format(mostRecentPaydate).equals(dateAsString));
+	}
+
+	@Test
+	public void testGetNumberOfPaychecks_expect_2() {
+		String dateAsString = "12/05/2014";
+		
+		data.put(Constants.MOST_RECENT_PAYDATE, dateAsString);
+		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "1");
+		
+		PaycheckUtils sut = new PaycheckUtils(data);
+
+		Date date = sut.getMostRecentPaydate(data);
+		
+		int val = sut.getNumberOfPaychecks(data, date);
+		
+		assertTrue(val == 2);
+	}
+	
+	@Test
+	public void testGetNumberOfPaychecks_expect_3() {
+		String dateAsString = "01/02/2015";
+		
+		data.put(Constants.MOST_RECENT_PAYDATE, dateAsString);
+		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "1");
+		
+		PaycheckUtils sut = new PaycheckUtils(data);
+
+		Date date = sut.getMostRecentPaydate(data);
+		
+		int val = sut.getNumberOfPaychecks(data, date);
+		
+		assertTrue(val == 3);
+	}
+
+	@Test
+	public void testGetNumberOfPaychecks_expect_3_givenADateAfterMRPDate() {
+		String dateAsString = "12/05/2014";
+		
+		data.put(Constants.MOST_RECENT_PAYDATE, dateAsString);
+		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "1");
+		
+		PaycheckUtils sut = new PaycheckUtils(data);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Date date = null;
+		
+		try {
+			date = sdf.parse("1/2/2015");
+		} catch (ParseException pe) {
+			fail("date parse exception");
+		}
+		
+		int val = sut.getNumberOfPaychecks(data, date);
+		assertTrue(val == 3);
 	}
 
 	@Test

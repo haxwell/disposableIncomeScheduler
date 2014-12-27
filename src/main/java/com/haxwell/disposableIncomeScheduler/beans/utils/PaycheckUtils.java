@@ -18,6 +18,48 @@ public class PaycheckUtils {
 	}
 	
 	/**
+	 * Given a date, returns the number of paychecks in that month.
+	 */
+	public int getNumberOfPaychecks(JSONObject data, Date date) {
+		int rtn = -1;
+		Date mrpDate = getMostRecentPaydate(data);
+		
+		if (date.equals(mrpDate) || date.after(mrpDate)) {
+			long diff = date.getTime() - mrpDate.getTime();
+			
+			diff /= 1000 * 60 * 60 * 24;
+			
+			// get the paycheck number of the given date
+			int i = paycheckNumberArray[(int)diff];
+			
+			// now iterate through the paycheckNumberArray until the
+			//  number changes, and then we hit '1' again. The number
+			//  before we hit '1' is the number of paychecks in that
+			//  month.
+			boolean weAreIteratingInTheCurrentMonth = true;
+			boolean iteratedPastOneAlready = (i > 1);
+			int idx = 1;
+			int max = i;
+			while (weAreIteratingInTheCurrentMonth) {
+				int x = paycheckNumberArray[((int)diff) + idx++];
+				
+				if (x == 1 && iteratedPastOneAlready)
+					weAreIteratingInTheCurrentMonth = false;
+				
+				if (x > 1)
+					iteratedPastOneAlready = true;
+				
+				if (x > max)
+					max = x;
+			}
+			
+			rtn = max;
+		}
+		
+		return rtn;
+	}
+	
+	/**
 	 * Given a date, returns the number of the paycheck in the month that the date is being covered by
 	 */
 	public int getPaycheckNumber(JSONObject data, Date date) {
