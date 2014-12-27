@@ -38,9 +38,10 @@ public class AddAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		final String NAME = "name";
 		final String AMT_PP = "150";
+		final String RESET = "y";
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP);
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, RESET);
 		
 		sut.setInputGetter(mockedInputGetter);
 		
@@ -55,6 +56,34 @@ public class AddAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		assertTrue(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_PP));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
+		assertTrue(obj.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
+	}
+		
+	@Test
+	public void testEnterValidNameAndAmountButInvalidValueForReset() {
+		AddAShortTermGoalMenuItemHandler sut = new AddAShortTermGoalMenuItemHandler();
+		
+		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
+		
+		int arrSize = arr.size();
+		
+		final String NAME = "name";
+		final String AMT_PP = "150";
+		final String RESET = "gfdsafd";
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, RESET);
+		
+		sut.setInputGetter(mockedInputGetter);
+		
+		boolean rtn = sut.doIt(data, state);
+		
+		assertFalse(rtn);
+		
+		assertTrue(arr.size() == arrSize);
+		
+		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
+		assertTrue(obj == null);
 	}
 		
 	@Test
@@ -108,5 +137,4 @@ public class AddAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
 		assertTrue(obj == null);
 	}
-		
 }

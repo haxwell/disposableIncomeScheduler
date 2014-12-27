@@ -53,5 +53,6 @@ public class Constants {
 	public static final String LONG_TERM_GOALS_JSON = "longTermGoals";
 	public static final String MOST_RECENT_PAYDATE = "mostRecentPaydate";
 	public static final String MOST_RECENT_PAYDATE_PERIOD_NUMBER = "mostRecentPaydatePeriodNumber";
+	public static final String RESET_EACH_PERIOD_JSON = "resetEachPeriod";
 	
 }

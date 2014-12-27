@@ -51,12 +51,33 @@ public class EditAShortTermGoalMenuItemHandler extends GoalAttributeEditingMenuI
 					rtn = true;
 				}
 
-				getPrintlner().print("Total Amount Saved [" + obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON) + "]: ");
-				String tas = getInputGetter().readInput();
+				getPrintlner().print("Reset With Each New Period? [" + obj.get(Constants.RESET_EACH_PERIOD_JSON) + "]: (y/n)");
+				String reset = getInputGetter().readInput();
 				
-				if (tas != null && !tas.equals("") && getPriceValidator().isValidValue(tas)) {
-					obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, tas);
-					rtn = true;
+				if (reset != null && !reset.equals("")) {
+					String upperReset = reset.toUpperCase();
+					
+					if (upperReset.equals("Y") || upperReset.equals("N")) {
+						obj.put(Constants.RESET_EACH_PERIOD_JSON, reset);
+						rtn = true;
+					}
+					else {
+						getPrintlner().println("No change made. Expected 'y' or 'n'.\n");
+					}
+				}
+
+				reset = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
+				if (reset.toUpperCase().equals("N")) {
+					getPrintlner().print("Total Amount Saved [" + obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON) + "]: ");
+					String tas = getInputGetter().readInput();
+					
+					if (tas != null && !tas.equals("") && getPriceValidator().isValidValue(tas)) {
+						obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, tas);
+						rtn = true;
+					}
+				}
+				else {
+					obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
 				}
 			}
 		}

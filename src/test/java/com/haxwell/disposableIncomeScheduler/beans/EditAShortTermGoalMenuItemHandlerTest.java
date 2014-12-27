@@ -34,11 +34,12 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject stg = MenuItemUtils.getShortTermGoal(data, "clothing");
 		
 		final String NEW_GOAL_NAME = "newGoalName";
+		final String RESET = "n";
 		final String AMT_SAVED_PP = "999";
 		final String AMT_SAVED_SO_FAR = "25";
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("1", NEW_GOAL_NAME, AMT_SAVED_PP, AMT_SAVED_SO_FAR);
+		when(mockedInputGetter.readInput()).thenReturn("1", NEW_GOAL_NAME, AMT_SAVED_PP, RESET, AMT_SAVED_SO_FAR);
 		
 		sut.setInputGetter(mockedInputGetter);
 
@@ -47,6 +48,7 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		assertTrue(rtn);
 		
 		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
 		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
 		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
 	}
@@ -58,11 +60,12 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject stg = MenuItemUtils.getShortTermGoal(data, "clothing");
 		
 		final String NEW_GOAL_NAME = "newGoalName";
+		final String RESET = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 		final String AMT_SAVED_PP = stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"";
 		final String AMT_SAVED_SO_FAR = stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("1", NEW_GOAL_NAME, "", "");
+		when(mockedInputGetter.readInput()).thenReturn("1", NEW_GOAL_NAME, "", "", "");
 		
 		sut.setInputGetter(mockedInputGetter);
 
@@ -71,6 +74,7 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		assertTrue(rtn);
 		
 		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
 		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
 		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
 	}
@@ -82,11 +86,38 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject stg = MenuItemUtils.getShortTermGoal(data, "clothing");
 		
 		final String NEW_GOAL_NAME = stg.get(Constants.DESCRIPTION_JSON)+"";
+		final String RESET = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 		final String AMT_SAVED_PP = "1024";
 		final String AMT_SAVED_SO_FAR = stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("1", "", AMT_SAVED_PP, "");
+		when(mockedInputGetter.readInput()).thenReturn("1", "", AMT_SAVED_PP, "", "");
+		
+		sut.setInputGetter(mockedInputGetter);
+
+		boolean rtn = sut.doIt(data, state);
+		
+		assertTrue(rtn);
+		
+		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
+		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
+		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
+	}
+
+	@Test
+	public void testChangeOnlyResetEachPeriod() {
+		EditAShortTermGoalMenuItemHandler sut = new EditAShortTermGoalMenuItemHandler();
+		
+		JSONObject stg = MenuItemUtils.getShortTermGoal(data, "clothing");
+		
+		final String NEW_GOAL_NAME = stg.get(Constants.DESCRIPTION_JSON)+"";
+		final String RESET = "y";
+		final String AMT_SAVED_PP = stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"";
+		final String AMT_SAVED_SO_FAR = stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn("1", "", "", RESET, "");
 		
 		sut.setInputGetter(mockedInputGetter);
 
@@ -96,6 +127,33 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
 		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
+		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
+	}
+
+	@Test
+	public void testChangeOnlyResetEachPeriod_badInput() {
+		EditAShortTermGoalMenuItemHandler sut = new EditAShortTermGoalMenuItemHandler();
+		
+		JSONObject stg = MenuItemUtils.getShortTermGoal(data, "clothing");
+		
+		final String NEW_GOAL_NAME = stg.get(Constants.DESCRIPTION_JSON)+"";
+		final String AMT_SAVED_PP = stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"";
+		final String RESET = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";
+		final String AMT_SAVED_SO_FAR = stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn("1", "", "", "blah", "");
+		
+		sut.setInputGetter(mockedInputGetter);
+
+		boolean rtn = sut.doIt(data, state);
+		
+		assertFalse(rtn);
+		
+		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
+		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
 		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
 	}
 
@@ -107,10 +165,11 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		final String NEW_GOAL_NAME = stg.get(Constants.DESCRIPTION_JSON)+"";
 		final String AMT_SAVED_PP = stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"";
+		final String RESET = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 		final String AMT_SAVED_SO_FAR = "1024";
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("1", "", "", AMT_SAVED_SO_FAR);
+		when(mockedInputGetter.readInput()).thenReturn("1", "", "", "", AMT_SAVED_SO_FAR);
 		
 		sut.setInputGetter(mockedInputGetter);
 
@@ -120,6 +179,7 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
 		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));		
 		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
 	}
 
@@ -131,10 +191,11 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		final String NEW_GOAL_NAME = stg.get(Constants.DESCRIPTION_JSON)+"";
 		final String AMT_SAVED_PP = stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"";
+		final String RESET = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";		
 		final String AMT_SAVED_SO_FAR = stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("1", "", "", "");
+		when(mockedInputGetter.readInput()).thenReturn("1", "", "", "", "");
 		
 		sut.setInputGetter(mockedInputGetter);
 
@@ -144,6 +205,7 @@ public class EditAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		
 		assertTrue(stg.get(Constants.DESCRIPTION_JSON).equals(NEW_GOAL_NAME));
 		assertTrue(stg.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_SAVED_PP));
+		assertTrue(stg.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));		
 		assertTrue(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals(AMT_SAVED_SO_FAR));
 	}
 }

@@ -17,24 +17,37 @@ public class AddAShortTermGoalMenuItemHandler extends GoalAttributeEditingMenuIt
 		boolean rtn = false;
 		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
 				
-		System.out.print("Enter the name of the short term goal: ");
+		getPrintlner().print("Enter the name of the short term goal: ");
 		String name = getInputGetter().readInput();
 		
 		if (name != null && name.length() > 0) {
-			System.out.print("Amount to save per period: ");
+			getPrintlner().print("Amount to save per period: ");
 			String amtPerPeriod = getInputGetter().readInput();
 			
 			Validator v = getValidatorMap().get(Constants.PRICE);
 			if (v.isValidValue(amtPerPeriod)) {
-				JSONObject obj = new JSONObject();
 				
-				obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, amtPerPeriod);
-				obj.put(Constants.DESCRIPTION_JSON, name);
-				obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
+				getPrintlner().print("Reset with each new period? (Y/n)");
+				String reset = getInputGetter().readInput();
 				
-				arr.add(obj);
+				if (reset == "")
+					reset = "Y";
 				
-				rtn = true;
+				// TODO: if ever another attribute is needed here.. refactor using a more
+				//  extensable solution, rather than adding a deeper IF.
+				String upperReset = reset.toUpperCase();
+				if (upperReset.equals("Y") || upperReset.equals("N")) {
+					JSONObject obj = new JSONObject();
+					
+					obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, amtPerPeriod);
+					obj.put(Constants.DESCRIPTION_JSON, name);
+					obj.put(Constants.RESET_EACH_PERIOD_JSON, reset);
+					obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
+					
+					arr.add(obj);
+					
+					rtn = true;
+				}
 			}
 		}
 		

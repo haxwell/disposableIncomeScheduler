@@ -66,6 +66,7 @@ public class JSONDataBasedTest {
 		stgobj.put(Constants.DESCRIPTION_JSON, "clothing");
 		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
 		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "75");
+		stgobj.put(Constants.RESET_EACH_PERIOD_JSON, "n");
 		
 		arr.add(stgobj);
 		
@@ -73,6 +74,7 @@ public class JSONDataBasedTest {
 		stgobj.put(Constants.DESCRIPTION_JSON, "groceries");
 		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
 		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "150");
+		stgobj.put(Constants.RESET_EACH_PERIOD_JSON, "y");		
 		
 		arr.add(stgobj);
 		
@@ -80,6 +82,7 @@ public class JSONDataBasedTest {
 		stgobj.put(Constants.DESCRIPTION_JSON, "gas");
 		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
 		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "120");
+		stgobj.put(Constants.RESET_EACH_PERIOD_JSON, "y");
 		
 		arr.add(stgobj);
 
