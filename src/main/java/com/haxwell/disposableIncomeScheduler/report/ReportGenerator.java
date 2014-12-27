@@ -80,12 +80,25 @@ public class ReportGenerator {
 	}
 	
 	public double getOffset(JSONObject data) {
-		int num = pu.getPaycheckNumber(data, Calendar.getInstance().getTime());
+		Date date = Calendar.getInstance().getTime();
+		int num = pu.getNumberOfPaychecks(data, date);
 		double rtn = -1;
 		
-		if (num == 1) rtn = 0.5;
-		if (num == 2) rtn = 1.0;
-		if (num == 3) rtn = 0.0;
+		// TODO: should be taking into account the period length from the JSON file
+		
+		if (num == 2) {
+			int chkNum = pu.getPaycheckNumber(data, date);
+			
+			if (chkNum == 1) rtn = 0.5;
+			else rtn = 1.0;
+		
+		} else if (num == 3) {
+			int chkNum = pu.getPaycheckNumber(data, date);
+			
+			if (chkNum == 1) rtn = 0.33;
+			else if (chkNum == 2) rtn = 0.66;
+			else rtn = 1.0;
+		}
 		
 		return rtn;
 	}
