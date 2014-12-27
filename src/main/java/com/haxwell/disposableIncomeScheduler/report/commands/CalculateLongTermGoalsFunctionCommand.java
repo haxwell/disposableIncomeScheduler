@@ -27,11 +27,18 @@ public class CalculateLongTermGoalsFunctionCommand extends FunctionCommand {
 		
 		while (ggi.hasNext()) {
 			String goal = ggi.next();
+			
+			String levelString = "";
+			
+			for (int i=0; i < ggi.getLevel(); i++)
+				levelString += "  ";
 		
 			if (dapg.containsKey(goal)) {
-				cl.add(index + indexOffset++, new SubtractCommand(dapg.get(goal), goal));
+				SubtractCommand element = new SubtractCommand(dapg.get(goal), goal);
+				element.setBufferString(levelString);
+				cl.add(index + indexOffset++, element);
 			} else {
-				cl.add(index + indexOffset++, new StringCommand(goal));
+				cl.add(index + indexOffset++, new StringCommand(levelString + goal));
 			}
 		}
 	}

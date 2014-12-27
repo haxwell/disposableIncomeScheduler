@@ -5,6 +5,7 @@ public class SubtractCommand extends Command {
 	protected int amt = -1;
 	protected String grp = null;
 	protected String desc = null;
+	private String bufferString;
 	
 	public SubtractCommand(int amount, String desc) {
 		this.amt = amount;
@@ -38,5 +39,13 @@ public class SubtractCommand extends Command {
 	
 	public String getDescription() {
 		return desc;
+	}
+	
+	public void setBufferString(String str) {
+		this.bufferString = str;
+	}
+	
+	public String getBufferString() {
+		return this.bufferString == null ? "" : this.bufferString;
 	}
 }

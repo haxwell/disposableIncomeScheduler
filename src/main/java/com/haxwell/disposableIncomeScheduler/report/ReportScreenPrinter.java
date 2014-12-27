@@ -81,6 +81,7 @@ public class ReportScreenPrinter {
 				
 				total -= amt;
 				
+				println.print(scmd.getBufferString());
 				println.format("%-8d%-20s", amt, scmd.getDescription());
 				println.println();
 			}

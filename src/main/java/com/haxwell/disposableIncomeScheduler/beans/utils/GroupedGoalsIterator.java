@@ -11,6 +11,7 @@ import net.minidev.json.JSONObject;
 public class GroupedGoalsIterator implements Iterator<String> {
 
 	Stack<InnerDataObj> stack;
+	int level = 0;
 	
 	public GroupedGoalsIterator(JSONArray arr) {
 		stack = new Stack<InnerDataObj>();
@@ -37,6 +38,8 @@ public class GroupedGoalsIterator implements Iterator<String> {
 					InnerDataObj newIDO = new InnerDataObj(arr);
 					stack.push(newIDO);
 					
+					level++;
+					
 					ido = newIDO;					
 				} else {
 					//  if not, then check, can we display another goal sibling?
@@ -52,6 +55,8 @@ public class GroupedGoalsIterator implements Iterator<String> {
 							ido = stack.peek();
 							ido.groupsWhoseChildrenHaveBeenProcessed.add(ido.lastNameReturned);
 						}
+						
+						level--;
 					}
 				}
 			} else {
@@ -80,6 +85,10 @@ public class GroupedGoalsIterator implements Iterator<String> {
 		rtn = ido.advance();
 		
 		return rtn;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 
 	private class InnerDataObj {
