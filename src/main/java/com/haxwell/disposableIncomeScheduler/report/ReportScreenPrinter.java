@@ -28,7 +28,7 @@ public class ReportScreenPrinter {
 	public void print(Println println) {
 		
 		int total = 0;
-		Map<String, Integer> groupMap = new HashMap<String, Integer>();
+		Map<String, Long> groupMap = new HashMap<String, Long>();
 		
 		for (int index = 0; index < this.cl.size(); index++) {
 			Command cmd = this.cl.get(index);
@@ -42,18 +42,18 @@ public class ReportScreenPrinter {
 			if (cmd instanceof AddCommand) {
 				AddCommand acmd = (AddCommand)cmd;
 				
-				int amt = acmd.getAmount();
+				long amt = acmd.getAmount();
 				
 				String grp = acmd.getGroup();
 				if (grp != null) {
-					Integer i = groupMap.get(grp);
+					Long l = groupMap.get(grp);
 					
-					if (i == null)
-						i = new Integer(amt);
+					if (l == null)
+						l = new Long(amt);
 					else
-						i += amt;
+						l += amt;
 					
-					groupMap.put(grp, i);
+					groupMap.put(grp, l);
 				}
 
 				total += amt;
@@ -65,18 +65,18 @@ public class ReportScreenPrinter {
 			if (cmd instanceof SubtractCommand) {
 				SubtractCommand scmd = (SubtractCommand)cmd;
 				
-				int amt = scmd.getAmount();
+				long amt = scmd.getAmount();
 				
 				String grp = scmd.getGroup();
 				if (grp != null) {
-					Integer i = groupMap.get(grp);
+					Long l = groupMap.get(grp);
 					
-					if (i == null)
-						i = new Integer(amt);
+					if (l == null)
+						l = new Long(amt);
 					else
-						i += amt;
+						l += amt;
 					
-					groupMap.put(grp, i);
+					groupMap.put(grp, l);
 				}
 				
 				total -= amt;
@@ -89,7 +89,7 @@ public class ReportScreenPrinter {
 			if (cmd instanceof SubtotalCommand) {
 				SubtotalCommand scmd = (SubtotalCommand)cmd;
 				
-				int amt = -1;
+				long amt = -1;
 				String grp = scmd.getGroup();
 				if (grp == null) {
 					amt = total;
