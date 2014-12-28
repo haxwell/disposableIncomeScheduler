@@ -20,18 +20,20 @@
     	{
     		"totalAmountSaved":"0",
     		"amountSavedPerPeriod":"150",
-    		"description":"groceries"
-    			
+    		"description":"groceries",
+        	"resetEachPeriod":"y"
     	},
     	{
     		"totalAmountSaved":"0",
     		"amountSavedPerPeriod":"120",
-    		"description":"gas"
+    		"description":"gas",
+    		"resetEachPeriod":"y"    			
     	},
     	{
-    		"totalAmountSaved":"0",
+    		"totalAmountSaved":"75",
     		"amountSavedPerPeriod":"75",
-    		"description":"clothing"
+    		"description":"clothing",
+    		"resetEachPeriod":"n"    		
     	}
     ],
     "longTermGoals": [
