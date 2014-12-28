@@ -173,4 +173,20 @@ public class JSONDataBasedTest {
 		
 		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, pathToGroup);
 	}
+	
+	protected JSONObject getJSONObjectByDescriptionFromJSONArray(JSONArray arr, String description) {
+		JSONObject rtn = null;
+		boolean found = false;
+		
+		for (int i=0; i < arr.size() && !found; i++) {
+			JSONObject obj = (JSONObject)arr.get(i);
+			
+			if (obj.get(Constants.DESCRIPTION_JSON).equals(description)) {
+				rtn = obj;
+				found = true;
+			}
+		}
+		
+		return rtn;
+	}
 }
