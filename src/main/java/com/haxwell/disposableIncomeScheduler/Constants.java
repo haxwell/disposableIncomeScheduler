@@ -54,5 +54,8 @@ public class Constants {
 	public static final String MOST_RECENT_PAYDATE = "mostRecentPaydate";
 	public static final String MOST_RECENT_PAYDATE_PERIOD_NUMBER = "mostRecentPaydatePeriodNumber";
 	public static final String RESET_EACH_PERIOD_JSON = "resetEachPeriod";
+	public static final String BEGINNING_BALANCE = "beginningBalance";
+	public static final String PAYCHECK_AMT = AMT_PAID_PER_PERIOD_JSON;
+	public static final String RAINY_DAY_FUND_AMT = "rainyDayFundAmt";
 	
 }
