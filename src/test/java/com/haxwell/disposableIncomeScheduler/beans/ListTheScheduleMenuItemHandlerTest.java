@@ -22,6 +22,6 @@ public class ListTheScheduleMenuItemHandlerTest extends JSONDataBasedTest {
 	public void testFoo() {
 		ListTheScheduleMenuItemHandler sut = new ListTheScheduleMenuItemHandler();
 		
-		sut.doIt(data, null);
+		sut.doIt(data, state);
 	}
 }

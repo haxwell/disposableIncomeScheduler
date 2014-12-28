@@ -14,6 +14,8 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
+import com.haxwell.disposableIncomeScheduler.report.commands.SubtractCommand;
 
 public class Calculator {
 	
@@ -21,9 +23,91 @@ public class Calculator {
 		public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied);
 	}
 
-	public static Map<String, Long> getDollarAmountsToBeAppliedPerGroup(JSONObject data) {
+	public static Map<String, Long> getDollarAmountsToBeAppliedToGenericallyReservedFunds(JSONObject data) {
+		Map<String, Long> map = new HashMap<>();
+		
+		map.put(Constants.BEGINNING_BALANCE, getBeginningBalance(data));
+		map.put(Constants.PAYCHECK_AMT, getAmountPaidPerPeriod(data));
+		map.put(Constants.RAINY_DAY_FUND_AMT,  getRainyDayFundAmount(data));
+		
+		return map;
+	}
+	
+	public static Map<String, Double> getDollarAmountsToBeAppliedToExpenses(JSONObject data) {
+		Map<String, Double> map = new HashMap<>();
+		
+		double offset = getOffset(data);
+		JSONArray expenses = MenuItemUtils.getExpenses(data);
+		for (int i = 0; i < expenses.size(); i++) {
+			JSONObject obj = (JSONObject) expenses.get(i);
+			
+			map.put(obj.get(Constants.DESCRIPTION_JSON)+"", Long.parseLong(obj.get(Constants.PRICE_JSON)+"")*offset);
+		}
+		
+		return map;
+	}
+	
+	public static Map<String, Double> getDollarAmountsToBeAppliedToShortTermGoals(JSONObject data, JSONObject state) {
+		Map<String, Double> map = new HashMap<>();
+		
+		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
+		for (int i = 0; i < stgs.size(); i++) {
+			JSONObject obj = (JSONObject) stgs.get(i);
+			
+			Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+			
+			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
+			if (resetEachPeriod.toUpperCase().equals("N")) {
+				if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED)) {
+					amount = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
+				} else {
+					amount += Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
+				}
+			}
+			
+			map.put(obj.get(Constants.DESCRIPTION_JSON)+"", amount*1.0);
+		}
+		
+		return map;
+	}
+	
+	public static long getDollarAmountToBeSpreadOverLongTermGoals(JSONObject data, JSONObject state) {
+		return getDollarAmountToBeSpreadOverLongTermGoals(
+				Calculator.getDollarAmountsToBeAppliedToGenericallyReservedFunds(data),
+				Calculator.getDollarAmountsToBeAppliedToExpenses(data),
+				Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state));
+	}
+	
+	public static long getTotalDollarAmountAfterAccountingForGenericallyReservedFunds(Map<String, Long> genericFundsMap) {
+		long total = 0;
+		total += genericFundsMap.get(Constants.BEGINNING_BALANCE);
+		total += genericFundsMap.get(Constants.PAYCHECK_AMT);
+		total -= genericFundsMap.get(Constants.RAINY_DAY_FUND_AMT);
+		
+		return total;
+	}
+	
+	public static long getDollarAmountToBeSpreadOverLongTermGoals(Map<String, Long> genericFundsMap, 
+			Map<String, Double> expenseMap, Map<String, Double> stgMap) {
+		long total = 0;
+		
+		// calc this and then have getDollarAmountsToBeAppliedPerLongTermGoalGroup() call this and use it as
+		//  its 'dollarAmount' variable.
+		total = getTotalDollarAmountAfterAccountingForGenericallyReservedFunds(genericFundsMap);
+		
+		for (String key : expenseMap.keySet()) {
+			total -= expenseMap.get(key);
+		}
+		
+		for (String key : stgMap.keySet()) {
+			total -= stgMap.get(key);
+		}
+		
+		return total;
+	}
+	
+	public static Map<String, Long> getDollarAmountsToBeAppliedPerLongTermGoalGroup(JSONObject data, long totalDollarAmount) {
 		JSONObject weights = Calculator.getWeights(data);
-		int dollarAmount = Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
 		
 		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
 		JSONObject grpRootElement = (JSONObject)grpArr.get(0);
@@ -33,7 +117,7 @@ public class Calculator {
 		
 		final Map<String, Long> map = new HashMap<>();
 		
-		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount, new CalculatedPreviousSavedAmountHandler() {
+		applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new CalculatedPreviousSavedAmountHandler() {
 			@Override
 			public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
 				map.put(groupElement.get(Constants.DESCRIPTION_JSON)+"", dollarAmountToBeApplied);
@@ -43,9 +127,9 @@ public class Calculator {
 		return map;
 	}
 	
-	public static void applyMoney(JSONObject data) {
+	public static void applyMoneyToLongTermGoals(JSONObject data, long totalDollarAmount) {
 		JSONObject weights = Calculator.getWeights(data);
-		int dollarAmount = Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+//		int dollarAmount = Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
 		
 		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
 		JSONObject grpRootElement = (JSONObject)grpArr.get(0);
@@ -53,7 +137,7 @@ public class Calculator {
 		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
 		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
 		
-		applyMoneyHelper(grpRootElement, weightsRootElement, dollarAmount, new CalculatedPreviousSavedAmountHandler() {
+		applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new CalculatedPreviousSavedAmountHandler() {
 			@Override
 			public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
 				Object object = groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON);
@@ -632,4 +716,46 @@ public class Calculator {
 		
 		return rtn;
 	}
+	
+	public static long getBeginningBalance(JSONObject data) {
+		int totalInThePot = Integer.parseInt(data.get(Constants.TOTAL_IN_THE_POT_JSON)+"");
+//		int amtPaidThisPeriod = Integer.parseInt(data.get(Constants.AMT_PAID_PER_PERIOD_JSON)+"");
+		
+		return totalInThePot; // + amtPaidThisPeriod;
+	}
+	
+	public static long getAmountPaidPerPeriod(JSONObject data) {
+		return Integer.parseInt(data.get(Constants.AMT_PAID_PER_PERIOD_JSON)+"");
+	}
+	
+	public static long getRainyDayFundAmount(JSONObject data) {
+		return Integer.parseInt(data.get(Constants.AMT_SAVED_FOR_RAINY_DAY_JSON)+"");
+	}
+
+	private static double getOffset(JSONObject data) {
+		Date date = Calendar.getInstance().getTime();
+		PaycheckUtils pu = new PaycheckUtils(data);
+		int num = pu.getNumberOfPaychecks(data, date);
+		double rtn = -1;
+		
+		// TODO: should be taking into account the period length from the JSON file
+		
+		if (num == 2) {
+			int chkNum = pu.getPaycheckNumber(data, date);
+			
+			if (chkNum == 1) rtn = 0.5;
+			else rtn = 1.0;
+		
+		} else if (num == 3) {
+			int chkNum = pu.getPaycheckNumber(data, date);
+			
+			if (chkNum == 1) rtn = 0.33;
+			else if (chkNum == 2) rtn = 0.66;
+			else rtn = 1.0;
+		}
+		
+		return rtn;
+	}
+	
+	
 }

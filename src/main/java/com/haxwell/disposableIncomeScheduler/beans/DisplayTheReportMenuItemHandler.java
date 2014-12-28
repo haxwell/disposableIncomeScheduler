@@ -17,7 +17,7 @@ public class DisplayTheReportMenuItemHandler extends GoalAttributeEditingMenuIte
 	public boolean doIt(JSONObject data, JSONObject state) {
 		ReportGenerator rg = new ReportGenerator();
 		
-		CommandList cl = rg.getReportData(data);
+		CommandList cl = rg.getReportData(data, state);
 		
 		ReportScreenPrinter rsp = new ReportScreenPrinter(cl);
 		

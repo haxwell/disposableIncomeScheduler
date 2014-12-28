@@ -34,7 +34,7 @@ public class ReportGenerator {
 	public ReportGenerator() {
 	}
 	
-	public CommandList getReportData(JSONObject data) {
+	public CommandList getReportData(JSONObject data, JSONObject state) {
 		pu = new PaycheckUtils(data);
 		
 		CommandList cl = new CommandList();
@@ -44,64 +44,40 @@ public class ReportGenerator {
 		cl.add(new StringCommand(getCheckOfTheMonth(data) + " check of the month"));
 		cl.add(new StringCommand(""));
 		
-		cl.add(new AddCommand(getBeginningBalance(data), "Previous balance"));
-		cl.add(new AddCommand(getAmountPaidPerPeriod(data), "Paycheck"));
+		Map<String, Long> map = Calculator.getDollarAmountsToBeAppliedToGenericallyReservedFunds(data);
+		
+		cl.add(new AddCommand(map.get(Constants.BEGINNING_BALANCE), "Previous balance"));
+		cl.add(new AddCommand(map.get(Constants.PAYCHECK_AMT), "Paycheck"));
 		cl.add(new SubtotalCommand("Beginning balance - " + getReportBeginDate(data)));
 		
-		cl.add(new SubtractCommand(getRainyDayFundAmount(data), "Rainy Day Fund"));
+		cl.add(new SubtractCommand(map.get(Constants.RAINY_DAY_FUND_AMT), "Rainy Day Fund"));
 		cl.add(new SubtotalCommand("After Generically Reserved Funds"));
 		
-		double offset = getOffset(data);
-		JSONArray expenses = MenuItemUtils.getExpenses(data);
-		for (int i = 0; i < expenses.size(); i++) {
-			JSONObject obj = (JSONObject) expenses.get(i);
-			
-			cl.add(new SubtractCommand(Integer.parseInt(obj.get(Constants.PRICE_JSON)+"")*offset, obj.get(Constants.DESCRIPTION_JSON)+"", "expensesGroup"));
+		Map<String, Double> expenseMap = Calculator.getDollarAmountsToBeAppliedToExpenses(data);
+		
+		for (String key : expenseMap.keySet()) {
+			cl.add(new SubtractCommand(expenseMap.get(key), key, "expensesGroup"));
 		}
 		
 		cl.add(new SubtotalCommand("Total Monthly Expenses", "expensesGroup"));
 		cl.add(new SubtotalCommand("Total in account, After Monthly Expenses"));
 		
-		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
-		for (int i = 0; i < stgs.size(); i++) {
-			JSONObject obj = (JSONObject) stgs.get(i);
-			
-			cl.add(new SubtractCommand(Integer.parseInt(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"")*offset, obj.get(Constants.DESCRIPTION_JSON)+"", "stgsGroup"));
+		Map<String, Double> stgMap = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
+		
+		for (String key : stgMap.keySet()) {
+			cl.add(new SubtractCommand(stgMap.get(key), key, "stgsGroup"));
 		}
 		
 		cl.add(new SubtotalCommand("Total Short Term Goals", "stgsGroup"));
 		cl.add(new SubtotalCommand("Savings, to be spread over Long Term Goals", data, Constants.AMT_SAVED_PER_PERIOD_JSON));
 		
-		cl.add(new CalculateLongTermGoalsFunctionCommand(data));
+		cl.add(new CalculateLongTermGoalsFunctionCommand(data, map, expenseMap, stgMap));
 		
 		cl.add(new SubtotalCommand("Total - Amount Remaining"));
 
 		return cl;
 	}
 	
-	public double getOffset(JSONObject data) {
-		Date date = Calendar.getInstance().getTime();
-		int num = pu.getNumberOfPaychecks(data, date);
-		double rtn = -1;
-		
-		// TODO: should be taking into account the period length from the JSON file
-		
-		if (num == 2) {
-			int chkNum = pu.getPaycheckNumber(data, date);
-			
-			if (chkNum == 1) rtn = 0.5;
-			else rtn = 1.0;
-		
-		} else if (num == 3) {
-			int chkNum = pu.getPaycheckNumber(data, date);
-			
-			if (chkNum == 1) rtn = 0.33;
-			else if (chkNum == 2) rtn = 0.66;
-			else rtn = 1.0;
-		}
-		
-		return rtn;
-	}
 	
 	public void print(JSONObject data) {
 		setReportHeaderVariables(data);
@@ -111,32 +87,6 @@ public class ReportGenerator {
 		reportData.put(REPORT_BEGIN, getReportBeginDate(data));
 		reportData.put(REPORT_END, getReportEndDate(data));
 		reportData.put(CHECK_OF_THE_MONTH, getCheckOfTheMonth(data));
-	}
-	
-	public void setBeginningBalance(JSONObject data) {
-
-		int beginningBalance = getBeginningBalance(data);
-		int rainyDayFundAmount = getRainyDayFundAmount(data);
-		
-		reportData.put(BEGINNING_BALANCE, beginningBalance+"");
-		reportData.put(RAINY_DAY_FUND_AMT, rainyDayFundAmount+"");
-		
-//		reportData.put()
-	}
-	
-	protected int getAmountPaidPerPeriod(JSONObject data) {
-		return Integer.parseInt(data.get(Constants.AMT_PAID_PER_PERIOD_JSON)+"");
-	}
-	
-	protected int getRainyDayFundAmount(JSONObject data) {
-		return Integer.parseInt(data.get(Constants.AMT_SAVED_FOR_RAINY_DAY_JSON)+"");
-	}
-	
-	protected int getBeginningBalance(JSONObject data) {
-		int totalInThePot = Integer.parseInt(data.get(Constants.TOTAL_IN_THE_POT_JSON)+"");
-//		int amtPaidThisPeriod = Integer.parseInt(data.get(Constants.AMT_PAID_PER_PERIOD_JSON)+"");
-		
-		return totalInThePot; // + amtPaidThisPeriod;
 	}
 	
 	protected String getReportBeginDate(JSONObject data) {

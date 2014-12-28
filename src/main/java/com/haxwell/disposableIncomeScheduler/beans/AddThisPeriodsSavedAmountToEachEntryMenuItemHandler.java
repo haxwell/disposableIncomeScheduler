@@ -1,5 +1,7 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
+import java.util.Map;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -30,21 +32,19 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 			return rtn;
 		}
 
-		System.out.println("Type 'yes' to update each entry..");
+		getPrintlner().println("Type 'yes' to update each entry..");
 		
-		String input = System.console().readLine();
+		String input = getInputGetter().readInput();
 		
 		if (input.toLowerCase().equals("yes")) {
-			// add the amount saved per month to the total in the pot
-			String amtStr = (String)data.get(Constants.AMT_SAVED_PER_PERIOD_JSON);
-			Integer amt = Integer.parseInt(amtStr);
+			setBeginningBalanceToIncludeThisPeriodsPay(data);
 			
-			String totalInThePot = (String)data.get(Constants.TOTAL_IN_THE_POT_JSON);
-			Integer total = Integer.parseInt(totalInThePot == null ? "0" : totalInThePot);
+			updateShortTermGoalTotalSavedAmounts(data);
 			
-			data.put(Constants.TOTAL_IN_THE_POT_JSON, (total + amt)+"");
-			
-			Calculator.applyMoney(data);
+			// get the total that would be remaining after accounting for expenses and short term goals
+			long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
+
+			Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
 			
 			rtn = true;
 			amtHasAlreadyBeenAdded = true;
@@ -53,5 +53,32 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 		}
 		
 		return rtn;
+	}
+
+	private void updateShortTermGoalTotalSavedAmounts(JSONObject data) {
+		// update all the short term goals that need updating...
+		JSONArray shortTermGoals = MenuItemUtils.getShortTermGoals(data);
+		
+		for (int i = 0; i < shortTermGoals.size(); i++) {
+			JSONObject obj = (JSONObject)shortTermGoals.get(i);
+			
+			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
+			if (resetEachPeriod.toUpperCase().equals("N")) {
+				Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+				Long total = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
+				
+				obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, (amount + total)+"");
+			}
+		}
+	}
+
+	private void setBeginningBalanceToIncludeThisPeriodsPay(JSONObject data) {
+		String amtStr = (String)data.get(Constants.AMT_PAID_PER_PERIOD_JSON);
+		Integer amt = Integer.parseInt(amtStr);
+		
+		String totalInThePot = (String)data.get(Constants.TOTAL_IN_THE_POT_JSON);
+		Integer total = Integer.parseInt(totalInThePot == null ? "0" : totalInThePot);
+		
+		data.put(Constants.TOTAL_IN_THE_POT_JSON, (total + amt)+"");
 	}
 }

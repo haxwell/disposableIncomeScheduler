@@ -39,7 +39,9 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
 		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
 		
-		Map<String, Long> dollarAmountsToBeAppliedPerGroup = Calculator.getDollarAmountsToBeAppliedPerGroup(data);
+		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
+		
+		Map<String, Long> dollarAmountsToBeAppliedPerGroup = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
 		
 		System.out.println();
 		System.out.format("%-35s%14s%8s%16s%29s%27s", Constants.DESCRIPTION, Constants.DATE_NEEDED, Constants.PRICE, "Prev Saved Amt", "$ From Curr Dep", "Time Remaining");

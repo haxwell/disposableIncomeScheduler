@@ -13,14 +13,22 @@ import com.haxwell.disposableIncomeScheduler.report.CommandList;
 public class CalculateLongTermGoalsFunctionCommand extends FunctionCommand {
 
 	JSONObject data = null;
+	private Map<String, Long> genericFundsMap;
+	private Map<String, Double> expenseMap;
+	private Map<String, Double> stgMap;
 	
-	public CalculateLongTermGoalsFunctionCommand(JSONObject data) {
+	public CalculateLongTermGoalsFunctionCommand(JSONObject data, Map<String, Long> genericFundsMap, Map<String, Double> expenseMap, 
+			Map<String, Double> stgMap) {
 		this.data = data;
+		this.genericFundsMap = genericFundsMap;
+		this.expenseMap = expenseMap;
+		this.stgMap = stgMap;
 	}
 	
 	public void func(CommandList cl, int index) {
 		GroupedGoalsIterator ggi = new GroupedGoalsIterator((JSONArray)data.get(MenuItemUtils.getRootGroupName()));
-		Map<String, Long> dapg = Calculator.getDollarAmountsToBeAppliedPerGroup(data);
+		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(this.genericFundsMap, this.expenseMap, this.stgMap);
+		Map<String, Long> dapg = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
 		
 		int indexOffset = 1;
 		cl.add(index + indexOffset++, new StringCommand(""));

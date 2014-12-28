@@ -25,7 +25,7 @@ public class ReportTest extends JSONDataBasedTest {
 	public void testReport() {
 		ReportGenerator rg = new ReportGenerator();
 		
-		CommandList cl = rg.getReportData(data);
+		CommandList cl = rg.getReportData(data, state);
 		
 		ReportScreenPrinter rsp = new ReportScreenPrinter(cl);
 		
