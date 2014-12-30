@@ -12,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 import com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.AbstractMenuItemHandlerProvider;
 import com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.MenuItemHandlerProviderCollection;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class Controller {
 
@@ -31,14 +32,14 @@ public class Controller {
 		return instance;
 	}
 	
-	public static List<MenuItemHandlerBean> getMenuItemHandlers(JSONObject data, JSONObject state) {
+	public static List<MenuItemHandlerBean> getMenuItemHandlers() {
 		List<MenuItemHandlerBean> rtn = new ArrayList<>();
 		List<AbstractMenuItemHandlerProvider> providerList = mihpc.getList();
 
 		Iterator<AbstractMenuItemHandlerProvider> iterator = providerList.iterator();
 		
 		while (iterator.hasNext()) {
-			MenuItemHandlerBean bean = iterator.next().getMenuItemHandler(data, state);
+			MenuItemHandlerBean bean = iterator.next().getMenuItemHandler();
 			
 			if (bean != null) {
 				rtn.add(bean);

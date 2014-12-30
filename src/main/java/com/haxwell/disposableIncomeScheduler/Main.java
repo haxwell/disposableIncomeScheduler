@@ -4,6 +4,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.ParseException;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class Main {
 	
@@ -22,7 +23,11 @@ public class Main {
 		
 		MenuItemUtils.initializeState(state);
 		
-		boolean changes = Processor.process(obj, state);
+		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		dass.setData(obj);
+		dass.setState(state);
+		
+		boolean changes = Processor.process();
 		
 		if (changes) {
 			System.out.println();

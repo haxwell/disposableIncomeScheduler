@@ -8,17 +8,21 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class Processor {
 
-	public static boolean process(JSONObject data, JSONObject state) {
+	public static boolean process() {
+		JSONObject data = DataAndStateSingleton.getInstance().getData();
+		JSONObject state = DataAndStateSingleton.getInstance().getState();
+		
 		Map<Integer, MenuItemHandlerBean> map = new HashMap<>();
 		boolean changesMade = false;
 		
 		MenuItemHandlerBean selection;
 		
 		do {
-			List<MenuItemHandlerBean> list = Controller.getInstance().getMenuItemHandlers(data, state);
+			List<MenuItemHandlerBean> list = Controller.getInstance().getMenuItemHandlers();
 			
 			map.clear();
 			

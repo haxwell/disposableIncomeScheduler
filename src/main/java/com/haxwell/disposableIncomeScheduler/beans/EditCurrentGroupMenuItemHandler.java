@@ -55,11 +55,11 @@ public class EditCurrentGroupMenuItemHandler extends MenuItemHandlerBean {
 	private LinkedList<MenuItemHandlerBean> getMenuOptions(JSONObject data, JSONObject state) {
 		LinkedList<MenuItemHandlerBean> linkedList = new LinkedList<MenuItemHandlerBean>();
 		
-		MenuItemHandlerBean menuItemHandler = new ChangeSelectedGroupNameMenuItemHandlerProvider().getMenuItemHandler(data, state);
+		MenuItemHandlerBean menuItemHandler = new ChangeSelectedGroupNameMenuItemHandlerProvider().getMenuItemHandler();
 		if (menuItemHandler != null)
 			linkedList.add(menuItemHandler);
 		
-		menuItemHandler = new SetCurrentGroupOverridePercentageMenuItemHandlerProvider().getMenuItemHandler(data, state); 
+		menuItemHandler = new SetCurrentGroupOverridePercentageMenuItemHandlerProvider().getMenuItemHandler(); 
 		if (menuItemHandler != null)
 			linkedList.add(menuItemHandler);
 		
