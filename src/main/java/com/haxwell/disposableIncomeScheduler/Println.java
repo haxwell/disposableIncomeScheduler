@@ -1,4 +1,4 @@
-package com.haxwell.disposableIncomeScheduler.beans;
+package com.haxwell.disposableIncomeScheduler;
 
 public class Println {
 

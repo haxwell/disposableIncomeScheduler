@@ -1,5 +1,6 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
+import com.haxwell.disposableIncomeScheduler.Println;
 import com.haxwell.disposableIncomeScheduler.report.CommandList;
 import com.haxwell.disposableIncomeScheduler.report.ReportGenerator;
 import com.haxwell.disposableIncomeScheduler.report.ReportScreenPrinter;

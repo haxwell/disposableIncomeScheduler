@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
-import com.haxwell.disposableIncomeScheduler.beans.Println;
+import com.haxwell.disposableIncomeScheduler.Println;
 import com.haxwell.disposableIncomeScheduler.report.commands.AddCommand;
 import com.haxwell.disposableIncomeScheduler.report.commands.Command;
 import com.haxwell.disposableIncomeScheduler.report.commands.FunctionCommand;

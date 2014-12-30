@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.haxwell.disposableIncomeScheduler.beans.Println;
 import com.haxwell.disposableIncomeScheduler.report.CommandList;
 import com.haxwell.disposableIncomeScheduler.report.ReportGenerator;
 import com.haxwell.disposableIncomeScheduler.report.ReportScreenPrinter;
