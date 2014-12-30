@@ -8,6 +8,7 @@ import java.util.Date;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 
 public class PaycheckUtils {
 	
@@ -104,7 +105,7 @@ public class PaycheckUtils {
 	private int[] getPaycheckNumberArray(JSONObject data) {
 		final int ARRAY_SIZE = 365;
 		int[] rtn = null;
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = CalendarUtils.getCurrentCalendar();
 		Date date = getMostRecentPaydate(data);
 		
 		cal.setTime(date);

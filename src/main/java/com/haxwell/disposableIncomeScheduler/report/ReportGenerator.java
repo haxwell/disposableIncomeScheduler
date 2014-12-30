@@ -19,6 +19,7 @@ import com.haxwell.disposableIncomeScheduler.report.commands.CalculateLongTermGo
 import com.haxwell.disposableIncomeScheduler.report.commands.StringCommand;
 import com.haxwell.disposableIncomeScheduler.report.commands.SubtotalCommand;
 import com.haxwell.disposableIncomeScheduler.report.commands.SubtractCommand;
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 
 public class ReportGenerator {
 
@@ -115,7 +116,7 @@ public class ReportGenerator {
 			Calendar cal = null;
 			date = sdf.parse(data.get(Constants.MOST_RECENT_PAYDATE)+"");
 			
-			cal = Calendar.getInstance();
+			cal = CalendarUtils.getCurrentCalendar();
 			cal.setTime(date);
 			
 			int periodLength = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
@@ -133,6 +134,6 @@ public class ReportGenerator {
 	}
 	
 	protected String getCheckOfTheMonth(JSONObject data) {
-		return pu.getPaycheckNumberAsString(data, Calendar.getInstance().getTime()); 
+		return pu.getPaycheckNumberAsString(data, CalendarUtils.getCurrentCalendar().getTime()); 
 	}
 }

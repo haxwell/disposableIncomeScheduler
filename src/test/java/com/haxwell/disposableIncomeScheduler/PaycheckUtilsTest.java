@@ -3,7 +3,6 @@ package com.haxwell.disposableIncomeScheduler;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 
 public class PaycheckUtilsTest extends JSONDataBasedTest {
 
@@ -118,7 +118,7 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 		}
 		
 		// if we pass in the same date as the MRP, the MRPPN should be the same
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = CalendarUtils.getCurrentCalendar();
 		cal.setTime(dateDecemberFifth2014); 
 				
 		assertTrue(sut.getPaycheckNumber(data, dateDecemberFifth2014) == 1);

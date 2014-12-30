@@ -58,4 +58,6 @@ public class Constants {
 	public static final String PAYCHECK_AMT = AMT_PAID_PER_PERIOD_JSON;
 	public static final String RAINY_DAY_FUND_AMT = "rainyDayFundAmt";
 	
+	public static final String TESTING_OVERRIDE_DATE_JSON = "testingOverrideDate";
+	
 }

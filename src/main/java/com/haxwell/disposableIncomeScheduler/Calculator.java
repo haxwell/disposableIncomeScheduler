@@ -16,6 +16,7 @@ import net.minidev.json.JSONObject;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
 import com.haxwell.disposableIncomeScheduler.report.commands.SubtractCommand;
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 
 public class Calculator {
 	
@@ -627,12 +628,12 @@ public class Calculator {
 
 	public static int getNumberOfDaysFromToday(JSONObject obj) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = CalendarUtils.getCurrentCalendar();
 		int rtn = -1;
 		
 		try {
 			cal.setTime(sdf.parse(obj.get(Constants.DATE_NEEDED_JSON).toString()));
-			rtn = (int)(((((cal.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
+			rtn = (int)(((((cal.getTimeInMillis() - CalendarUtils.getCurrentCalendar().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -657,7 +658,7 @@ public class Calculator {
 		Date furthestDate = getFurthestNeededByDate(data);
 		
 		if (furthestDate != null) {
-			int rangeInDays = (int)(((((furthestDate.getTime() - Calendar.getInstance().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
+			int rangeInDays = (int)(((((furthestDate.getTime() - CalendarUtils.getCurrentCalendar().getTimeInMillis()) / 1000 ) / 60) / 60) / 24);
 			arr = new int[rangeInDays];
 			
 			int scale = 25;
@@ -733,7 +734,7 @@ public class Calculator {
 	}
 
 	private static double getOffset(JSONObject data) {
-		Date date = Calendar.getInstance().getTime();
+		Date date = CalendarUtils.getCurrentCalendar().getTime();
 		PaycheckUtils pu = new PaycheckUtils(data);
 		int num = pu.getNumberOfPaychecks(data, date);
 		double rtn = -1;

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
+
 public class DateNeededValueValidator extends Validator {
 	public String getValidValue(String str) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -12,7 +14,7 @@ public class DateNeededValueValidator extends Validator {
 		try {
 			Date parse = sdf.parse(str);
 			
-			Calendar cal = Calendar.getInstance();
+			Calendar cal = CalendarUtils.getCurrentCalendar();
 			if (parse.before(cal.getTime()))
 				str = "";
 			
@@ -31,7 +33,7 @@ public class DateNeededValueValidator extends Validator {
 		try {
 			Date parse = sdf.parse(str);
 			
-			Calendar cal = Calendar.getInstance();
+			Calendar cal = CalendarUtils.getCurrentCalendar();
 			if (parse.before(cal.getTime()))
 				rtn = false;
 			

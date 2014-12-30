@@ -1,11 +1,12 @@
 {
-    "totalInThePot":"1000",
+    "testingOverrideDate":"12/06/2014",
+	"totalInThePot":"1000",
 	"periodLength": "14",
 	"amountPaidPerPeriod":"2400",
     "amountSavedPerPeriod": "500",
     "amtSavedForRainyDay":"500",
-    "mostRecentPaydate": "12/19/2014",
-    "mostRecentPaydatePeriodNumber":"2",
+    "mostRecentPaydate": "12/05/2014",
+    "mostRecentPaydatePeriodNumber":"1",
     "expenses" : [
 	    {
 			"price" : "1025",
