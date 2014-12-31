@@ -3,6 +3,7 @@ package com.haxwell.disposableIncomeScheduler;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minidev.json.JSONArray;
@@ -106,18 +107,41 @@ public class CalculatorTest extends JSONDataBasedTest {
 		}
 	}
 
-//	@Test
-//	public void testCalculateWeights() {
-//		JSONObject weights = Calculator.getWeights(data);
-//		
-//		assertTrue(weights.size() > 0);
-//	}
-	
-//	@Test
-//	public void testApplyMoney() {
-//		Calculator.applyMoney(data);
-//		
-//		assertTrue(true);
-//	}
+	@Test
+	public void testApplyMoneyToLongTermGoals() {
+		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "2000");
+		
+		long totalDollarAmount = 2400;
+		// apply the money once.. with the default values in 'data', the 'Garage Door' goal should have more than it needs saved.
+		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
+		
+		initializeState_Outside();
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(arr);
+		long price = -1;
+		long prevSavedAmt = -1;
+		
+		for (JSONObject obj : goals) {
+			if (obj.containsKey(strOutside_garage)) {
+				price = Long.parseLong(obj.get(Constants.PRICE_JSON)+"");
+				prevSavedAmt = Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
+				
+				assertTrue(prevSavedAmt > price);
+			}
+		}
+		
+		// apply the money again.. the 'Garage Door' goal should have the same amount as before.. no money should be applied to it
+		//  once a moneyApplication has put it over the top.
+		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
+		
+		arr = MenuItemUtils.getSelectedGroup(data, state);
+		goals = MenuItemUtils.getGoalsOfAGroup(arr);
+		
+		for (JSONObject obj : goals) {
+			if (obj.containsKey(strOutside_garage)) {
+				assertTrue(prevSavedAmt == Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+""));
+			}
+		}
+	}
 	
 }

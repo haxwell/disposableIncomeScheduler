@@ -278,39 +278,45 @@ public class Calculator {
 											for (int xx=0; xx < grandchildGroupGoalWeights.size(); xx++) {
 												JSONObject grandchildGroupGoalWeight = (JSONObject)grandchildGroupGoalWeights.get(xx);
 												if (grandchildGroupGoalWeight.containsKey(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)) {
-													if (groupToOPMap.size() == 0) {
-														Double d = Double.parseDouble(grandchildGroupGoalWeight.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)+"");
-														groupToOPMap.put(grandchildGroupName, d);
-													}
-													else {
-														/**
-														 * We set a rule saying there can only be one group with an overriding percentage 
-														 * set, because there are so many corner cases that arise when multiple groups have 
-														 * an overriding percentage set, that my mind is currently boggled. The problem 
-														 * lies in the apparent need to account for the difference in the original percentage 
-														 * weight of the group and the overridden percentage. the sum of the sibling group's 
-														 * percentages must equal 1.0. so if you override one, the others must adjust as well.
-														 * 
-														 * Its easy enough with one group changed, but if two groups change, how do you 
-														 * handle that? the way it is done now is to spread the difference over the sibling 
-														 * groups .01% at a time. .01 of the difference is added/subtracted to the weight of 
-														 * the first sibling group, and .01 is added/subtracted to the next. In that way the 
-														 * difference is spread over each of the siblings, and you still come up with 1.0 
-														 * total for all. But if a second is overridden, what do you do? Do you exclude the 
-														 * first group from being adjusted? Then what if there are only two groups? Only the 
-														 * second group remains, and to adjust it would change the overridden percentage set 
-														 * on it. What if there are three? well, it depends on whether the overriding values 
-														 * in the first two groups are positive or negative adjustments. I think it may be 
-														 * possible if they are both negative. Haven't worked it out, it just feels like it 
-														 * would work. But there are, as I said, a lot more corner cases, possibilities, 
-														 * and I don't see the benefit now. And if you don't exclude the first group, 
-														 * then its overriding value changes when the second is applied. So thats a dead end 
-														 * I believe. Anyway, this is a difficult problem, and I leave it to my future self 
-														 * to think about, if it turns out setting only one overriden percentage per sibling 
-														 * group doesn't work out.
-														 */
-														
-														throw new IllegalStateException("Only one group in a set of sibling groups can have an overridden percentage!");
+													String groupWeightAsPercentage = grandchildGroupGoalWeight.get(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON)+"";
+													
+													// if group weight as percentage == 1.0, then it is the only group among its siblings (if any) that has any weight
+													//  doesn't make sense to override the percentage, so we check for it here.
+													if (!groupWeightAsPercentage.equals("1.0")) {
+														if (groupToOPMap.size() == 0) {
+															Double d = Double.parseDouble(grandchildGroupGoalWeight.get(Constants.OVERRIDING_PERCENTAGE_AMT_JSON)+"");
+															groupToOPMap.put(grandchildGroupName, d);
+														}
+														else {
+															/**
+															 * We set a rule saying there can only be one group with an overriding percentage 
+															 * set, because there are so many corner cases that arise when multiple groups have 
+															 * an overriding percentage set, that my mind is currently boggled. The problem 
+															 * lies in the apparent need to account for the difference in the original percentage 
+															 * weight of the group and the overridden percentage. the sum of the sibling group's 
+															 * percentages must equal 1.0. so if you override one, the others must adjust as well.
+															 * 
+															 * Its easy enough with one group changed, but if two groups change, how do you 
+															 * handle that? the way it is done now is to spread the difference over the sibling 
+															 * groups .01% at a time. .01 of the difference is added/subtracted to the weight of 
+															 * the first sibling group, and .01 is added/subtracted to the next. In that way the 
+															 * difference is spread over each of the siblings, and you still come up with 1.0 
+															 * total for all. But if a second is overridden, what do you do? Do you exclude the 
+															 * first group from being adjusted? Then what if there are only two groups? Only the 
+															 * second group remains, and to adjust it would change the overridden percentage set 
+															 * on it. What if there are three? well, it depends on whether the overriding values 
+															 * in the first two groups are positive or negative adjustments. I think it may be 
+															 * possible if they are both negative. Haven't worked it out, it just feels like it 
+															 * would work. But there are, as I said, a lot more corner cases, possibilities, 
+															 * and I don't see the benefit now. And if you don't exclude the first group, 
+															 * then its overriding value changes when the second is applied. So thats a dead end 
+															 * I believe. Anyway, this is a difficult problem, and I leave it to my future self 
+															 * to think about, if it turns out setting only one overriden percentage per sibling 
+															 * group doesn't work out.
+															 */
+															
+															throw new IllegalStateException("Only one group in a set of sibling groups can have an overridden percentage!");
+														}
 													}
 												}
 											}
@@ -388,8 +394,11 @@ public class Calculator {
 								
 								Double offset = ((multiplier * 0.01) * multiplier);
 								
+								Double prevDiff = null;
 								// while the difference has not been completely spread...
-								while (diff != 0.0) {
+								while (diff != 0.0 && prevDiff != diff) { // checking prevDiff prevents an infinite loop
+									prevDiff = diff;
+									
 									// then for each group whos GWP we are adjusting
 									for (JSONObject grandchildGroup : listOfFilteredJSONObjects) {
 										String grandchildGroupName = grandchildGroup.keySet().iterator().next();
@@ -431,6 +440,18 @@ public class Calculator {
 		return rtn;
 	}
 	
+	/**
+	 * Iterates over a subset of the long term goals, reading their happiness and utility values, adding them up
+	 * and calculating a percentage, relative to the goal's siblings, which indicates which portion of the money
+	 * this goal should get compared to its siblings.
+	 * 
+	 * The resulting JSONObject has the same names, structure and relationships as the original long term goal 
+	 * subset, but the details of each leaf (goal) are specific to calculating the weights. 
+	 * 
+	 * @param element
+	 * @param dateArr
+	 * @return
+	 */
 	private static JSONObject buildJSONWeightObject(JSONObject element, int[] dateArr) {
 		JSONObject weights = new JSONObject();
 		
@@ -494,16 +515,27 @@ public class Calculator {
 						//  the total weight of the level, and is where we put the weight as a percentage (which is a portion
 						//  relative to its siblings)
 						if (obj.containsKey(Constants.WEIGHT_JSON)) {
-							Object valueObj = obj.get(Constants.WEIGHT_JSON);
+							int objWeight = Integer.parseInt(obj.get(Constants.WEIGHT_JSON)+"");
+							double objWeightAsPercentage;
 							
-							int value = Integer.parseInt(valueObj+"");
-							obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, ((value*1.0)/total)+"");
+							if (obj.containsKey(Constants.SAVING_IS_COMPLETE_JSON))
+								objWeightAsPercentage = 0.0;
+							else
+								objWeightAsPercentage = (objWeight*1.0)/total;
+								
+							obj.put(Constants.WEIGHT_AS_PERCENTAGE_JSON, (objWeightAsPercentage)+"");
 						}
 					}
 				}
 			}
 		} else {
 			// this is a goal, a leaf
+			long prevSaveAmt = Long.parseLong(element.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");			
+			long price = Long.parseLong(element.get(Constants.PRICE_JSON)+"");
+			
+			if (prevSaveAmt >= price)
+				weights.put(Constants.SAVING_IS_COMPLETE_JSON, "true");
+
 			int value = getValueForGoal(element, dateArr); 
 			weights.put(Constants.DESCRIPTION_JSON, element.get(Constants.DESCRIPTION_JSON));
 			weights.put(Constants.WEIGHT_JSON, value+"");
@@ -606,7 +638,10 @@ public class Calculator {
 					Integer innerGroupWeight = 0;
 					for (int x=0; x < groupElements.size(); x++) {
 						JSONObject groupElement = (JSONObject)groupElements.get(x);
-						innerGroupWeight += Integer.parseInt(groupElement.get(Constants.WEIGHT_JSON)+"");
+
+						if (!groupElement.containsKey(Constants.SAVING_IS_COMPLETE_JSON)) {
+							innerGroupWeight += Integer.parseInt(groupElement.get(Constants.WEIGHT_JSON)+"");
+						}
 					}
 					
 					JSONObject groupWeightObj = new JSONObject();

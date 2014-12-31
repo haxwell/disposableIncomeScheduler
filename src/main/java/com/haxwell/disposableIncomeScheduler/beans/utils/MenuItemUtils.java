@@ -517,4 +517,8 @@ public class MenuItemUtils {
 		
 		return rtn;
 	}
+
+	public static JSONArray getLongTermGoals(JSONObject data) {
+		return (JSONArray)data.get(Constants.LONG_TERM_GOALS_JSON);
+	}
 }

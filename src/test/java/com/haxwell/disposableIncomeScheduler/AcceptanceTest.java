@@ -50,6 +50,10 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		when(mockedInputGetter.readInput()).thenReturn("yes");
 		
 		addT.setInputGetter(mockedInputGetter);
+		
+		Println mockedPrintlner = mock(Println.class);
+		addT.setPrintlner(mockedPrintlner);
+		
 		addT.doIt(data, state);
 		
 		DisplayTheReportMenuItemHandler dispTR = new DisplayTheReportMenuItemHandler();
@@ -58,6 +62,7 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		when(mockedInputGetter2.readInput()).thenReturn("");
 		
 		dispTR.setInputGetter(mockedInputGetter2);
+		dispTR.setPrintlner(mockedPrintlner);
 		dispTR.doIt(data, state);
 		
 		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/20/2014");

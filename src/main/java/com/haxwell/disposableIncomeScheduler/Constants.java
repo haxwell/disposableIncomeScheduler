@@ -62,5 +62,6 @@ public class Constants {
 	
 	public static final String TESTING_OVERRIDE_DATE_JSON = "testingOverrideDate";
 	public static final String NUMBER_OF_PAYCHECKS_PROCESSED = "numberOfPaychecksProcessed";
+	public static final String SAVING_IS_COMPLETE_JSON = "savingIsComplete";
 	
 }
