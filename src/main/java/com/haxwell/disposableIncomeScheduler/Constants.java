@@ -29,6 +29,8 @@ public class Constants {
 	public final static String AMT_SAVED_PER_PERIOD_JSON = "amountSavedPerPeriod";
 	public final static String TOTAL_IN_THE_POT = "Total in the Pot";
 	public final static String TOTAL_IN_THE_POT_JSON = "totalInThePot";
+	public final static String PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON = "prevTotalInThePot_BeforeApplyingFunds";
+	public final static String PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON = "prevTotalInThePot_AfterApplyingFunds";
 	
 	public static final String PREVIOUS_SAVED_AMT = "Previous Saved Amount";
 	public static final String PREVIOUS_SAVED_AMT_JSON = "previousSavedAmount";
@@ -59,5 +61,6 @@ public class Constants {
 	public static final String RAINY_DAY_FUND_AMT = "rainyDayFundAmt";
 	
 	public static final String TESTING_OVERRIDE_DATE_JSON = "testingOverrideDate";
+	public static final String NUMBER_OF_PAYCHECKS_PROCESSED = "numberOfPaychecksProcessed";
 	
 }
