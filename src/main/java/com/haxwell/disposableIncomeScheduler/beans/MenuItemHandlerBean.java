@@ -12,8 +12,8 @@ public class MenuItemHandlerBean {
 	String menuText;
 	List<MenuItemHandlerBean> children;
 	
-	InputGetter inputGetter;
-	Println println;
+	private InputGetter inputGetter;
+	private Println println;
 	
 	/**
 	 * 
