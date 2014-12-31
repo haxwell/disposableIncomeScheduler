@@ -3,10 +3,11 @@ package com.haxwell.disposableIncomeScheduler.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import com.haxwell.disposableIncomeScheduler.Constants;
+import java.util.Date;
 
 import net.minidev.json.JSONObject;
+
+import com.haxwell.disposableIncomeScheduler.Constants;
 
 public class CalendarUtils {
 
@@ -25,5 +26,20 @@ public class CalendarUtils {
 		}
 		
 		return rtn;
+	}
+	
+	public static Calendar getCalendar(Date date) {
+		Calendar rtn = Calendar.getInstance();
+		rtn.setTime(date);
+		
+		return rtn;
+	}
+	
+	public static void advanceCalendarByPeriodLength(Calendar cal) {
+		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		JSONObject data = dass.getData();
+		int periodLength = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
+
+		cal.add(Calendar.DAY_OF_MONTH, periodLength);
 	}
 }
