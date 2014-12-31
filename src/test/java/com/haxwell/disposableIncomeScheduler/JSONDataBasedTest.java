@@ -192,4 +192,35 @@ public class JSONDataBasedTest {
 		
 		return rtn;
 	}
+	
+	protected void initializeState_12880() {
+		MenuItemUtils.initializeState(state);
+
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+	}
+
+	protected void initializeState_Bathroom() {
+		MenuItemUtils.initializeState(state);
+
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strBathroom);
+	}
+
+	protected void initializeState_Kitchen() {
+		MenuItemUtils.initializeState(state);
+
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strKitchen);
+	}
+
+	protected void initializeState_Outside() {
+		MenuItemUtils.initializeState(state);
+
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, str12880);
+		simulateSelectingAGroup(state, strOutside);
+	}
 }

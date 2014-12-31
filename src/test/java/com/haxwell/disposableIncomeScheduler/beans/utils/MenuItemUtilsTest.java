@@ -226,27 +226,4 @@ public class MenuItemUtilsTest extends JSONDataBasedTest {
 		
 		assertFalse(MenuItemUtils.doesGroupHaveSubgroups(MenuItemUtils.getSelectedGroup(data, state)));
 	}
-	
-	private void initializeState_12880() {
-		MenuItemUtils.initializeState(state);
-
-		simulateSelectingAGroup(state, strJohnathansGoals);
-		simulateSelectingAGroup(state, str12880);
-	}
-
-	private void initializeState_Bathroom() {
-		MenuItemUtils.initializeState(state);
-
-		simulateSelectingAGroup(state, strJohnathansGoals);
-		simulateSelectingAGroup(state, str12880);
-		simulateSelectingAGroup(state, strBathroom);
-	}
-
-	private void initializeState_Kitchen() {
-		MenuItemUtils.initializeState(state);
-
-		simulateSelectingAGroup(state, strJohnathansGoals);
-		simulateSelectingAGroup(state, str12880);
-		simulateSelectingAGroup(state, strKitchen);
-	}
 }
