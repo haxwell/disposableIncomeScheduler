@@ -9,10 +9,12 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class PaycheckUtils {
 	
 	int[] paycheckNumberArray = null;
+	Date paycheckNumberArrayBeginDate = null;
 	
 	public PaycheckUtils(JSONObject data) {
 		paycheckNumberArray = getPaycheckNumberArray(data);
@@ -21,12 +23,11 @@ public class PaycheckUtils {
 	/**
 	 * Given a date, returns the number of paychecks in that month.
 	 */
-	public int getNumberOfPaychecks(JSONObject data, Date date) {
+	public int getNumberOfPaychecks(Date date) {
 		int rtn = -1;
-		Date mrpDate = getMostRecentPaydate(data);
 		
-		if (date.equals(mrpDate) || date.after(mrpDate)) {
-			long diff = date.getTime() - mrpDate.getTime();
+		if (date.equals(paycheckNumberArrayBeginDate) || date.after(paycheckNumberArrayBeginDate)) {
+			long diff = date.getTime() - paycheckNumberArrayBeginDate.getTime();
 			
 			diff /= 1000 * 60 * 60 * 24;
 			
@@ -63,23 +64,31 @@ public class PaycheckUtils {
 	/**
 	 * Given a date, returns the number of the paycheck in the month that the date is being covered by
 	 */
-	public int getPaycheckNumber(JSONObject data, Date date) {
+	public int getPaycheckNumber(Date date) {
 		int rtn = -1;
-		Date mrpDate = getMostRecentPaydate(data);
 		
-		if (date.equals(mrpDate) || date.after(mrpDate)) {
-			long diff = date.getTime() - mrpDate.getTime();
+		if (date.equals(paycheckNumberArrayBeginDate) || date.after(paycheckNumberArrayBeginDate)) {
+			long diff = date.getTime() - paycheckNumberArrayBeginDate.getTime();
 			
 			diff /= 1000 * 60 * 60 * 24;
 			
-			return paycheckNumberArray[(int)diff];
+			rtn = paycheckNumberArray[(int)diff];
 		}
+		
+		System.out.println("getPaycheckNumber() returning " + rtn);
 		
 		return rtn;
 	}
 	
-	public String getPaycheckNumberAsString(JSONObject data, Date date) {
-		int pn = getPaycheckNumber(data, date);
+	public int getNextPaycheckNumber(Date date) {
+		Calendar cal = CalendarUtils.getCalendar(date);
+		CalendarUtils.advanceCalendarByPeriodLength(cal);
+		
+		return getPaycheckNumber(cal.getTime());
+	}
+	
+	public String getPaycheckNumberAsString(Date date) {
+		int pn = getPaycheckNumber(date);
 		String rtn = "";
 		
 		if (pn == 1) rtn = "1st";
@@ -102,38 +111,65 @@ public class PaycheckUtils {
 		return rtn; 
 	}
 	
+	public void advanceMostRecentPaydateByOnePeriod(JSONObject data) {
+		Calendar cal = CalendarUtils.getCurrentCalendar();
+		cal.setTime(getMostRecentPaydate(data));
+
+		CalendarUtils.advanceCalendarByPeriodLength(cal);
+//		int periodLength = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
+//		cal.add(Calendar.DAY_OF_MONTH, periodLength);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		data.put(Constants.MOST_RECENT_PAYDATE, sdf.format(cal.getTime()));
+		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, getPaycheckNumber(cal.getTime()));
+	}
+	
+	private int getPeriodLength() {
+		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		
+		JSONObject data = dass.getData();
+		
+		return Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
+	}
+	
+	private int getMostRecentPaydatePeriodNumber() {
+		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		
+		JSONObject data = dass.getData();
+		
+		return Integer.parseInt(data.get(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER)+"");
+	}
+
 	private int[] getPaycheckNumberArray(JSONObject data) {
 		final int ARRAY_SIZE = 365;
 		int[] rtn = null;
 		Calendar cal = CalendarUtils.getCurrentCalendar();
-		Date date = getMostRecentPaydate(data);
+		paycheckNumberArrayBeginDate = getMostRecentPaydate(data);
 		
-		cal.setTime(date);
+		cal.setTime(paycheckNumberArrayBeginDate);
  
-		if (cal != null) {
-			rtn = new int[ARRAY_SIZE];
-			int periodLength = Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
-			int periodCounter = 0;
-			int paycheckNumber = Integer.parseInt(data.get(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER)+"");
-			int month = cal.get(Calendar.MONTH);
+		rtn = new int[ARRAY_SIZE];
+		int periodLength = getPeriodLength();
+		int periodCounter = 0;
+		int paycheckNumber = getMostRecentPaydatePeriodNumber();
+		int month = cal.get(Calendar.MONTH);
+		
+		for (int i = 0; i < ARRAY_SIZE; i++) {
+			rtn[i] = paycheckNumber;
 			
-			for (int i = 0; i < ARRAY_SIZE; i++) {
-				rtn[i] = paycheckNumber;
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			
+			if (++periodCounter >= periodLength) {
+				periodCounter = 0;
 				
-				cal.add(Calendar.DAY_OF_MONTH, 1);
+				int _month = cal.get(Calendar.MONTH);
 				
-				if (++periodCounter >= periodLength) {
-					periodCounter = 0;
-					
-					int _month = cal.get(Calendar.MONTH);
-					
-					if (_month != month) {
-						month = _month;
-						paycheckNumber = 0;
-					}
-
-					paycheckNumber++;
+				if (_month != month) {
+					month = _month;
+					paycheckNumber = 0;
 				}
+
+				paycheckNumber++;
 			}
 		}
 		

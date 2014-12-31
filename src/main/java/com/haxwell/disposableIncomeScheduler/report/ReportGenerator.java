@@ -6,13 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
-import com.haxwell.disposableIncomeScheduler.beans.utils.GroupedGoalsIterator;
-import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
 import com.haxwell.disposableIncomeScheduler.report.commands.AddCommand;
 import com.haxwell.disposableIncomeScheduler.report.commands.CalculateLongTermGoalsFunctionCommand;
@@ -23,17 +20,17 @@ import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 
 public class ReportGenerator {
 
-	final String REPORT_BEGIN = "reportBeginDate";
-	final String REPORT_END = "reportEndDate";
-	final String CHECK_OF_THE_MONTH = "checkOfTheMonth";
-	final String BEGINNING_BALANCE = "beginningBalance";
-	final String RAINY_DAY_FUND_AMT = "rainyDayFundAmt";
-	
 	PaycheckUtils pu;
 	JSONObject reportData = new JSONObject();
 	
 	public ReportGenerator() {
 	}
+	
+	// TODO: A current problem is that we have the calculation of the report happening in at least two places.. First when
+	//  the money is applied, and second HERE in displaying the report. In both places we are getting values and adding this
+	//  subtracting that. There should be one means of describing the calculation that both (all) places can use.
+	//
+	//  see: AddThisPeriodsSavedAmountToEachEntryMenuItemHandler.java::doIt()
 	
 	public CommandList getReportData(JSONObject data, JSONObject state) {
 		pu = new PaycheckUtils(data);
@@ -47,7 +44,7 @@ public class ReportGenerator {
 		
 		Map<String, Long> map = Calculator.getDollarAmountsToBeAppliedToGenericallyReservedFunds(data);
 		
-		cl.add(new AddCommand(map.get(Constants.BEGINNING_BALANCE), "Previous balance"));
+		cl.add(new AddCommand(map.get(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON), "Previous balance"));
 		cl.add(new AddCommand(map.get(Constants.PAYCHECK_AMT), "Paycheck"));
 		cl.add(new SubtotalCommand("Beginning balance - " + getReportBeginDate(data)));
 		
@@ -77,17 +74,6 @@ public class ReportGenerator {
 		cl.add(new SubtotalCommand("Total - Amount Remaining"));
 
 		return cl;
-	}
-	
-	
-	public void print(JSONObject data) {
-		setReportHeaderVariables(data);
-	}
-	
-	public void setReportHeaderVariables(JSONObject data) {
-		reportData.put(REPORT_BEGIN, getReportBeginDate(data));
-		reportData.put(REPORT_END, getReportEndDate(data));
-		reportData.put(CHECK_OF_THE_MONTH, getCheckOfTheMonth(data));
 	}
 	
 	protected String getReportBeginDate(JSONObject data) {
@@ -134,6 +120,7 @@ public class ReportGenerator {
 	}
 	
 	protected String getCheckOfTheMonth(JSONObject data) {
-		return pu.getPaycheckNumberAsString(data, CalendarUtils.getCurrentCalendar().getTime()); 
+		Date time = CalendarUtils.getCurrentCalendar().getTime();
+		return pu.getPaycheckNumberAsString(time); 
 	}
 }

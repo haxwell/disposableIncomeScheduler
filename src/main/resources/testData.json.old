@@ -1,1 +1,91 @@
-{"periodLength":"14","amountSavedPerPeriod":"500","items":[{"price":"6000","utilityImmediacy":"13","description":"Furnace","happinessImmediacy":"13","happinessLength":"25","utilityLength":"25","dateNeededBy":""},{"price":"6000","utilityImmediacy":"13","description":"Kitchen remodel","happinessImmediacy":"15","happinessLength":"25","utilityLength":"25","dateNeededBy":"6\/21\/2016"},{"price":"12500","utilityImmediacy":"15","description":"Trip To France","happinessImmediacy":"20","happinessLength":"7","dateNeededBy":"10\/31\/2016","utilityLength":"8"}],"totalInThePot":"1000"}
+{
+    "testingOverrideDate":"12/06/2014",
+	"totalInThePot":"1000",
+	"prevTotalInThePot_AfterApplyingFunds":"0",
+	"prevTotalInThePot_BeforeApplyingFunds":"0",
+	"periodLength": "14",
+	"amountPaidPerPeriod":"2400",
+    "amountSavedPerPeriod": "500",
+    "amtSavedForRainyDay":"500",
+    "mostRecentPaydate": "11/21/2014",
+    "mostRecentPaydatePeriodNumber":"2",
+    "numberOfPaychecksProcessed":"0",
+    "expenses" : [
+	    {
+			"price" : "1025",
+			"description" : "mortgage"
+		},
+		{
+			"price":"112",
+			"description" : "car insurance"
+		}
+    ],
+    "shortTermGoals" : [
+    	{
+    		"totalAmountSaved":"0",
+    		"amountSavedPerPeriod":"150",
+    		"description":"groceries",
+        	"resetEachPeriod":"y"
+    	},
+    	{
+    		"totalAmountSaved":"0",
+    		"amountSavedPerPeriod":"120",
+    		"description":"gas",
+    		"resetEachPeriod":"y"    			
+    	},
+    	{
+    		"totalAmountSaved":"0",
+    		"amountSavedPerPeriod":"75",
+    		"description":"clothing",
+    		"resetEachPeriod":"n"    		
+    	}
+    ],
+    "longTermGoals": [
+        {
+            "realEstate": [
+                {
+                    "12880": [
+                        {
+                            "outside": [
+                                {
+                                    "price": "1000",
+                                    "utilityImmediacy": "13",
+                                    "description": "Main Garage Door",
+                                    "happinessImmediacy": "13",
+                                    "happinessLength": "25",
+                                    "utilityLength": "25",
+                                    "dateNeededBy": ""
+                                },
+                                {
+                                    "price": "750",
+                                    "utilityImmediacy": "13",
+                                    "description": "Little Garage Door",
+                                    "happinessImmediacy": "13",
+                                    "happinessLength": "25",
+                                    "utilityLength": "25",
+                                    "dateNeededBy": ""
+                                }
+                            ]
+                        },
+                        {
+                            "kitchen": [
+                                {
+                                    "price": "1000",
+                                    "utilityImmediacy": "13",
+                                    "description": "Kitchen floor",
+                                    "happinessImmediacy": "13",
+                                    "happinessLength": "25",
+                                    "utilityLength": "25",
+                                    "dateNeededBy": ""
+                                }
+                            ]
+                        },
+                        {
+                            "HVAC": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

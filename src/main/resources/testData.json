@@ -1,12 +1,14 @@
 {
     "testingOverrideDate":"12/06/2014",
 	"totalInThePot":"1000",
+	"prevTotalInThePot_AfterApplyingFunds":"0",
+	"prevTotalInThePot_BeforeApplyingFunds":"0",
 	"periodLength": "14",
 	"amountPaidPerPeriod":"2400",
     "amountSavedPerPeriod": "500",
     "amtSavedForRainyDay":"500",
-    "mostRecentPaydate": "12/05/2014",
-    "mostRecentPaydatePeriodNumber":"1",
+    "mostRecentPaydate": "11/21/2014",
+    "mostRecentPaydatePeriodNumber":"2",
     "expenses" : [
 	    {
 			"price" : "1025",
@@ -31,7 +33,7 @@
     		"resetEachPeriod":"y"    			
     	},
     	{
-    		"totalAmountSaved":"75",
+    		"totalAmountSaved":"0",
     		"amountSavedPerPeriod":"75",
     		"description":"clothing",
     		"resetEachPeriod":"n"    		

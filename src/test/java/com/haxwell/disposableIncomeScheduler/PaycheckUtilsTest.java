@@ -53,7 +53,7 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 
 		Date date = sut.getMostRecentPaydate(data);
 		
-		int val = sut.getNumberOfPaychecks(data, date);
+		int val = sut.getNumberOfPaychecks(date);
 		
 		assertTrue(val == 2);
 	}
@@ -69,7 +69,7 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 
 		Date date = sut.getMostRecentPaydate(data);
 		
-		int val = sut.getNumberOfPaychecks(data, date);
+		int val = sut.getNumberOfPaychecks(date);
 		
 		assertTrue(val == 3);
 	}
@@ -92,10 +92,31 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 			fail("date parse exception");
 		}
 		
-		int val = sut.getNumberOfPaychecks(data, date);
+		int val = sut.getNumberOfPaychecks(date);
 		assertTrue(val == 3);
 	}
 
+	@Test
+	public void testGetPaycheckNumber_1() {
+		String dateAsString = "11/21/2014";
+		String mrppn = "2"; 
+		
+		data.put(Constants.MOST_RECENT_PAYDATE, dateAsString);
+		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, mrppn);
+		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/06/2014");
+		
+		PaycheckUtils sut = new PaycheckUtils(data);
+		
+		sut.advanceMostRecentPaydateByOnePeriod(data);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			assertTrue(sut.getPaycheckNumber(sdf.parse("12/05/2014")) == 1);
+		} catch (ParseException pe) {
+			fail();
+		}
+	}
+	
 	@Test
 	public void testGetPaycheckNumber() {
 		String dateAsString = "12/05/2014";
@@ -121,27 +142,27 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 		Calendar cal = CalendarUtils.getCurrentCalendar();
 		cal.setTime(dateDecemberFifth2014); 
 				
-		assertTrue(sut.getPaycheckNumber(data, dateDecemberFifth2014) == 1);
+		assertTrue(sut.getPaycheckNumber(dateDecemberFifth2014) == 1);
 		
 		// if we pass in a date 5 days shorter than the period length, the MRPPN should be the same
 		final int PERIOD_LENGTH = 14;
 		cal.setTime(dateDecemberFifth2014);		
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH - 5);
 		
-		assertTrue(sut.getPaycheckNumber(data, cal.getTime()) == 1);
+		assertTrue(sut.getPaycheckNumber(cal.getTime()) == 1);
 		
 		// if we pass in a date equal to the MRP + the period length, the MRPPN should be the next value
 		cal.setTime(dateDecemberFifth2014);
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
 		
-		assertTrue(sut.getPaycheckNumber(data, cal.getTime()) == 2);
+		assertTrue(sut.getPaycheckNumber(cal.getTime()) == 2);
 		
 		// if we pass in a date equal to the MRP + two period length minus one day, the MRPPN is the next value 
 		cal.setTime(dateDecemberFifth2014);
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
 		cal.add(Calendar.DAY_OF_MONTH, -1);
-		assertTrue(sut.getPaycheckNumber(data, cal.getTime()) == 2);
+		assertTrue(sut.getPaycheckNumber(cal.getTime()) == 2);
 		
 		// test that if 12/05/14 is our start date, and period lengths are 14 days, and the given date is Jan 30
 		//  that that counts as the third paycheck number of the month
@@ -150,10 +171,24 @@ public class PaycheckUtilsTest extends JSONDataBasedTest {
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
-		assertTrue(sut.getPaycheckNumber(data, cal.getTime()) == 3);
+		assertTrue(sut.getPaycheckNumber(cal.getTime()) == 3);
 		
 		// ...and the one after that, feb 13, is the first paycheck of the month
 		cal.add(Calendar.DAY_OF_MONTH, PERIOD_LENGTH);
-		assertTrue(sut.getPaycheckNumber(data, cal.getTime()) == 1);
+		assertTrue(sut.getPaycheckNumber(cal.getTime()) == 1);
+	}
+	
+	@Test
+	public void testGetNextPaycheckNumber() {
+		String dateAsString = "11/21/2014";
+		String mrppn = "2"; 
+		
+		data.put(Constants.MOST_RECENT_PAYDATE, dateAsString);
+		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, mrppn);
+		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/06/2014");
+		
+		PaycheckUtils sut = new PaycheckUtils(data);
+		
+		assertTrue(sut.getNextPaycheckNumber(sut.getMostRecentPaydate(data)) == 1);
 	}
 }

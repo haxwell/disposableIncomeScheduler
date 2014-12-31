@@ -5,6 +5,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class JSONDataBasedTest {
 
@@ -36,6 +37,8 @@ public class JSONDataBasedTest {
 	protected void createDataAndStateObjects() {
 		JSONObject obj = new JSONObject();
 		
+		obj.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "0");
+		obj.put(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON, "2000");		
 		obj.put(Constants.TOTAL_IN_THE_POT_JSON, "2000");
 		obj.put(Constants.PERIOD_LENGTH_JSON, "14");
 		obj.put(Constants.AMT_PAID_PER_PERIOD_JSON, "2400");
@@ -43,6 +46,7 @@ public class JSONDataBasedTest {
 		obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "500");
 		obj.put(Constants.MOST_RECENT_PAYDATE, "12/19/2014");
 		obj.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "2");
+		obj.put(Constants.NUMBER_OF_PAYCHECKS_PROCESSED, "0");
 		
 		JSONArray arr = new JSONArray();
 
@@ -89,8 +93,8 @@ public class JSONDataBasedTest {
 		obj.put(Constants.SHORT_TERM_GOALS_JSON, arr);
 		
 		JSONObject iobj = new JSONObject();
-		iobj.put(getGoalGroupName(strBathroom), "0.15");
-//		iobj.put(getGoalGroupName(strOutside), "0.20");
+		iobj.put(strBathroom, "0.15");
+//		iobj.put(strOutside), "0.20");
 		obj.put(Constants.OVERRIDING_PERCENTAGE_AMT_JSON, iobj);
 		
 		JSONObject bathroom = new JSONObject();
@@ -98,47 +102,50 @@ public class JSONDataBasedTest {
 		
 		arr.add(getGoal(strBathroom_sink, strBathroom_sink_price, 0, 10, 10, 10, 10, "06/21/2015"));
 		arr.add(getGoal(strBathroom_shower, strBathroom_shower_price, 0, 10, 10, 10, 10, "06/21/2015"));
-		bathroom.put(getGoalGroupName(strBathroom), arr);
+		bathroom.put(strBathroom, arr);
 
 		JSONObject outside = new JSONObject();
 		arr = new JSONArray();
 		arr.add(getGoal(strOutside_garage, strOutside_garage_price));
-		outside.put(getGoalGroupName(strOutside), arr);
+		outside.put(strOutside, arr);
 		
 		JSONObject kitchen = new JSONObject();
 		arr = new JSONArray();
-		kitchen.put(getGoalGroupName(strKitchen), arr);
+		kitchen.put(strKitchen, arr);
 		
 		JSONObject _12880 = new JSONObject();
 		arr = new JSONArray();
 		arr.add(bathroom);
 		arr.add(outside);
 		arr.add(kitchen);
-		_12880.put(getGoalGroupName(str12880), arr);
+		_12880.put(str12880, arr);
 		
 		// -- trip to france
 		JSONObject tripToFrance = new JSONObject();
 		arr = new JSONArray();
 		arr.add(getGoal(strTripToFrance_airfare, strTripToFrance_airfare_price, 0, 10, 10, 10, 10, "09/01/2016"));
 		arr.add(getGoal(strTripToFrance_lodging, strTripToFrance_lodging_price, 0, 10, 10, 10, 10, "10/01/2016"));
-		tripToFrance.put(getGoalGroupName(strTripToFrance), arr);
+		tripToFrance.put(strTripToFrance, arr);
 		
 		arr = new JSONArray();
 		arr.add(_12880);
 		arr.add(tripToFrance);
 		
 		JSONObject johnathansGoals = new JSONObject();
-		johnathansGoals.put(getGoalGroupName(strJohnathansGoals), arr);
+		johnathansGoals.put(strJohnathansGoals, arr);
 		
 		arr = new JSONArray();
 		arr.add(johnathansGoals);
 
-		obj.put(getGoalGroupName(Constants.LONG_TERM_GOALS_JSON), arr);
+		obj.put(Constants.LONG_TERM_GOALS_JSON, arr);
 		
 		data = obj;
 		state = new JSONObject();
 		
 		MenuItemUtils.initializeState(state);
+		
+		DataAndStateSingleton.getInstance().setData(data);
+		DataAndStateSingleton.getInstance().setState(state);
 	}
 	
 	private JSONObject getGoal(String name, Integer price) {
@@ -159,10 +166,6 @@ public class JSONDataBasedTest {
 		obj.put(Constants.PREVIOUS_SAVED_AMT_JSON, previouslySavedAmt);
 		
 		return obj;
-	}
-	
-	private String getGoalGroupName(String str) {
-		return /*Constants.GOALS_ATTR_KEY+"_"+*/str;
 	}
 	
 	protected void simulateSelectingAGroup(JSONObject state, String groupName) {
