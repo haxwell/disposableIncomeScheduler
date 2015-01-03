@@ -47,7 +47,8 @@ public class Constants {
 	public static final String GROUP_WEIGHT_JSON = "groupWeight";
 	public static final String GROUP_WEIGHT_AS_PERCENTAGE_JSON = "groupWeightAsPercentage";
 	
-	public static final String PERIODIC_AMT_HAS_BEEN_APPLIED = "periodicAmtHasBeenApplied";
+	public static final String PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS = "periodicAmtHasBeenApplied";
+	public static final String PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS = "periodicAmtHasBeenApplied_stgs";
 
 	public static final String EXPENSES_JSON = "expenses";
 	public static final String TOTAL_AMOUNT_SAVED_JSON = "totalAmountSaved";

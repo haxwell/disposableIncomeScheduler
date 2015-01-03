@@ -94,7 +94,7 @@ public class CalculatorTest extends JSONDataBasedTest {
 		expectedValues.put("gas", 120.0);
 		expectedValues.put("groceries", 150.0);
 		
-		state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED, "feezlelydoo");
+		state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS, "feezlelydoo");
 		
 		Map<String, Double> map = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
 		

@@ -70,7 +70,7 @@ public class Calculator {
 			
 			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 			if (resetEachPeriod.toUpperCase().equals("N")) {
-				if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED)) {
+				if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS)) {
 					amount = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
 				} else {
 					amount += Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
@@ -190,8 +190,14 @@ public class Calculator {
 				
 				if (rtn.applied == 0 && rtn.overage == 0)
 					finished = true;
+				else if (rtn.applied == totalDollarAmount && rtn.overage == 0)
+					// then all money was applied, no goal had more money applied to it than it could take.. we're done! .. I think.
+					finished = true;
 				else
+					// if rtn.applied == totalDollarAmount && rtn.overage > 0 then all money was applied, but at least one goal had more money applied to it than it could take.. run it again.
 					totalDollarAmount = rtn.overage;
+				
+				
 				
 			} while (!finished);
 		}

@@ -1,11 +1,15 @@
 package com.haxwell.disposableIncomeScheduler.report.commands;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
+import java.util.Set;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Calculator;
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.GroupedGoalsIterator;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.report.CommandList;
@@ -27,26 +31,28 @@ public class CalculateLongTermGoalsFunctionCommand extends FunctionCommand {
 	
 	public void func(CommandList cl, int index) {
 		GroupedGoalsIterator ggi = new GroupedGoalsIterator((JSONArray)data.get(MenuItemUtils.getRootGroupName()));
-		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(this.genericFundsMap, this.expenseMap, this.stgMap);
-		Map<String, Long> dapg = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
+//		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(this.genericFundsMap, this.expenseMap, this.stgMap);
+//		Map<String, Long> dapg = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
 		
 		int indexOffset = 1;
 		cl.add(index + indexOffset++, new StringCommand(""));
 		
 		while (ggi.hasNext()) {
-			String goal = ggi.next();
+			JSONObject obj = ggi.next();
 			
 			String levelString = "";
 			
 			for (int i=0; i < ggi.getLevel(); i++)
 				levelString += "  ";
 		
-			if (dapg.containsKey(goal)) {
-				SubtractCommand element = new SubtractCommand(dapg.get(goal), goal);
+			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+				SubtractCommand element = new SubtractCommand(Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+""), obj.get(Constants.DESCRIPTION_JSON)+"");
 				element.setBufferString(levelString);
 				cl.add(index + indexOffset++, element);
 			} else {
-				cl.add(index + indexOffset++, new StringCommand(levelString + goal));
+				Set<String> keySet = obj.keySet();
+				String objName = keySet.iterator().next();
+				cl.add(index + indexOffset++, new StringCommand(levelString + objName));
 			}
 		}
 	}

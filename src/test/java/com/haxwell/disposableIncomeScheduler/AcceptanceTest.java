@@ -51,8 +51,9 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		
 		addT.setInputGetter(mockedInputGetter);
 		
-		Println mockedPrintlner = mock(Println.class);
-		addT.setPrintlner(mockedPrintlner);
+//		Println printlner = mock(Println.class);
+		Println printlner = new Println();
+		addT.setPrintlner(printlner);
 		
 		addT.doIt(data, state);
 		
@@ -62,19 +63,21 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		when(mockedInputGetter2.readInput()).thenReturn("");
 		
 		dispTR.setInputGetter(mockedInputGetter2);
-		dispTR.setPrintlner(mockedPrintlner);
+		dispTR.setPrintlner(printlner);
 		dispTR.doIt(data, state);
 		
 		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/20/2014");
 		
-		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED);
+		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS);
+		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS);
 		
 		addT.doIt(data, state);
 		dispTR.doIt(data, state);
 		
 		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "01/03/2015");
 		
-		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED);
+		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS);
+		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS);
 		
 		addT.doIt(data, state);
 		dispTR.doIt(data, state);

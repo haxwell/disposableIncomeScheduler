@@ -17,7 +17,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED)) {
+		if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS)) {
 			System.out.println("\nThe periodically saved amount has already been added!\n");
 			return rtn;
 		}
@@ -42,6 +42,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 			setBeginningBalanceToIncludeThisPeriodsPay(data);
 			
 			updateShortTermGoalTotalSavedAmounts(data);
+			state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS, "true");			
 			
 			// get the total that would be remaining after accounting for expenses and short term goals
 			long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
@@ -50,7 +51,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 			
 			rtn = true;
 			
-			state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED, "true");
+			state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS, "true");
 			long numPaychecksProcessed = Integer.parseInt(data.get(Constants.NUMBER_OF_PAYCHECKS_PROCESSED)+"");
 			data.put(Constants.NUMBER_OF_PAYCHECKS_PROCESSED, numPaychecksProcessed+1);
 			

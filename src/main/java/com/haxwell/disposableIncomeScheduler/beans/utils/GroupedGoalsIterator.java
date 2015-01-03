@@ -8,17 +8,14 @@ import java.util.Stack;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class GroupedGoalsIterator implements Iterator<String> {
+public class GroupedGoalsIterator implements Iterator<JSONObject> {
 
 	Stack<InnerDataObj> stack;
 	int level = 0;
 	
 	public GroupedGoalsIterator(JSONArray arr) {
 		stack = new Stack<InnerDataObj>();
-		
-		InnerDataObj ido = new InnerDataObj(arr);
-		
-		stack.push(ido);
+		stack.push(new InnerDataObj(arr));
 	}
 	
 	@Override
@@ -77,14 +74,8 @@ public class GroupedGoalsIterator implements Iterator<String> {
 	}
 
 	@Override
-	public String next() {
-		String rtn = null;
-		
-		InnerDataObj ido = stack.peek();
-		
-		rtn = ido.advance();
-		
-		return rtn;
+	public JSONObject next() {
+		return stack.peek().advance();
 	}
 	
 	public int getLevel() {
@@ -129,7 +120,7 @@ public class GroupedGoalsIterator implements Iterator<String> {
 				return goalsIterator.hasNext();
 		}
 		
-		public String advance() {
+		public JSONObject advance() {
 			if (subgroups()) {
 				lastObjReturned = sgIterator.next();
 			} else {
@@ -138,7 +129,7 @@ public class GroupedGoalsIterator implements Iterator<String> {
 			
 			lastNameReturned = nameIterator.next();
 			
-			return lastNameReturned;
+			return lastObjReturned;
 		}
 		
 		public boolean subgroups() {

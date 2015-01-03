@@ -1,18 +1,20 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
-import static org.junit.Assert.assertTrue;	
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
 
 public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
@@ -33,7 +35,7 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 		
 		GroupedGoalsIterator sut = new GroupedGoalsIterator(grpArr);
 		
-		List<String> list = new ArrayList<>();
+		List<JSONObject> list = new ArrayList<>();
 		
 		while (sut.hasNext())
 			list.add(sut.next());
@@ -46,7 +48,21 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 		
 		while (tokenizer.hasMoreElements()) {
 			String token = tokenizer.nextToken().trim();
-			assertTrue(list.get(index++).equals(token));
+			JSONObject obj = list.get(index++);
+			
+			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+				assertTrue(obj.get(Constants.DESCRIPTION_JSON).equals(token));	
+			}
+			else {
+				Set<String> keySet = obj.keySet();
+				
+				assertTrue(keySet.size() == 1);
+				
+				for (String str : keySet) {
+					assertTrue(str.equals(token));
+				}
+			}
+			
 		}
 	}
 }
