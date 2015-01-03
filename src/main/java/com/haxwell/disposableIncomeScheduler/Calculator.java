@@ -14,6 +14,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
+import com.haxwell.disposableIncomeScheduler.beans.utils.GroupedGoalsIterator;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
 import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
@@ -83,20 +84,33 @@ public class Calculator {
 		return map;
 	}
 	
+	public static Map<String, Double> getAmountsAlreadySavedForLongTermGoals(JSONObject data) {
+		Map<String, Double> map = new HashMap<>();
+		GroupedGoalsIterator ggi = new GroupedGoalsIterator(MenuItemUtils.getLongTermGoals(data));
+		
+		while (ggi.hasNext()) {
+			JSONObject obj = ggi.next();
+			
+			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+				map.put(obj.get(Constants.DESCRIPTION_JSON)+"", Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"")*1.0 );	
+			}
+		}
+		
+		return map;
+	}
+	
 	public static long getDollarAmountToBeSpreadOverLongTermGoals(JSONObject data, JSONObject state) {
 		return getDollarAmountToBeSpreadOverLongTermGoals(
 				Calculator.getDollarAmountsToBeAppliedToGenericallyReservedFunds(data),
 				Calculator.getDollarAmountsToBeAppliedToExpenses(data),
-				Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state));
+				Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state),
+				Calculator.getAmountsAlreadySavedForLongTermGoals(data));
 	}
 	
 	public static long getDollarAmountToBeSpreadOverLongTermGoals(Map<String, Long> genericFundsMap, 
-			Map<String, Double> expenseMap, Map<String, Double> stgMap) {
-		long total = 0;
-		
-		// calc this and then have getDollarAmountsToBeAppliedPerLongTermGoalGroup() call this and use it as
-		//  its 'dollarAmount' variable.
-		total = getTotalDollarAmountAfterAccountingForGenericallyReservedFunds(genericFundsMap);
+			Map<String, Double> expenseMap, Map<String, Double> stgMap, Map<String, Double> ltgMap) {
+
+		long total = getTotalDollarAmountAfterAccountingForGenericallyReservedFunds(genericFundsMap);
 		
 		for (String key : expenseMap.keySet()) {
 			total -= expenseMap.get(key);
@@ -104,6 +118,10 @@ public class Calculator {
 		
 		for (String key : stgMap.keySet()) {
 			total -= stgMap.get(key);
+		}
+		
+		for (String key : ltgMap.keySet()) {
+			total -= ltgMap.get(key);
 		}
 		
 		return total;
@@ -196,8 +214,6 @@ public class Calculator {
 				else
 					// if rtn.applied == totalDollarAmount && rtn.overage > 0 then all money was applied, but at least one goal had more money applied to it than it could take.. run it again.
 					totalDollarAmount = rtn.overage;
-				
-				
 				
 			} while (!finished);
 		}
@@ -598,8 +614,10 @@ public class Calculator {
 							int objWeight = Integer.parseInt(obj.get(Constants.WEIGHT_JSON)+"");
 							double objWeightAsPercentage;
 							
-							if (obj.containsKey(Constants.SAVING_IS_COMPLETE_JSON))
+							if (obj.containsKey(Constants.SAVING_IS_COMPLETE_JSON)) {
 								objWeightAsPercentage = 0.0;
+								total -= objWeight;
+							}
 							else
 								objWeightAsPercentage = (objWeight*1.0)/total;
 								
