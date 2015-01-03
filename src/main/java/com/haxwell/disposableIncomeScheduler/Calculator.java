@@ -12,6 +12,7 @@ import java.util.Map;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
@@ -19,6 +20,17 @@ import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 
 public class Calculator {
 	
+	private static class InnerCalculatePreviousSavedAmountHandler
+			implements CalculatedPreviousSavedAmountHandler {
+		@Override
+		public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
+			Object object = groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON);
+			long previousSavedAmount = Long.parseLong((object == null) ? "0" : object.toString());
+			previousSavedAmount += dollarAmountToBeApplied;
+			groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
+		}
+	}
+
 	public interface CalculatedPreviousSavedAmountHandler {
 		public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied);
 	}
@@ -117,18 +129,47 @@ public class Calculator {
 	}
 	
 	public static Map<String, Long> getDollarAmountsToBeAppliedPerLongTermGoalGroup(JSONObject data, long totalDollarAmount) {
-		JSONObject grpRootElement = getFirstElementInRootGroupArray(data); 
-		JSONObject weightsRootElement = getFirstElementInRootGroupArray(Calculator.getWeights(data)); 
+		String dataString = data.toJSONString();
+		JSONObject dataCopy = (JSONObject)JSONValue.parse(dataString);
+		
+		JSONObject grpRootElement = getFirstElementInRootGroupArray(dataCopy); 
 		
 		final Map<String, Long> map = new HashMap<>();
 		
-		if (grpRootElement != null && weightsRootElement != null) {
-			applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new CalculatedPreviousSavedAmountHandler() {
-				@Override
-				public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
-					map.put(groupElement.get(Constants.DESCRIPTION_JSON)+"", dollarAmountToBeApplied);
-				}
-			});
+		if (grpRootElement != null) {
+			boolean finished = false;
+			
+			do {
+				JSONObject weightsRootElement = getFirstElementInRootGroupArray(Calculator.getWeights(dataCopy));
+				
+				ApplyMoneyHelperReturnValue rtn = new ApplyMoneyHelperReturnValue();
+				
+				rtn = applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new InnerCalculatePreviousSavedAmountHandler() {
+					@Override
+					public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
+						super.handleIt(groupElement, dollarAmountToBeApplied);
+
+						String key = groupElement.get(Constants.DESCRIPTION_JSON)+"";
+						long l = 0;
+						
+						if (map.containsKey(key)) {
+							l = map.get(key);
+						}
+						
+						map.put(groupElement.get(Constants.DESCRIPTION_JSON)+"", l + dollarAmountToBeApplied);
+					}
+				});
+						
+				if (rtn.applied == 0 && rtn.overage == 0)
+					finished = true;
+				else if (rtn.applied == totalDollarAmount && rtn.overage == 0)
+					// then all money was applied, no goal had more money applied to it than it could take.. we're done! .. I think.
+					finished = true;
+				else
+					// if rtn.applied == totalDollarAmount && rtn.overage > 0 then all money was applied, but at least one goal had more money applied to it than it could take.. run it again.
+					totalDollarAmount = rtn.overage;
+				
+			} while (!finished);
 		}
 		
 		return map;
@@ -136,23 +177,38 @@ public class Calculator {
 	
 	public static void applyMoneyToLongTermGoals(JSONObject data, long totalDollarAmount) {
 		JSONObject grpRootElement = getFirstElementInRootGroupArray(data);
-		JSONObject weightsRootElement = getFirstElementInRootGroupArray(Calculator.getWeights(data));
 		
-		if (grpRootElement != null && weightsRootElement != null) {
-			applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new CalculatedPreviousSavedAmountHandler() {
-				@Override
-				public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
-					Object object = groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON);
-					long previousSavedAmount = Long.parseLong((object == null) ? "0" : object.toString());
-					previousSavedAmount += dollarAmountToBeApplied;
-					groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
-				}
-			});
+		if (grpRootElement != null) {
+			boolean finished = false;
+
+			do {
+				JSONObject weightsRootElement = getFirstElementInRootGroupArray(Calculator.getWeights(data));
+				
+				ApplyMoneyHelperReturnValue rtn = new ApplyMoneyHelperReturnValue();
+				
+				rtn = applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new InnerCalculatePreviousSavedAmountHandler());
+				
+				if (rtn.applied == 0 && rtn.overage == 0)
+					finished = true;
+				else
+					totalDollarAmount = rtn.overage;
+				
+			} while (!finished);
 		}
 	}
 	
-	private static void applyMoneyHelper(JSONObject ge, JSONObject we, long dollarAmount, CalculatedPreviousSavedAmountHandler func) {
+	private static class ApplyMoneyHelperReturnValue {
+		// OVERAGE is the amount that was over what was needed to fully save for the goals on a given level and its children.
+		long overage = 0;
+		
+		// APPLIED is the amount attempted to be applied to goals. It it equals 0, then all subgoals had zero weight, meaning they are all fully saved.
+		long applied = 0;
+	}
+	
+	private static ApplyMoneyHelperReturnValue applyMoneyHelper(JSONObject ge, JSONObject we, long dollarAmount, CalculatedPreviousSavedAmountHandler func) {
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(ge);
+
+		ApplyMoneyHelperReturnValue rtn = new ApplyMoneyHelperReturnValue();
 		
 		if (list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
@@ -165,7 +221,7 @@ public class Calculator {
 					JSONObject weightElement = (JSONObject)weightElements.get(x);
 					
 					List<String> subgroupNames = MenuItemUtils.getSubgroupNamesOfAGroup(groupElement);
-					
+
 					if (subgroupNames.size() > 0) {
 						JSONArray arr = (JSONArray)weightElement.get(subgroupNames.get(0));
 						Double groupWeightAsPercentage = 0.0;
@@ -182,16 +238,34 @@ public class Calculator {
 						
 						long weightedDollarAmount = Math.round(dollarAmount * groupWeightAsPercentage);
 						
-						applyMoneyHelper(groupElement, weightElement, weightedDollarAmount, func);
+						rtn.applied += weightedDollarAmount;
+						
+						ApplyMoneyHelperReturnValue rtn_ = applyMoneyHelper(groupElement, weightElement, weightedDollarAmount, func);
+						
+						rtn.overage += rtn_.overage;
 					}
 					else {
 						// this is a goal.. we need to apply money here
 						Double goalWeightAsPercentage = Double.parseDouble(weightElement.get(Constants.WEIGHT_AS_PERCENTAGE_JSON)+"");
-						func.handleIt(groupElement, Math.round(dollarAmount * goalWeightAsPercentage));
+						
+						long price = Long.parseLong(groupElement.get(Constants.PRICE_JSON)+"");
+						long alreadySaved = Long.parseLong(groupElement.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
+						long remainingToBeSaved = price - alreadySaved;
+						
+						long amtToBeApplied = Math.round(dollarAmount * goalWeightAsPercentage);
+						
+						if (amtToBeApplied > remainingToBeSaved) {
+							rtn.overage += (amtToBeApplied - remainingToBeSaved);
+							amtToBeApplied = remainingToBeSaved;
+						}
+						
+						func.handleIt(groupElement, amtToBeApplied);
 					}
-				}				
+				}
 			}
-		} 
+		}
+		
+		return rtn;
 	}
 	
 	public static JSONObject getWeights(JSONObject data) {

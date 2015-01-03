@@ -1,9 +1,11 @@
 package com.haxwell.disposableIncomeScheduler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
@@ -34,6 +36,20 @@ public class JSONDataBasedTest {
 	protected final String strTripToFrance_lodging = "lodging";
 	protected final Integer strTripToFrance_lodging_price = 2000;
 
+	protected List<String> getLongTermGoalNames() {
+		List<String> rtn = new ArrayList<String>();
+		
+		rtn.add(strBathroom_sink);
+		rtn.add(strBathroom_shower);
+		rtn.add(strOutside_garage);
+		rtn.add(strTripToFrance_airfare);
+		rtn.add(strTripToFrance_lodging);
+		
+		return rtn;
+	}
+	
+	// TODO: get the default values assigned here from a JSONObject. That way tests can create
+	//  a basic object with a few values to override the default defaults.
 	protected void createDataAndStateObjects() {
 		JSONObject obj = new JSONObject();
 		
@@ -222,5 +238,12 @@ public class JSONDataBasedTest {
 		simulateSelectingAGroup(state, strJohnathansGoals);
 		simulateSelectingAGroup(state, str12880);
 		simulateSelectingAGroup(state, strOutside);
+	}
+	
+	protected void initializeState_TripToFrance() {
+		MenuItemUtils.initializeState(state);
+		
+		simulateSelectingAGroup(state, strJohnathansGoals);
+		simulateSelectingAGroup(state, strTripToFrance);
 	}
 }

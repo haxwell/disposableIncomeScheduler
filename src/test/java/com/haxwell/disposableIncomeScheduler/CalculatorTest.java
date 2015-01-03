@@ -17,6 +17,10 @@ import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 
 public class CalculatorTest extends JSONDataBasedTest {
 
+	private abstract class Command {
+		public abstract void execute();
+	}
+	
 	@Before
 	public void setup() {
 		createDataAndStateObjects();
@@ -108,11 +112,11 @@ public class CalculatorTest extends JSONDataBasedTest {
 	}
 
 	@Test
-	public void testApplyMoneyToLongTermGoals() {
+	public void testApplyMoneyToLongTermGoals_GoalBecomesFullySavedAndNoMoreMoneyIsApplied() {
 		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "2000");
 		
 		long totalDollarAmount = 2400;
-		// apply the money once.. with the default values in 'data', the 'Garage Door' goal should have more than it needs saved.
+		// apply the money once.. with the default values in 'data', the 'Garage Door' goal should have all the money it needs ($1000).
 		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
 		
 		initializeState_Outside();
@@ -126,7 +130,7 @@ public class CalculatorTest extends JSONDataBasedTest {
 				price = Long.parseLong(obj.get(Constants.PRICE_JSON)+"");
 				prevSavedAmt = Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
 				
-				assertTrue(prevSavedAmt > price);
+				assertTrue(prevSavedAmt == price);
 			}
 		}
 		
@@ -143,5 +147,136 @@ public class CalculatorTest extends JSONDataBasedTest {
 			}
 		}
 	}
+
+	@Test
+	public void testApplyMoneyToLongTermGoals_AllGoalsAreFullySaved() {
+		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "2000");
+		
+		long totalDollarAmount = 2400;
+
+		// set the price for all the goals to 20.. so they can quickly be fully saved.
+		initializeState_Bathroom();
+		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(MenuItemUtils.getSelectedGroup(data, state));
+		
+		for (JSONObject goal : goals) {
+			goal.put(Constants.PRICE_JSON, "20");
+		}
+		
+		initializeState_Outside();
+		goals = MenuItemUtils.getGoalsOfAGroup(MenuItemUtils.getSelectedGroup(data, state));
+		
+		for (JSONObject goal : goals) {
+			goal.put(Constants.PRICE_JSON, "20");
+		}
+
+		// skip initializing state to Kitchen, because it should be empty.
+		
+		initializeState_TripToFrance();
+		goals = MenuItemUtils.getGoalsOfAGroup(MenuItemUtils.getSelectedGroup(data, state));
+		
+		for (JSONObject goal : goals) {
+			goal.put(Constants.PRICE_JSON, "20");
+		}
+		
+		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
+		
+		verifyGoalSavedAmount(strBathroom_sink, "20", new Command() {
+			@Override
+			public void execute() {
+				initializeState_Bathroom();
+			}
+		});
+
+		verifyGoalSavedAmount(strBathroom_shower, "20", new Command() {
+			@Override
+			public void execute() {
+				initializeState_Bathroom();
+			}
+		});
+
+		verifyGoalSavedAmount(strOutside_garage, "20", new Command() {
+			@Override
+			public void execute() {
+				initializeState_Outside();
+			}
+		});
+		
+		// skip verifying kitchen.. should be empty.. should probably check, too.. but don't want to right now..
+		
+		verifyGoalSavedAmount(strTripToFrance_airfare, "20", new Command() {
+			@Override
+			public void execute() {
+				initializeState_TripToFrance();
+			}
+		});
+
+		verifyGoalSavedAmount(strTripToFrance_lodging, "20", new Command() {
+			@Override
+			public void execute() {
+				initializeState_TripToFrance();
+			}
+		});
+	}
 	
+	@Test
+	public void testApplyMoneyToLongTermGoals_NoGoalsAreFullySaved() {
+		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "200");
+		
+		long totalDollarAmount = 240;
+		
+		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
+		
+		verifyGoalSavedAmount(strBathroom_sink, "12", new Command() {
+			@Override
+			public void execute() {
+				initializeState_Bathroom();
+			}
+		});
+
+		verifyGoalSavedAmount(strBathroom_shower, "12", new Command() {
+			@Override
+			public void execute() {
+				initializeState_Bathroom();
+			}
+		});
+
+		verifyGoalSavedAmount(strOutside_garage, "134", new Command() {
+			@Override
+			public void execute() {
+				initializeState_Outside();
+			}
+		});
+		
+		// skip verifying kitchen.. should be empty.. should probably check, too.. but don't want to right now..
+		
+		verifyGoalSavedAmount(strTripToFrance_airfare, "41", new Command() {
+			@Override
+			public void execute() {
+				initializeState_TripToFrance();
+			}
+		});
+
+		verifyGoalSavedAmount(strTripToFrance_lodging, "41", new Command() {
+			@Override
+			public void execute() {
+				initializeState_TripToFrance();
+			}
+		});
+	}
+	
+	private void verifyGoalSavedAmount(String goalKey, String amt, Command initStateCmd) {
+		initStateCmd.execute();
+		
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(arr);
+		String prevSavedAmt = "";
+		
+		for (JSONObject obj : goals) {
+			if (obj.containsKey(strOutside_garage)) {
+				prevSavedAmt = obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"";
+				
+				assertTrue(prevSavedAmt.equals(amt));
+			}
+		}
+	}
 }
