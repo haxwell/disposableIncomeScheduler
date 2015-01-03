@@ -31,7 +31,7 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 	
 	@Test
 	public void testGroupGoalsIterator() {
-		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
+		JSONArray grpArr = MenuItemUtils.getLongTermGoals(data);
 		
 		GroupedGoalsIterator sut = new GroupedGoalsIterator(grpArr);
 		
