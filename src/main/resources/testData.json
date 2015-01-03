@@ -9,6 +9,7 @@
     "amtSavedForRainyDay":"500",
     "mostRecentPaydate": "11/21/2014",
     "mostRecentPaydatePeriodNumber":"2",
+    "numberOfPaychecksProcessed":"0",    
     "expenses" : [
 	    {
 			"price" : "1025",
@@ -53,7 +54,8 @@
                                     "happinessImmediacy": "13",
                                     "happinessLength": "25",
                                     "utilityLength": "25",
-                                    "dateNeededBy": ""
+                                    "dateNeededBy": "",
+                                    "previousSavedAmount": "0"                                    
                                 },
                                 {
                                     "price": "750",
@@ -62,7 +64,8 @@
                                     "happinessImmediacy": "13",
                                     "happinessLength": "25",
                                     "utilityLength": "25",
-                                    "dateNeededBy": ""
+                                    "dateNeededBy": "",
+                                    "previousSavedAmount": "0"
                                 }
                             ]
                         },
@@ -75,7 +78,8 @@
                                     "happinessImmediacy": "13",
                                     "happinessLength": "25",
                                     "utilityLength": "25",
-                                    "dateNeededBy": ""
+                                    "dateNeededBy": "",
+                                    "previousSavedAmount": "0"
                                 }
                             ]
                         },
