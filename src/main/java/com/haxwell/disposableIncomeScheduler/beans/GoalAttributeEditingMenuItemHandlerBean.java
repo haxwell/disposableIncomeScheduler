@@ -7,6 +7,7 @@ import java.util.Map;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.validators.DateNeededValueValidator;
 import com.haxwell.disposableIncomeScheduler.validators.HappinessUtilityValueValidator;
+import com.haxwell.disposableIncomeScheduler.validators.PositiveIntegerValidator;
 import com.haxwell.disposableIncomeScheduler.validators.PriceValidator;
 import com.haxwell.disposableIncomeScheduler.validators.Validator;
 
@@ -31,7 +32,7 @@ public class GoalAttributeEditingMenuItemHandlerBean extends MenuItemHandlerBean
 		Map<String, Validator> validatorMap = new HashMap<>();
 		validatorMap.put(Constants.DESCRIPTION, new Validator());
 		validatorMap.put(Constants.PRICE, new PriceValidator());
-		validatorMap.put(Constants.PREVIOUS_SAVED_AMT, new PriceValidator());
+		validatorMap.put(Constants.PREVIOUS_SAVED_AMT, new PositiveIntegerValidator());
 		validatorMap.put(Constants.HAPPINESS_IMMEDIACY, new HappinessUtilityValueValidator());
 		validatorMap.put(Constants.UTILITY_IMMEDIACY, new HappinessUtilityValueValidator());
 		validatorMap.put(Constants.HAPPINESS_LENGTH, new HappinessUtilityValueValidator());
