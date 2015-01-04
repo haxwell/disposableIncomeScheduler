@@ -21,7 +21,7 @@ public class AddAnExpenseMenuItemHandler extends GoalAttributeEditingMenuItemHan
 		String name = getInputGetter().readInput();
 		
 		if (name != null && name.length() > 0) {
-			System.out.print("Cost per period: ");
+			System.out.print("Cost per month: ");
 			String cost = getInputGetter().readInput();
 			
 			Validator v = getValidatorMap().get(Constants.PRICE);

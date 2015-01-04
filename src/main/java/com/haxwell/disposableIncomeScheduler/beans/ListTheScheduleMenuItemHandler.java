@@ -50,8 +50,8 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 		listGroupsAndGoalsByWeight(grpRootElement, weightsRootElement, 1, dollarAmountsToBeAppliedPerGroup);
 		
 		System.out.println();
-		System.out.println("Amount Saved per Period = " + data.get(Constants.AMT_SAVED_PER_PERIOD_JSON));
-		System.out.println("Total in the Pot = " + data.get(Constants.TOTAL_IN_THE_POT_JSON));
+		System.out.println("Amount Saved per Period = " + data.get(Constants.AMT_SAVED_PER_MONTH_JSON));
+//		System.out.println("Total in the Pot = " + data.get(Constants.TOTAL_IN_THE_POT_JSON));
 		
 		return rtn;
 	}
@@ -137,7 +137,7 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 		return rtn;
 	}
 	
-	private long getDaysToGoAtCurrentRateOfDeposit(JSONObject item, Long depositPerPeriod) {
+	private long getDaysToGoAtCurrentRateOfDeposit(JSONObject item, Long dollarsClaimedInCurrentDeposit) {
 		Integer daysPerPeriod = Integer.parseInt(this.data.get(Constants.PERIOD_LENGTH_JSON).toString());
 		Integer price = Integer.parseInt(item.get(Constants.PRICE_JSON).toString());
 		Integer alreadySaved;
@@ -149,35 +149,15 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 			alreadySaved = 0;
 		}
 		
-		return Math.round((price - alreadySaved) / depositPerPeriod) * daysPerPeriod;
+		int rtn = -1;
+		
+		try {
+			rtn = Math.round((price - alreadySaved) / dollarsClaimedInCurrentDeposit) * daysPerPeriod;
+		}
+		catch (ArithmeticException ae) {
+			rtn = 0;
+		}
+		
+		return rtn;
 	}
-	
-//	private Double getPercentageOfCurrentDepositClaimed(JSONObject data, Double weight) {
-//		return weight * (Integer.parseInt(data.get(Constants.AMT_SAVED_PER_PERIOD_JSON).toString()));
-//	}
-
-//	private List getSortedEntryList(Map<String, Double> weights) {
-//		List list = new ArrayList<>(Arrays.asList(weights.entrySet().toArray()));
-//
-//		Comparator comp = new Comparator() {
-//
-//			@Override
-//			public int compare(Object o1, Object o2) {
-//				Entry<String, Double> e1 = (Entry<String, Double>)o1;
-//				Entry<String, Double> e2 = (Entry<String, Double>)o2;
-//				
-//				if (e1.getValue() > e2.getValue())
-//					return -1;
-//				if (e1.getValue() < e2.getValue())
-//					return 1;
-//				
-//				return 0;
-//			}
-//		};
-//		
-//		Collections.sort(list, comp);
-//		
-//		return list;
-//	}
-
-}
+}	

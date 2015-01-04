@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.haxwell.disposableIncomeScheduler.beans.AddThisPeriodsSavedAmountToEachEntryMenuItemHandler;
+import com.haxwell.disposableIncomeScheduler.beans.ApplyPaycheckToExpensesAndGoalsMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.DisplayTheReportMenuItemHandler;
 
 public class AcceptanceTest extends JSONDataBasedTest {
@@ -44,7 +44,7 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, mrppn);
 		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/06/2014");
 		
-		AddThisPeriodsSavedAmountToEachEntryMenuItemHandler addT = new AddThisPeriodsSavedAmountToEachEntryMenuItemHandler();
+		ApplyPaycheckToExpensesAndGoalsMenuItemHandler addT = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
 		when(mockedInputGetter.readInput()).thenReturn("yes");
@@ -68,16 +68,16 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		
 		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/20/2014");
 		
-		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS);
-		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS);
+		state.remove(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS);
+		state.remove(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS);
 		
 		addT.doIt(data, state);
 		dispTR.doIt(data, state);
 		
 		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "01/03/2015");
 		
-		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS);
-		state.remove(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS);
+		state.remove(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS);
+		state.remove(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS);
 		
 		addT.doIt(data, state);
 		dispTR.doIt(data, state);

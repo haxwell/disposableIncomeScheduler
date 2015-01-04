@@ -55,11 +55,11 @@ public class JSONDataBasedTest {
 		
 		obj.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "0");
 		obj.put(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON, "2000");		
-		obj.put(Constants.TOTAL_IN_THE_POT_JSON, "2000");
+//		obj.put(Constants.TOTAL_IN_THE_POT_JSON, "2000");
 		obj.put(Constants.PERIOD_LENGTH_JSON, "14");
 		obj.put(Constants.AMT_PAID_PER_PERIOD_JSON, "2400");
 		obj.put(Constants.AMT_SAVED_FOR_RAINY_DAY_JSON, "500");		
-		obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "500");
+		obj.put(Constants.AMT_SAVED_PER_MONTH_JSON, "500");
 		obj.put(Constants.MOST_RECENT_PAYDATE, "12/19/2014");
 		obj.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, "2");
 		obj.put(Constants.NUMBER_OF_PAYCHECKS_PROCESSED, "0");
@@ -85,7 +85,7 @@ public class JSONDataBasedTest {
 		JSONObject stgobj = new JSONObject();
 		stgobj.put(Constants.DESCRIPTION_JSON, "clothing");
 		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
-		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "75");
+		stgobj.put(Constants.AMT_SAVED_PER_MONTH_JSON, "75");
 		stgobj.put(Constants.RESET_EACH_PERIOD_JSON, "n");
 		
 		arr.add(stgobj);
@@ -93,7 +93,7 @@ public class JSONDataBasedTest {
 		stgobj = new JSONObject();
 		stgobj.put(Constants.DESCRIPTION_JSON, "groceries");
 		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
-		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "150");
+		stgobj.put(Constants.AMT_SAVED_PER_MONTH_JSON, "150");
 		stgobj.put(Constants.RESET_EACH_PERIOD_JSON, "y");		
 		
 		arr.add(stgobj);
@@ -101,7 +101,7 @@ public class JSONDataBasedTest {
 		stgobj = new JSONObject();
 		stgobj.put(Constants.DESCRIPTION_JSON, "gas");
 		stgobj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
-		stgobj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, "120");
+		stgobj.put(Constants.AMT_SAVED_PER_MONTH_JSON, "120");
 		stgobj.put(Constants.RESET_EACH_PERIOD_JSON, "y");
 		
 		arr.add(stgobj);

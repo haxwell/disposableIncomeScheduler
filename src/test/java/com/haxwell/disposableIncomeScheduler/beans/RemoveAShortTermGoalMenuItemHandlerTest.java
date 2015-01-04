@@ -73,7 +73,7 @@ public class RemoveAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, "clothing");
 		assertFalse(obj == null);
 
-		assertTrue(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals("75"));
+		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals("75"));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 	}
 
@@ -99,7 +99,7 @@ public class RemoveAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, "clothing");
 		assertFalse(obj == null);
 
-		assertTrue(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals("75"));
+		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals("75"));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 	}
 
@@ -125,7 +125,7 @@ public class RemoveAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, "clothing");
 		assertFalse(obj == null);
 
-		assertTrue(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals("75"));
+		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals("75"));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 	}
 
@@ -151,7 +151,7 @@ public class RemoveAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, "clothing");
 		assertFalse(obj == null);
 
-		assertTrue(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals("75"));
+		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals("75"));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 	}
 }

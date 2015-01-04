@@ -46,7 +46,15 @@ public class CalculateLongTermGoalsFunctionCommand extends FunctionCommand {
 				levelString += "  ";
 		
 			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
-				SubtractCommand element = new SubtractCommand(Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+""), obj.get(Constants.DESCRIPTION_JSON)+"");
+				long prevSavedAmt = Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
+				long price = Long.parseLong(obj.get(Constants.PRICE_JSON)+"");
+				
+				String desc = obj.get(Constants.DESCRIPTION_JSON)+"";
+				
+				if (prevSavedAmt >= price)
+					desc += " *";
+				
+				SubtractCommand element = new SubtractCommand(prevSavedAmt, desc);
 				element.setBufferString(levelString);
 				cl.add(index + indexOffset++, element);
 			} else {

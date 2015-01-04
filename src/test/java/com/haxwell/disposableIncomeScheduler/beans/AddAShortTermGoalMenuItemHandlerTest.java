@@ -54,9 +54,40 @@ public class AddAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
 		assertFalse(obj == null);
 		
-		assertTrue(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON).equals(AMT_PP));
+		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals(AMT_PP));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 		assertTrue(obj.get(Constants.RESET_EACH_PERIOD_JSON).equals(RESET));
+	}
+
+	@Test
+	public void testHappyPath_WithPressingEnterToSelectDefaultReset() {
+		AddAShortTermGoalMenuItemHandler sut = new AddAShortTermGoalMenuItemHandler();
+		
+		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
+		
+		int arrSize = arr.size();
+		
+		final String NAME = "name";
+		final String AMT_PP = "150";
+		final String RESET = "";
+		
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, RESET);
+		
+		sut.setInputGetter(mockedInputGetter);
+		
+		boolean rtn = sut.doIt(data, state);
+		
+		assertTrue(rtn);
+		
+		assertTrue(arr.size() == arrSize + 1);
+		
+		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
+		assertFalse(obj == null);
+		
+		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals(AMT_PP));
+		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
+		assertTrue(obj.get(Constants.RESET_EACH_PERIOD_JSON).equals("N"));
 	}
 		
 	@Test

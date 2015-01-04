@@ -75,8 +75,6 @@ public class PaycheckUtils {
 			rtn = paycheckNumberArray[(int)diff];
 		}
 		
-		System.out.println("getPaycheckNumber() returning " + rtn);
-		
 		return rtn;
 	}
 	
@@ -98,7 +96,18 @@ public class PaycheckUtils {
 		return rtn;
 	}
 	
-	public Date getMostRecentPaydate(JSONObject data) {
+	public static Date getFuturePaydate(JSONObject data, int periodsAhead) {
+		Date d = getMostRecentPaydate(data);
+		Calendar cal = CalendarUtils.getCurrentCalendar();
+		cal.setTime(d);
+		
+		for (int i = 0; i < periodsAhead; i++)
+			CalendarUtils.advanceCalendarByPeriodLength(cal);
+		
+		return cal.getTime();
+	}
+	
+	public static Date getMostRecentPaydate(JSONObject data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Date rtn = null;
 		

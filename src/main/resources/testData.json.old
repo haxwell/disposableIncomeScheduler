@@ -1,45 +1,7 @@
 {
-    "testingOverrideDate":"12/06/2014",
-	"totalInThePot":"1000",
-	"prevTotalInThePot_AfterApplyingFunds":"0",
-	"prevTotalInThePot_BeforeApplyingFunds":"0",
-	"periodLength": "14",
-	"amountPaidPerPeriod":"2400",
-    "amountSavedPerPeriod": "500",
-    "amtSavedForRainyDay":"500",
-    "mostRecentPaydate": "11/21/2014",
-    "mostRecentPaydatePeriodNumber":"2",
-    "numberOfPaychecksProcessed":"0",
-    "expenses" : [
-	    {
-			"price" : "1025",
-			"description" : "mortgage"
-		},
-		{
-			"price":"112",
-			"description" : "car insurance"
-		}
-    ],
-    "shortTermGoals" : [
-    	{
-    		"totalAmountSaved":"0",
-    		"amountSavedPerPeriod":"150",
-    		"description":"groceries",
-        	"resetEachPeriod":"y"
-    	},
-    	{
-    		"totalAmountSaved":"0",
-    		"amountSavedPerPeriod":"120",
-    		"description":"gas",
-    		"resetEachPeriod":"y"    			
-    	},
-    	{
-    		"totalAmountSaved":"0",
-    		"amountSavedPerPeriod":"75",
-    		"description":"clothing",
-    		"resetEachPeriod":"n"    		
-    	}
-    ],
+    "amountSavedPerMonth": "500",
+    "mostRecentPaydatePeriodNumber": "2",
+    "mostRecentPaydate": "12/19/2014",
     "longTermGoals": [
         {
             "realEstate": [
@@ -48,35 +10,38 @@
                         {
                             "outside": [
                                 {
-                                    "price": "1000",
-                                    "utilityImmediacy": "13",
-                                    "description": "Main Garage Door",
                                     "happinessImmediacy": "13",
+                                    "dateNeededBy": "",
+                                    "price": "1000",
                                     "happinessLength": "25",
+                                    "description": "Main Garage Door",
+                                    "utilityImmediacy": "13",
                                     "utilityLength": "25",
-                                    "dateNeededBy": ""
+                                    "previousSavedAmount": "0"
                                 },
                                 {
-                                    "price": "750",
-                                    "utilityImmediacy": "13",
-                                    "description": "Little Garage Door",
                                     "happinessImmediacy": "13",
+                                    "dateNeededBy": "",
+                                    "price": "750",
                                     "happinessLength": "25",
+                                    "description": "Little Garage Door",
+                                    "utilityImmediacy": "13",
                                     "utilityLength": "25",
-                                    "dateNeededBy": ""
+                                    "previousSavedAmount": "0"
                                 }
                             ]
                         },
                         {
                             "kitchen": [
                                 {
-                                    "price": "1000",
-                                    "utilityImmediacy": "13",
-                                    "description": "Kitchen floor",
                                     "happinessImmediacy": "13",
+                                    "dateNeededBy": "",
+                                    "price": "1000",
                                     "happinessLength": "25",
+                                    "description": "Kitchen floor",
+                                    "utilityImmediacy": "13",
                                     "utilityLength": "25",
-                                    "dateNeededBy": ""
+                                    "previousSavedAmount": "0"
                                 }
                             ]
                         },
@@ -86,6 +51,80 @@
                     ]
                 }
             ]
+        }
+    ],
+    "amountPaidPerPeriod": "2400",
+    "shortTermGoals": [
+        {
+            "amountSavedPerMonth": "150",
+            "totalAmountSaved": "0",
+            "resetEachPeriod": "y",
+            "description": "groceries"
+        },
+        {
+            "amountSavedPerMonth": "120",
+            "totalAmountSaved": "0",
+            "resetEachPeriod": "y",
+            "description": "gas"
+        },
+        {
+            "amountSavedPerMonth": "75",
+            "totalAmountSaved": "0",
+            "resetEachPeriod": "n",
+            "description": "clothing"
+        },
+        {
+            "amountSavedPerMonth": "200",
+            "resetEachPeriod": "n",
+            "totalAmountSaved": "0",
+            "description": "car maintenance"
+        },
+        {
+            "amountSavedPerMonth": "150",
+            "resetEachPeriod": "n",
+            "totalAmountSaved": "0",
+            "description": "Health Care"
+        },
+        {
+            "amountSavedPerMonth": "200",
+            "resetEachPeriod": "n",
+            "totalAmountSaved": "0",
+            "description": "entertainment"
+        }
+    ],
+    "prevTotalInThePot_BeforeApplyingFunds": "6600",
+    "numberOfPaychecksProcessed": "0",
+    "periodLength": "14",
+    "prevTotalInThePot_AfterApplyingFunds": "6600",
+    "amtSavedForRainyDay": "500",
+    "expenses": [
+        {
+            "price": "1025",
+            "description": "mortgage"
+        },
+        {
+            "price": "112",
+            "description": "car insurance"
+        },
+        {
+            "price": "210",
+            "description": "HOA"
+        },
+        {
+            "price": "90",
+            "description": "Comcast"
+        },
+        {
+            "price": "100",
+            "description": "Xcel Energy"
+        },
+        {
+            "price": "100",
+            "description": "Cell Phone"
+        },
+        {
+            "price": "17",
+            "description": "Netflix"
         }
     ]
 }

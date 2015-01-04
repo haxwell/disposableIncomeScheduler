@@ -19,9 +19,9 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 		
 		rtn.add(Constants.PERIOD_LENGTH);
 		rtn.add(Constants.AMT_PAID_PER_PERIOD);
-		rtn.add(Constants.AMT_SAVED_PER_PERIOD);
+//		rtn.add(Constants.AMT_SAVED_PER_MONTH);
 		rtn.add(Constants.AMT_SAVED_FOR_RAINY_DAY);
-		rtn.add(Constants.TOTAL_IN_THE_POT);
+//		rtn.add(Constants.TOTAL_IN_THE_POT);
 		
 		return rtn;
 	}
@@ -31,9 +31,9 @@ public class EditCalculationVariablesMenuItemHandler extends GoalAttributeEditin
 		
 		map.put(Constants.PERIOD_LENGTH, Constants.PERIOD_LENGTH_JSON);
 		map.put(Constants.AMT_PAID_PER_PERIOD, Constants.AMT_PAID_PER_PERIOD_JSON);
-		map.put(Constants.AMT_SAVED_PER_PERIOD, Constants.AMT_SAVED_PER_PERIOD_JSON);
+//		map.put(Constants.AMT_SAVED_PER_MONTH, Constants.AMT_SAVED_PER_MONTH_JSON);
 		map.put(Constants.AMT_SAVED_FOR_RAINY_DAY, Constants.AMT_SAVED_FOR_RAINY_DAY_JSON);
-		map.put(Constants.TOTAL_IN_THE_POT, Constants.TOTAL_IN_THE_POT_JSON);
+//		map.put(Constants.TOTAL_IN_THE_POT, Constants.TOTAL_IN_THE_POT_JSON);
 		
 		return map;
 	}

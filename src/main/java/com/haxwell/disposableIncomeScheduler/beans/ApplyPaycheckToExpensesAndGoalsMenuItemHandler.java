@@ -1,5 +1,9 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -7,22 +11,48 @@ import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
-public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
+public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
 	public String getMenuText() {
-		return "Add This Period's Saved Amount To Each Entry";
+		String str = getDateOfPaycheckToBeAppliedAsString();
+		return "Apply the most recent paycheck (" + str + ")";
+	}
+
+	private String getDateOfPaycheckToBeAppliedAsString() {
+		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		JSONObject data = dass.getData();
+		
+		// get the mrpd
+		Date mrpd = PaycheckUtils.getMostRecentPaydate(data);
+		
+		// get the next pd
+		Date pd = PaycheckUtils.getFuturePaydate(data, 1);
+		
+		Date today = Calendar.getInstance().getTime();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		String str = null;
+		// if today is the day of or after next pd, display next pd
+		if (today.equals(pd) || today.after(pd)) {
+			str = sdf.format(pd);
+		} else {
+			// 	otherwise use mrpd
+			str = sdf.format(mrpd);
+		}
+		return str;
 	}
 	
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS)) {
-			System.out.println("\nThe periodically saved amount has already been added!\n");
-			return rtn;
-		}
+//		if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS)) {
+//			System.out.println("\nThe periodically saved amount has already been added!\n");
+//			return rtn;
+//		}
 
-		getPrintlner().println("Type 'yes' to update each entry..");
+		getPrintlner().println("Type 'yes' to apply the paycheck for " + getDateOfPaycheckToBeAppliedAsString() + "..");
 		
 		String input = getInputGetter().readInput();
 		
@@ -42,7 +72,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 			setBeginningBalanceToIncludeThisPeriodsPay(data);
 			
 			updateShortTermGoalTotalSavedAmounts(data);
-			state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS, "true");			
+			state.put(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS, "true");			
 			
 			// get the total that would be remaining after accounting for expenses and short term goals
 			long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
@@ -51,7 +81,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 			
 			rtn = true;
 			
-			state.put(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS, "true");
+			state.put(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS, "true");
 			long numPaychecksProcessed = Integer.parseInt(data.get(Constants.NUMBER_OF_PAYCHECKS_PROCESSED)+"");
 			data.put(Constants.NUMBER_OF_PAYCHECKS_PROCESSED, numPaychecksProcessed+1);
 			
@@ -99,7 +129,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 				
 				String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 				if (resetEachPeriod.toUpperCase().equals("Y")) {
-					Long amt = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+					Long amt = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
 					
 					previousTotalInThePot -= amt;
 				}
@@ -118,7 +148,7 @@ public class AddThisPeriodsSavedAmountToEachEntryMenuItemHandler extends GoalAtt
 			
 			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 			if (resetEachPeriod.toUpperCase().equals("N")) {
-				Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+				Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
 				Long total = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
 				
 				obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, (amount + total)+"");

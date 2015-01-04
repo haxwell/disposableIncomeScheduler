@@ -39,7 +39,7 @@ public class ReportGenerator {
 		
 		cl.add(new StringCommand("Report for " + getReportBeginDate(data) + " thru " + getReportEndDate(data)));
 		cl.add(new StringCommand(""));
-		cl.add(new StringCommand(getCheckOfTheMonth(data) + " check of the month"));
+		cl.add(new StringCommand(getCheckOfTheMonth() + " of " + getNumberOfChecksForTheMonth() + " checks in the month"));
 		cl.add(new StringCommand(""));
 		
 		Map<String, Long> map = Calculator.getDollarAmountsToBeAppliedToGenericallyReservedFunds(data);
@@ -67,7 +67,7 @@ public class ReportGenerator {
 		}
 		
 		cl.add(new SubtotalCommand("Total Short Term Goals", "stgsGroup"));
-		cl.add(new SubtotalCommand("Savings, to be spread over Long Term Goals", data, Constants.AMT_SAVED_PER_PERIOD_JSON));
+		cl.add(new SubtotalCommand("Savings, to be spread over Long Term Goals", data, Constants.AMT_SAVED_PER_MONTH_JSON));
 		
 		cl.add(new CalculateLongTermGoalsFunctionCommand(data, map, expenseMap, stgMap));
 		
@@ -119,8 +119,13 @@ public class ReportGenerator {
 		return rtn;
 	}
 	
-	protected String getCheckOfTheMonth(JSONObject data) {
-		Date time = CalendarUtils.getCurrentCalendar().getTime();
-		return pu.getPaycheckNumberAsString(time); 
+	protected String getCheckOfTheMonth() {
+		Date d = CalendarUtils.getCurrentCalendar().getTime();
+		return pu.getPaycheckNumberAsString(d); 
+	}
+	
+	protected String getNumberOfChecksForTheMonth() {
+		Date d = CalendarUtils.getCurrentCalendar().getTime();
+		return pu.getNumberOfPaychecks(d)+"";
 	}
 }

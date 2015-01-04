@@ -25,8 +25,8 @@ public class Constants {
 	public final static String AMT_SAVED_FOR_RAINY_DAY_JSON = "amtSavedForRainyDay";
 	public final static String AMT_PAID_PER_PERIOD = "Amount Paid per Period";
 	public final static String AMT_PAID_PER_PERIOD_JSON = "amountPaidPerPeriod";
-	public final static String AMT_SAVED_PER_PERIOD = "Amount Saved per Period";
-	public final static String AMT_SAVED_PER_PERIOD_JSON = "amountSavedPerPeriod";
+	public final static String AMT_SAVED_PER_MONTH = "Amount Saved per Month";
+	public final static String AMT_SAVED_PER_MONTH_JSON = "amountSavedPerMonth";
 	public final static String TOTAL_IN_THE_POT = "Total in the Pot";
 	public final static String TOTAL_IN_THE_POT_JSON = "totalInThePot";
 	public final static String PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON = "prevTotalInThePot_BeforeApplyingFunds";
@@ -47,8 +47,8 @@ public class Constants {
 	public static final String GROUP_WEIGHT_JSON = "groupWeight";
 	public static final String GROUP_WEIGHT_AS_PERCENTAGE_JSON = "groupWeightAsPercentage";
 	
-	public static final String PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS = "periodicAmtHasBeenApplied";
-	public static final String PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS = "periodicAmtHasBeenApplied_stgs";
+	public static final String CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS = "currPaycheckHasBeenApplied";
+	public static final String CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS = "currPaycheckHasBeenApplied_stgs";
 
 	public static final String EXPENSES_JSON = "expenses";
 	public static final String TOTAL_AMOUNT_SAVED_JSON = "totalAmountSaved";
@@ -64,5 +64,4 @@ public class Constants {
 	public static final String TESTING_OVERRIDE_DATE_JSON = "testingOverrideDate";
 	public static final String NUMBER_OF_PAYCHECKS_PROCESSED = "numberOfPaychecksProcessed";
 	public static final String SAVING_IS_COMPLETE_JSON = "savingIsComplete";
-	
 }

@@ -21,17 +21,17 @@ public class AddAShortTermGoalMenuItemHandler extends GoalAttributeEditingMenuIt
 		String name = getInputGetter().readInput();
 		
 		if (name != null && name.length() > 0) {
-			getPrintlner().print("Amount to save per period: ");
+			getPrintlner().print("Amount to save per month: ");
 			String amtPerPeriod = getInputGetter().readInput();
 			
 			Validator v = getValidatorMap().get(Constants.PRICE);
 			if (v.isValidValue(amtPerPeriod)) {
 				
-				getPrintlner().print("Reset with each new period? (Y/n)");
+				getPrintlner().print("Reset with each new month? (y/N)");
 				String reset = getInputGetter().readInput();
 				
 				if (reset == "")
-					reset = "Y";
+					reset = "N";
 				
 				// TODO: if ever another attribute is needed here.. refactor using a more
 				//  extensable solution, rather than adding a deeper IF.
@@ -39,7 +39,7 @@ public class AddAShortTermGoalMenuItemHandler extends GoalAttributeEditingMenuIt
 				if (upperReset.equals("Y") || upperReset.equals("N")) {
 					JSONObject obj = new JSONObject();
 					
-					obj.put(Constants.AMT_SAVED_PER_PERIOD_JSON, amtPerPeriod);
+					obj.put(Constants.AMT_SAVED_PER_MONTH_JSON, amtPerPeriod);
 					obj.put(Constants.DESCRIPTION_JSON, name);
 					obj.put(Constants.RESET_EACH_PERIOD_JSON, reset);
 					obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");

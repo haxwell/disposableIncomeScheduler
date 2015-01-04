@@ -25,8 +25,8 @@ public class ListShortTermGoalsMenuItemHandler extends GoalAttributeEditingMenuI
 			JSONObject jobj = (JSONObject)arr.get(count);
 			String description = jobj.get(Constants.DESCRIPTION_JSON)+"";
 			String tas = jobj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
-			String aspp = jobj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"";
-			getPrintlner().println(count+1 + ". " + description + "(TAS: " + tas + " PP: " + aspp + ")");
+			String aspp = jobj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"";
+			getPrintlner().println(count+1 + ". " + description + "(Total Already Saved: " + tas + " / Amt Saved Per Month: " + aspp + ")");
 		}
 		
 		getPrintlner().println("-------\n");

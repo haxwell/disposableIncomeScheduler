@@ -67,11 +67,11 @@ public class Calculator {
 		for (int i = 0; i < stgs.size(); i++) {
 			JSONObject obj = (JSONObject) stgs.get(i);
 			
-			Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_PERIOD_JSON)+"");
+			Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
 			
 			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 			if (resetEachPeriod.toUpperCase().equals("N")) {
-				if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_STGS)) {
+				if (state.containsKey(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS)) {
 					amount = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
 				} else {
 					amount += Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
@@ -853,10 +853,10 @@ public class Calculator {
 		return rtn;
 	}
 	
-	public static long getTotalInThePot(JSONObject data) {
-		long l = Integer.parseInt(data.get(Constants.TOTAL_IN_THE_POT_JSON)+"");
-		return l;
-	}
+//	public static long getTotalInThePot(JSONObject data) {
+//		long l = Integer.parseInt(data.get(Constants.TOTAL_IN_THE_POT_JSON)+"");
+//		return l;
+//	}
 	
 	public static long getPreviousTotalInThePot(JSONObject data) {
 		long l = Integer.parseInt(data.get(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON)+"");
