@@ -1,1 +1,130 @@
-{"mostRecentPaydatePeriodNumber":1,"mostRecentPaydate":"01\/02\/2015","longTermGoals":[{"realEstate":[{"12880":[{"outside":[{"happinessImmediacy":"13","dateNeededBy":"","price":"1000","happinessLength":"25","description":"Main Garage Door","utilityImmediacy":"13","utilityLength":"25","previousSavedAmount":"1000"},{"happinessImmediacy":"13","dateNeededBy":"","price":"750","happinessLength":"25","description":"Little Garage Door","utilityImmediacy":"13","utilityLength":"25","previousSavedAmount":"750"}]},{"kitchen":[{"happinessImmediacy":"13","dateNeededBy":"","price":"1000","happinessLength":"25","description":"Kitchen floor","utilityImmediacy":"13","utilityLength":"25","previousSavedAmount":"1000"}]},{"HVAC":[]}]}]}],"amountPaidPerPeriod":"2400","shortTermGoals":[{"totalAmountSaved":"0","resetEachPeriod":"y","description":"groceries","amountSavedPerMonth":"150"},{"totalAmountSaved":"0","resetEachPeriod":"y","description":"gas","amountSavedPerMonth":"120"},{"totalAmountSaved":"75","resetEachPeriod":"n","description":"clothing","amountSavedPerMonth":"75"},{"resetEachPeriod":"n","totalAmountSaved":"200","description":"car maintenance","amountSavedPerMonth":"200"},{"resetEachPeriod":"n","totalAmountSaved":"150","description":"Health Care","amountSavedPerMonth":"150"},{"resetEachPeriod":"n","totalAmountSaved":"200","description":"entertainment","amountSavedPerMonth":"200"}],"prevTotalInThePot_BeforeApplyingFunds":"6600","numberOfPaychecksProcessed":1,"periodLength":"14","prevTotalInThePot_AfterApplyingFunds":"9000","amountSavedPerMonth":"500","amtSavedForRainyDay":"500","expenses":[{"price":"1025","description":"mortgage"},{"price":"112","description":"car insurance"},{"price":"210","description":"HOA"},{"price":"90","description":"Comcast"},{"price":"100","description":"Xcel Energy"},{"price":"100","description":"Cell Phone"},{"price":"17","description":"Netflix"}]}
+{
+    "amountSavedPerMonth": "500",
+    "mostRecentPaydatePeriodNumber": "2",
+    "mostRecentPaydate": "12/19/2014",
+    "longTermGoals": [
+        {
+            "realEstate": [
+                {
+                    "12880": [
+                        {
+                            "outside": [
+                                {
+                                    "happinessImmediacy": "13",
+                                    "dateNeededBy": "",
+                                    "price": "1000",
+                                    "happinessLength": "25",
+                                    "description": "Main Garage Door",
+                                    "utilityImmediacy": "13",
+                                    "utilityLength": "25",
+                                    "previousSavedAmount": "0"
+                                },
+                                {
+                                    "happinessImmediacy": "13",
+                                    "dateNeededBy": "",
+                                    "price": "750",
+                                    "happinessLength": "25",
+                                    "description": "Little Garage Door",
+                                    "utilityImmediacy": "13",
+                                    "utilityLength": "25",
+                                    "previousSavedAmount": "0"
+                                }
+                            ]
+                        },
+                        {
+                            "kitchen": [
+                                {
+                                    "happinessImmediacy": "13",
+                                    "dateNeededBy": "",
+                                    "price": "1000",
+                                    "happinessLength": "25",
+                                    "description": "Kitchen floor",
+                                    "utilityImmediacy": "13",
+                                    "utilityLength": "25",
+                                    "previousSavedAmount": "0"
+                                }
+                            ]
+                        },
+                        {
+                            "HVAC": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "amountPaidPerPeriod": "2400",
+    "shortTermGoals": [
+        {
+            "amountSavedPerMonth": "150",
+            "totalAmountSaved": "0",
+            "resetEachPeriod": "y",
+            "description": "groceries"
+        },
+        {
+            "amountSavedPerMonth": "120",
+            "totalAmountSaved": "0",
+            "resetEachPeriod": "y",
+            "description": "gas"
+        },
+        {
+            "amountSavedPerMonth": "75",
+            "totalAmountSaved": "0",
+            "resetEachPeriod": "n",
+            "description": "clothing"
+        },
+        {
+            "amountSavedPerMonth": "200",
+            "resetEachPeriod": "n",
+            "totalAmountSaved": "0",
+            "description": "car maintenance"
+        },
+        {
+            "amountSavedPerMonth": "150",
+            "resetEachPeriod": "n",
+            "totalAmountSaved": "0",
+            "description": "Health Care"
+        },
+        {
+            "amountSavedPerMonth": "200",
+            "resetEachPeriod": "n",
+            "totalAmountSaved": "0",
+            "description": "entertainment"
+        }
+    ],
+    "prevTotalInThePot_BeforeApplyingFunds": "6600",
+    "numberOfPaychecksProcessed": "0",
+    "periodLength": "14",
+    "prevTotalInThePot_AfterApplyingFunds": "6600",
+    "amtSavedForRainyDay": "500",
+    "expenses": [
+        {
+            "price": "1025",
+            "description": "mortgage"
+        },
+        {
+            "price": "112",
+            "description": "car insurance"
+        },
+        {
+            "price": "210",
+            "description": "HOA"
+        },
+        {
+            "price": "90",
+            "description": "Comcast"
+        },
+        {
+            "price": "100",
+            "description": "Xcel Energy"
+        },
+        {
+            "price": "100",
+            "description": "Cell Phone"
+        },
+        {
+            "price": "17",
+            "description": "Netflix"
+        }
+    ]
+}
