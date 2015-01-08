@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.parser.ParseException;
 
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
@@ -46,6 +47,21 @@ public class JSONDataBasedTest {
 		rtn.add(strTripToFrance_lodging);
 		
 		return rtn;
+	}
+	
+	protected void createDataAndStateObjects(String filepath) {
+
+		try {
+			data = DataFileManager.read(filepath);
+		}
+		catch (ParseException pe) {
+			pe.printStackTrace();
+		}
+		
+		MenuItemUtils.initializeState(state);
+		
+		DataAndStateSingleton.getInstance().setData(data);
+		DataAndStateSingleton.getInstance().setState(state);
 	}
 	
 	// TODO: get the default values assigned here from a JSONObject. That way tests can create

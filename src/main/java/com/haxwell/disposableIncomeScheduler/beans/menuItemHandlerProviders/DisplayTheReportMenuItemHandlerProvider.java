@@ -16,6 +16,8 @@ public class DisplayTheReportMenuItemHandlerProvider extends AbstractMenuItemHan
 	public MenuItemHandlerBean getMenuItemHandler() {
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		JSONObject data = dass.getData();
+
+		// TODO: This same code is in ListTheScheduleMenuItemHandlerProvider. Refactor.
 		
 		// if the current date is the day of, or after the date of the next check following the most 
 		// recent paycheck date, user needs to apply the current paycheck before displaying the report. 

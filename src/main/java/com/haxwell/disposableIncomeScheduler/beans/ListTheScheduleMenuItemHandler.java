@@ -39,24 +39,24 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
 		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
 		
-		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
+//		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
 		
-		Map<String, Long> dollarAmountsToBeAppliedPerGroup = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
+//		Map<String, Long> dollarAmountsToBeAppliedPerGroup = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
 		
 		System.out.println();
 		System.out.format("%-35s%14s%8s%16s%29s%27s", Constants.DESCRIPTION, Constants.DATE_NEEDED, Constants.PRICE, "Prev Saved Amt", "$ From Curr Dep", "Time Remaining");
 		System.out.println();
 		
-		listGroupsAndGoalsByWeight(grpRootElement, weightsRootElement, 1, dollarAmountsToBeAppliedPerGroup);
+		listGroupsAndGoalsByWeight(grpRootElement, weightsRootElement, 1);
 		
 		System.out.println();
-		System.out.println("Amount Saved per Period = " + data.get(Constants.AMT_SAVED_PER_MONTH_JSON));
+//		System.out.println("Amount Saved per Period = " + data.get(Constants.AMT_SAVED_PER_MONTH_JSON));
 //		System.out.println("Total in the Pot = " + data.get(Constants.TOTAL_IN_THE_POT_JSON));
 		
 		return rtn;
 	}
 	
-	public void listGroupsAndGoalsByWeight(JSONObject data, JSONObject weights, int depth, Map<String, Long> dollarAmountsToBeAppliedPerGroup) {
+	public void listGroupsAndGoalsByWeight(JSONObject data, JSONObject weights, int depth) {
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroupByWeight(data, weights);
 		
 		for (int x=0; x < list.size(); x++) {
@@ -80,7 +80,7 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 						JSONObject weightObj = (JSONObject) weightArr.get(z);
 						
 						if (dataObj.containsKey(sg))
-							listGroupsAndGoalsByWeight(dataObj, weightObj, depth+1, dollarAmountsToBeAppliedPerGroup);
+							listGroupsAndGoalsByWeight(dataObj, weightObj, depth+1);
 					}
 				}
 			} else {
@@ -92,15 +92,15 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 						JSONObject weightObj = (JSONObject) weightArr.get(z);
 						
 						if (dataObj.get(Constants.DESCRIPTION_JSON).equals(goalKey))
-							printGoal(dataObj, weightObj, depth, dollarAmountsToBeAppliedPerGroup);
+							printGoal(dataObj, weightObj, depth);
 					}
 				}
 			}
 		}
 	}
 	
-	private void printGoal(JSONObject goal, JSONObject weight, int depth, Map<String, Long> dollarAmountsToBeAppliedPerGroup) {
-		Long dollarsClaimedInCurrentDeposit = dollarAmountsToBeAppliedPerGroup.get(goal.get(Constants.DESCRIPTION_JSON));
+	private void printGoal(JSONObject goal, JSONObject weight, int depth) {
+		Long dollarsClaimedInCurrentDeposit = Long.parseLong(goal.get(Constants.AMT_CLAIMED_DURING_LAST_APPLICATION)+"");
 		Long daysToGoAtCurrentRateOfDeposit = getDaysToGoAtCurrentRateOfDeposit(goal, dollarsClaimedInCurrentDeposit);
 
 		for (int y=0; y < depth+1; y++)

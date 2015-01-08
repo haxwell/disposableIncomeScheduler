@@ -29,6 +29,10 @@ public class Calculator {
 			long previousSavedAmount = Long.parseLong((object == null) ? "0" : object.toString());
 			previousSavedAmount += dollarAmountToBeApplied;
 			groupElement.put(Constants.PREVIOUS_SAVED_AMT_JSON, previousSavedAmount+"");
+			
+			object = groupElement.get(Constants.AMT_CLAIMED_DURING_LAST_APPLICATION);
+			long amtClaimed = Long.parseLong((object == null) ? "0" : object.toString());
+			groupElement.put(Constants.AMT_CLAIMED_DURING_LAST_APPLICATION, amtClaimed + dollarAmountToBeApplied);
 		}
 	}
 
@@ -146,54 +150,55 @@ public class Calculator {
 		return rootElement;
 	}
 	
-	public static Map<String, Long> getDollarAmountsToBeAppliedPerLongTermGoalGroup(JSONObject data, long totalDollarAmount) {
-		String dataString = data.toJSONString();
-		JSONObject dataCopy = (JSONObject)JSONValue.parse(dataString);
-		
-		JSONObject grpRootElement = getFirstElementInRootGroupArray(dataCopy); 
-		
-		final Map<String, Long> map = new HashMap<>();
-		
-		if (grpRootElement != null) {
-			boolean finished = false;
-			
-			do {
-				JSONObject weightsRootElement = getFirstElementInRootGroupArray(Calculator.getWeights(dataCopy));
-				
-				ApplyMoneyHelperReturnValue rtn = new ApplyMoneyHelperReturnValue();
-				
-				rtn = applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new InnerCalculatePreviousSavedAmountHandler() {
-					@Override
-					public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
-						super.handleIt(groupElement, dollarAmountToBeApplied);
-
-						String key = groupElement.get(Constants.DESCRIPTION_JSON)+"";
-						long l = 0;
-						
-						if (map.containsKey(key)) {
-							l = map.get(key);
-						}
-						
-						map.put(groupElement.get(Constants.DESCRIPTION_JSON)+"", l + dollarAmountToBeApplied);
-					}
-				});
-						
-				if (rtn.applied == 0 && rtn.overage == 0)
-					finished = true;
-				else if (rtn.applied == totalDollarAmount && rtn.overage == 0)
-					// then all money was applied, no goal had more money applied to it than it could take.. we're done! .. I think.
-					finished = true;
-				else
-					// if rtn.applied == totalDollarAmount && rtn.overage > 0 then all money was applied, but at least one goal had more money applied to it than it could take.. run it again.
-					totalDollarAmount = rtn.overage;
-				
-			} while (!finished);
-		}
-		
-		return map;
-	}
+//	public static Map<String, Long> getDollarAmountsToBeAppliedPerLongTermGoalGroup(JSONObject data, long totalDollarAmount) {
+//		String dataString = data.toJSONString();
+//		JSONObject dataCopy = (JSONObject)JSONValue.parse(dataString);
+//		
+//		JSONObject grpRootElement = getFirstElementInRootGroupArray(dataCopy); 
+//		
+//		final Map<String, Long> map = new HashMap<>();
+//		
+//		if (grpRootElement != null) {
+//			boolean finished = false;
+//			
+//			do {
+//				JSONObject weightsRootElement = getFirstElementInRootGroupArray(Calculator.getWeights(dataCopy));
+//				
+//				ApplyMoneyHelperReturnValue rtn = new ApplyMoneyHelperReturnValue();
+//				
+//				rtn = applyMoneyHelper(grpRootElement, weightsRootElement, totalDollarAmount, new InnerCalculatePreviousSavedAmountHandler() {
+//					@Override
+//					public void handleIt(JSONObject groupElement, long dollarAmountToBeApplied) {
+//						super.handleIt(groupElement, dollarAmountToBeApplied);
+//
+//						String key = groupElement.get(Constants.DESCRIPTION_JSON)+"";
+//						long l = 0;
+//						
+//						if (map.containsKey(key)) {
+//							l = map.get(key);
+//						}
+//						
+//						map.put(groupElement.get(Constants.DESCRIPTION_JSON)+"", l + dollarAmountToBeApplied);
+//					}
+//				});
+//						
+//				if (rtn.applied == 0 && rtn.overage == 0)
+//					finished = true;
+//				else if (rtn.applied == totalDollarAmount && rtn.overage == 0)
+//					// then all money was applied, no goal had more money applied to it than it could take.. we're done! .. I think.
+//					finished = true;
+//				else
+//					// if rtn.applied == totalDollarAmount && rtn.overage > 0 then all money was applied, but at least one goal had more money applied to it than it could take.. run it again.
+//					totalDollarAmount = rtn.overage;
+//				
+//			} while (!finished);
+//		}
+//		
+//		return map;
+//	}
 	
 	public static void applyMoneyToLongTermGoals(JSONObject data, long totalDollarAmount) {
+		resetDollarAmountsClaimed(data);
 		JSONObject grpRootElement = getFirstElementInRootGroupArray(data);
 		
 		if (grpRootElement != null) {
@@ -219,6 +224,18 @@ public class Calculator {
 		}
 	}
 	
+	private static void resetDollarAmountsClaimed(JSONObject grpRootElement) {
+		GroupedGoalsIterator ggi = new GroupedGoalsIterator(MenuItemUtils.getLongTermGoals(grpRootElement));
+		
+		while (ggi.hasNext()) {
+			JSONObject obj = ggi.next();
+			
+			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+				obj.put(Constants.AMT_CLAIMED_DURING_LAST_APPLICATION, "0");
+			}
+		}
+	}
+
 	private static class ApplyMoneyHelperReturnValue {
 		// OVERAGE is the amount that was over what was needed to fully save for the goals on a given level and its children.
 		long overage = 0;
