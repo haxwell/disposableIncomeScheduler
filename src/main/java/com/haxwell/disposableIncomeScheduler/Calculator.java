@@ -69,20 +69,16 @@ public class Calculator {
 		
 		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
 		for (int i = 0; i < stgs.size(); i++) {
-			JSONObject obj = (JSONObject) stgs.get(i);
+			JSONObject stg = (JSONObject) stgs.get(i);
 			
-			Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
+			Long amount = Long.parseLong(stg.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
 			
-			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
+			String resetEachPeriod = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";
 			if (resetEachPeriod.toUpperCase().equals("N")) {
-				if (state.containsKey(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS)) {
-					amount = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
-				} else {
-					amount += Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
-				}
+				amount += Long.parseLong(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
 			}
 			
-			map.put(obj.get(Constants.DESCRIPTION_JSON)+"", amount*1.0);
+			map.put(stg.get(Constants.DESCRIPTION_JSON)+"", amount*1.0);
 		}
 		
 		return map;

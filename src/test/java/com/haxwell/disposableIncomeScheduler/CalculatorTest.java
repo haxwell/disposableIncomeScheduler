@@ -56,7 +56,7 @@ public class CalculatorTest extends JSONDataBasedTest {
 	}
 
 	@Test
-	public void getDollarAmountsToBeAppliedToShortTermGoals_PreApplyingFundsForThisPeriod_WithPreviousAmtSaved() {
+	public void getDollarAmountsToBeAppliedToShortTermGoals() {
 		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
 		JSONObject stg = getJSONObjectByDescriptionFromJSONArray(stgs, "clothing");
 		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "75");
@@ -66,35 +66,6 @@ public class CalculatorTest extends JSONDataBasedTest {
 		expectedValues.put("clothing", 150.0);
 		expectedValues.put("gas", 120.0);
 		expectedValues.put("groceries", 150.0);
-		
-		Map<String, Double> map = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
-		
-		assertTrue(map.size() == 3);
-		
-		for (int i = 0; i < stgs.size(); i++) {
-			JSONObject obj = (JSONObject) stgs.get(i);
-			
-			String desc = obj.get(Constants.DESCRIPTION_JSON)+"";
-			assertTrue(map.containsKey(desc));
-			
-			Double d = map.get(desc);
-			assertTrue(expectedValues.get(desc).equals(d));
-		}
-	}
-
-	@Test
-	public void getDollarAmountsToBeAppliedToShortTermGoals_PostApplyingFundsForThisPeriod() {
-		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
-		JSONObject stg = getJSONObjectByDescriptionFromJSONArray(stgs, "clothing");
-		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "75");
-
-		Map<String, Double> expectedValues = new HashMap<String, Double>();
-		
-		expectedValues.put("clothing", 75.0);
-		expectedValues.put("gas", 120.0);
-		expectedValues.put("groceries", 150.0);
-		
-		state.put(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_STGS, "feezlelydoo");
 		
 		Map<String, Double> map = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
 		
