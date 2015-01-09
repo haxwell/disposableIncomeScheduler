@@ -59,19 +59,20 @@ public class Processor {
 	
 	private static MenuItemHandlerBean getMenuSelection(Map<Integer, MenuItemHandlerBean> map) {
 		MenuItemHandlerBean rtn = null;
-		boolean NaN = true;
 		String input = "-";
 		
-		while (NaN && !input.equals("")) {
+		while (rtn == null && !input.equals("quit")) {
 			try {
 				input = System.console().readLine();
 				int i = Integer.parseInt(input);
 				rtn = map.get(i);
-				NaN = false;
+				
+				if (rtn == null)
+					System.out.println("\nInvalid selection.");
 			}
 			catch (NumberFormatException nfe) {
-				if (!input.equals(""))
-					System.out.println("\nNot a number. Try again. Just hit ENTER to exit.\n");
+				if (!input.equals("quit"))
+					System.out.println("\nNot a number. Try again. Type 'quit' to exit.\n");
 			}
 		}
 		
