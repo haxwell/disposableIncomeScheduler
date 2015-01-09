@@ -48,7 +48,7 @@ public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandler
 			arr.add(newObj);
 			rtn = true;
 			
-			getPrintlner().println("\nAdded entry '" + newObj.get(Constants.DESCRIPTION_JSON) + "'.");
+			getPrintlner().println("\nAdded goal '" + newObj.get(Constants.DESCRIPTION_JSON) + "'.");
 			getPrintlner().println(newObj.toJSONString());
 		}
 		
