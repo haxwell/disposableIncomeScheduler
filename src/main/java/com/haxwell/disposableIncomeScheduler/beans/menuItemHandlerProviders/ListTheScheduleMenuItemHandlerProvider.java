@@ -6,6 +6,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.beans.ListTheScheduleMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
 import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
@@ -31,11 +32,14 @@ public class ListTheScheduleMenuItemHandlerProvider extends AbstractMenuItemHand
 		next_pd.setTime(mrpd.getTime());
 		CalendarUtils.advanceCalendarByPeriodLength(next_pd);
 		
-		MenuItemHandlerBean rtn;
+		MenuItemHandlerBean rtn = null;
 		if ((cal.equals(next_pd) || cal.after(next_pd))) {
 			rtn = null;
-		} else
-			rtn = new ListTheScheduleMenuItemHandler();
+		} else {
+			if (MenuItemUtils.isMenuFocusedOnTheMainLevel(dass.getState()))
+				rtn = new ListTheScheduleMenuItemHandler();
+		}
+			
 		
 		return rtn;
 	}

@@ -24,6 +24,18 @@ public class MenuItemUtils {
 		state.put(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP, getRootGroupName());
 	}
 	
+	public static boolean isMenuFocusedOn(JSONObject state, String focus) {
+		Object obj = state.get(Constants.MENU_FOCUS);
+		
+		return obj != null && obj.equals(focus);
+	}
+	
+	public static boolean isMenuFocusedOnTheMainLevel(JSONObject state) {
+		Object obj = state.get(Constants.MENU_FOCUS);
+		
+		return obj == null;
+	}
+	
 	/**
 	 * returns the selected group name, or if none is selected, the name of the root group.
 	 * 

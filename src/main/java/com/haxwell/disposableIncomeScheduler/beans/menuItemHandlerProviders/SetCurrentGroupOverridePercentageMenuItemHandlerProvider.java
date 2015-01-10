@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.minidev.json.JSONObject;
 
-import com.haxwell.disposableIncomeScheduler.beans.EditCurrentGroupMenuItemHandler;
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 import com.haxwell.disposableIncomeScheduler.beans.SetCurrentGroupOverridePercentageMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
@@ -24,7 +24,7 @@ public class SetCurrentGroupOverridePercentageMenuItemHandlerProvider extends
 			List<JSONObject> siblingsOfSelectedGroup = MenuItemUtils.getSiblingsOfSelectedGroup(data, state);
 			
 			// check that the group has siblings, otherwise its weigh is 1.0, and makes no sense being overridden
-			if (siblingsOfSelectedGroup.size() > 0)
+			if (siblingsOfSelectedGroup.size() > 0 && MenuItemUtils.isMenuFocusedOn(state, Constants.LONG_TERM_GOALS_JSON))
 				return new SetCurrentGroupOverridePercentageMenuItemHandler();
 		}
 		

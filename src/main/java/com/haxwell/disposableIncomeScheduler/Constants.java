@@ -65,4 +65,6 @@ public class Constants {
 	public static final String NUMBER_OF_PAYCHECKS_PROCESSED = "numberOfPaychecksProcessed";
 	public static final String SAVING_IS_COMPLETE_JSON = "savingIsComplete";
 	public static final String AMT_CLAIMED_DURING_LAST_APPLICATION = "amtClaimedDuringLastApplication";
+	
+	public static final String MENU_FOCUS = "menuFocus";
 }

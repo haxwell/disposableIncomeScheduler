@@ -35,6 +35,19 @@ public class RemoveSelectedGroupMenuItemHandlerProviderTest extends JSONDataBase
 
 	@Test
 	public void testHappyPath2() {
+		// TEST: By default the longTermGoals group, the wrapper for all the other long term goals, is selected.
+		//  ensure by default this menu option does not appear.
+		RemoveSelectedGroupMenuItemHandlerProvider sut = new RemoveSelectedGroupMenuItemHandlerProvider();
+		
+		initializeMenuFocus_LongTermGoals();
+		
+		MenuItemHandlerBean bean = sut.getMenuItemHandler();
+		
+		assertTrue(bean == null);
+	}
+
+	@Test
+	public void testHappyPath3() {
 		// TEST: Once a group is selected, the user should be able to remove it.
 		//  ensure the menu option appears once a group is selected.
 		RemoveSelectedGroupMenuItemHandlerProvider sut = new RemoveSelectedGroupMenuItemHandlerProvider();

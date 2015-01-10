@@ -2,20 +2,23 @@ package com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders;
 
 import net.minidev.json.JSONObject;
 
-import com.haxwell.disposableIncomeScheduler.beans.EditCalculationVariablesMenuItemHandler;
+import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.ManageExpensesMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
-import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
-public class EditCalculationVariablesMenuItemHandlerProvider extends AbstractMenuItemHandlerProvider {
+public class ManageExpensesMenuItemHandlerProvider extends AbstractMenuItemHandlerProvider {
 
 	@Override
 	public MenuItemHandlerBean getMenuItemHandler() {
 		JSONObject state = DataAndStateSingleton.getInstance().getState();
+		Object obj = state.get(Constants.MENU_FOCUS);
 		
-		if (MenuItemUtils.isMenuFocusedOnTheMainLevel(state))
-			return new EditCalculationVariablesMenuItemHandler();
+		MenuItemHandlerBean rtn = null;
 		
-		return null;
+		if (obj == null)
+			rtn = new ManageExpensesMenuItemHandler();
+		
+		return rtn;
 	}
 }

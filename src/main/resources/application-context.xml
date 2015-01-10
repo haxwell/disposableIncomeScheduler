@@ -6,6 +6,11 @@
 	<bean id="MenuItemHandlerProviderCollection" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.MenuItemHandlerProviderCollection">
 		<property name="list">
 			<list>
+				<ref bean="ToMainMenuMenuItemHandlerProvider"/>
+				<ref bean="ManageExpensesMenuItemHandlerProvider"/>
+				<ref bean="ManageShortTermGoalsMenuItemHandlerProvider"/>
+				<ref bean="ManageLongTermGoalsMenuItemHandlerProvider"/>
+																
 				<ref bean="SelectAGroupMenuItemHandlerProvider"/>
 				<ref bean="MoveToParentGroupMenuItemHandlerProvider"/>
 				<ref bean="AddAGroupMenuItemHandlerProvider"/>
@@ -29,6 +34,18 @@
 				<ref bean="DisplayTheReportMenuItemHandlerProvider"/>
 			</list>
 		</property>
+	</bean>
+
+	<bean id="ToMainMenuMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ToMainMenuMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ManageExpensesMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ManageExpensesMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ManageShortTermGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ManageShortTermGoalsMenuItemHandlerProvider">
+	</bean>
+
+	<bean id="ManageLongTermGoalsMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.ManageLongTermGoalsMenuItemHandlerProvider">
 	</bean>
 
 	<bean id="SelectAGroupMenuItemHandlerProvider" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.SelectAGroupMenuItemHandlerProvider">

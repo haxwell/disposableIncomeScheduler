@@ -36,6 +36,19 @@ public class SetCurrentGroupOverridePercentageMenuItemHandlerProviderTest extend
 
 	@Test
 	public void testHappyPath2() {
+		// TEST: By default the longTermGoals group, the wrapper for all the other long term goals, is selected.
+		//  ensure by default this menu option does not appear.
+		SetCurrentGroupOverridePercentageMenuItemHandlerProvider sut = new SetCurrentGroupOverridePercentageMenuItemHandlerProvider();
+		
+		initializeMenuFocus_LongTermGoals();
+		
+		MenuItemHandlerBean bean = sut.getMenuItemHandler();
+		
+		assertTrue(bean == null);
+	}
+
+	@Test
+	public void testHappyPath3() {
 		// TEST: Once a group is selected, the user should be able to set the group override percentage.
 		//  ensure the menu option appears once a group with siblings is selected.
 		SetCurrentGroupOverridePercentageMenuItemHandlerProvider sut = new SetCurrentGroupOverridePercentageMenuItemHandlerProvider();

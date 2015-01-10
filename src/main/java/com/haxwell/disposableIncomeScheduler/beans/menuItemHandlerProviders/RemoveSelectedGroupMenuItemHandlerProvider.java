@@ -2,6 +2,7 @@ package com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders;
 
 import net.minidev.json.JSONObject;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 import com.haxwell.disposableIncomeScheduler.beans.RemoveSelectedGroupMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
@@ -14,8 +15,8 @@ public class RemoveSelectedGroupMenuItemHandlerProvider extends AbstractMenuItem
 		JSONObject state = DataAndStateSingleton.getInstance().getState();
 
 		String selGroupName = MenuItemUtils.getSelectedGroupName(state);
-		
-		if (selGroupName != null && !selGroupName.equals(MenuItemUtils.getRootGroupName())) {
+
+		if (selGroupName != null && !selGroupName.equals(MenuItemUtils.getRootGroupName()) && MenuItemUtils.isMenuFocusedOn(state, Constants.LONG_TERM_GOALS_JSON)) {
 			return new RemoveSelectedGroupMenuItemHandler();
 		}
 

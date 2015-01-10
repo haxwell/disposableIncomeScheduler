@@ -25,7 +25,7 @@ public class ChangeSelectedGroupNameMenuItemHandlerProviderTest extends JSONData
 	@Test
 	public void testHappyPath() {
 		// TEST: By default the longTermGoals group, the wrapper for all the other long term goals, is selected.
-		//  ensure by default this menu option does not appear.
+		//  ensure by default this menu option does not appear, with an unset menu focus.
 		ChangeSelectedGroupNameMenuItemHandlerProvider sut = new ChangeSelectedGroupNameMenuItemHandlerProvider();
 		
 		MenuItemHandlerBean bean = sut.getMenuItemHandler();
@@ -35,8 +35,21 @@ public class ChangeSelectedGroupNameMenuItemHandlerProviderTest extends JSONData
 
 	@Test
 	public void testHappyPath2() {
+		// TEST: By default the longTermGoals group, the wrapper for all the other long term goals, is selected.
+		//  ensure by default this menu option does not appear, with menu focus set to long term goals.
+		ChangeSelectedGroupNameMenuItemHandlerProvider sut = new ChangeSelectedGroupNameMenuItemHandlerProvider();
+		
+		initializeMenuFocus_LongTermGoals();
+		
+		MenuItemHandlerBean bean = sut.getMenuItemHandler();
+		
+		assertTrue(bean == null);
+	}
+
+	@Test
+	public void testHappyPath3() {
 		// TEST: Once a group is selected, the user should be able to change the group name.
-		//  ensure the menu option appears once a group is selected.
+		//  ensure the menu option appears once a group is selected, and menu focus is on long term goals.
 		ChangeSelectedGroupNameMenuItemHandlerProvider sut = new ChangeSelectedGroupNameMenuItemHandlerProvider();
 		
 		initializeState_12880();

@@ -1,14 +1,17 @@
 package com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders;
 
-import static org.junit.Assert.assertFalse;	
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import net.minidev.json.JSONObject;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
+import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class EditCurrentGroupMenuItemHandlerProviderTest extends JSONDataBasedTest {
 
@@ -27,6 +30,8 @@ public class EditCurrentGroupMenuItemHandlerProviderTest extends JSONDataBasedTe
 		// TEST: By default the longTermGoals group, the wrapper for all the other long term goals, is selected.
 		//  ensure by default this menu option does not appear.
 		EditCurrentGroupMenuItemHandlerProvider sut = new EditCurrentGroupMenuItemHandlerProvider();
+		
+		initializeMenuFocus_LongTermGoals();
 		
 		MenuItemHandlerBean bean = sut.getMenuItemHandler();
 		

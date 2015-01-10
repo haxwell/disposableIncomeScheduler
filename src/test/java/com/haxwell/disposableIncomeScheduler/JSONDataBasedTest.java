@@ -225,11 +225,25 @@ public class JSONDataBasedTest {
 		return rtn;
 	}
 	
+	protected void initializeMenuFocus_LongTermGoals() {
+		DataAndStateSingleton.getInstance().getState().put(Constants.MENU_FOCUS, Constants.LONG_TERM_GOALS_JSON);
+	}
+	
+	protected void initializeMenuFocus_ShortTermGoals() {
+		DataAndStateSingleton.getInstance().getState().put(Constants.MENU_FOCUS, Constants.SHORT_TERM_GOALS_JSON);
+	}
+	
+	protected void initializeMenuFocus_Expenses() {
+		DataAndStateSingleton.getInstance().getState().put(Constants.MENU_FOCUS, Constants.EXPENSES_JSON);
+	}
+	
 	protected void initializeState_12880() {
 		MenuItemUtils.initializeState(state);
 
 		simulateSelectingAGroup(state, strJohnathansGoals);
 		simulateSelectingAGroup(state, str12880);
+		
+		initializeMenuFocus_LongTermGoals();
 	}
 
 	protected void initializeState_Bathroom() {
@@ -238,6 +252,8 @@ public class JSONDataBasedTest {
 		simulateSelectingAGroup(state, strJohnathansGoals);
 		simulateSelectingAGroup(state, str12880);
 		simulateSelectingAGroup(state, strBathroom);
+		
+		initializeMenuFocus_LongTermGoals();
 	}
 
 	protected void initializeState_Kitchen() {
@@ -246,6 +262,8 @@ public class JSONDataBasedTest {
 		simulateSelectingAGroup(state, strJohnathansGoals);
 		simulateSelectingAGroup(state, str12880);
 		simulateSelectingAGroup(state, strKitchen);
+		
+		initializeMenuFocus_LongTermGoals();
 	}
 
 	protected void initializeState_Outside() {
@@ -254,6 +272,8 @@ public class JSONDataBasedTest {
 		simulateSelectingAGroup(state, strJohnathansGoals);
 		simulateSelectingAGroup(state, str12880);
 		simulateSelectingAGroup(state, strOutside);
+		
+		initializeMenuFocus_LongTermGoals();
 	}
 	
 	protected void initializeState_TripToFrance() {
@@ -261,5 +281,7 @@ public class JSONDataBasedTest {
 		
 		simulateSelectingAGroup(state, strJohnathansGoals);
 		simulateSelectingAGroup(state, strTripToFrance);
+		
+		initializeMenuFocus_LongTermGoals();
 	}
 }

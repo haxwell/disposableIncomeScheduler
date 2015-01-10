@@ -2,6 +2,7 @@ package com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders;
 
 import net.minidev.json.JSONObject;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.EditCurrentGroupMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
@@ -16,7 +17,7 @@ public class EditCurrentGroupMenuItemHandlerProvider extends
 
 		String selGroupName = MenuItemUtils.getSelectedGroupName(state);
 
-		if (selGroupName != null && !selGroupName.equals(MenuItemUtils.getRootGroupName()))
+		if (selGroupName != null && !selGroupName.equals(MenuItemUtils.getRootGroupName()) && MenuItemUtils.isMenuFocusedOn(state, Constants.LONG_TERM_GOALS_JSON))
 			return new EditCurrentGroupMenuItemHandler();
 		
 		return null;

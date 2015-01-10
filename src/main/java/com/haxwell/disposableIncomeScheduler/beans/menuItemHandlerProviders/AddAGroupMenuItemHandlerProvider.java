@@ -5,6 +5,7 @@ import java.util.List;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.AddAGroupMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
@@ -22,7 +23,7 @@ public class AddAGroupMenuItemHandlerProvider extends
 
 		List<JSONObject> list = MenuItemUtils.getGoalsOfAGroup(arr);
 		
-		if (list.size() == 0)
+		if (list.size() == 0 && MenuItemUtils.isMenuFocusedOn(state, Constants.LONG_TERM_GOALS_JSON))
 			return new AddAGroupMenuItemHandler();
 		
 		return null;
