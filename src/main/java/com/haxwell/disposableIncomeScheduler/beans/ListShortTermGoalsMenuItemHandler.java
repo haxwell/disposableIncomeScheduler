@@ -18,6 +18,10 @@ public class ListShortTermGoalsMenuItemHandler extends GoalAttributeEditingMenuI
 		
 		if (arr.size() > 0)
 			getPrintlner().println("Short Term Goals\n-------------");
+
+		getPrintlner().format("%-35s%-15s%-13s", "Description", "Already Saved", "Amt Per Month");
+		getPrintlner().println();
+		getPrintlner().println();
 		
 		// list each item
 		int count = 0;
@@ -26,7 +30,10 @@ public class ListShortTermGoalsMenuItemHandler extends GoalAttributeEditingMenuI
 			String description = jobj.get(Constants.DESCRIPTION_JSON)+"";
 			String tas = jobj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
 			String aspp = jobj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"";
-			getPrintlner().println(count+1 + ". " + description + "(Total Already Saved: " + tas + " / Amt Saved Per Month: " + aspp + ")");
+//			getPrintlner().println(count+1 + ". " + description + "(Total Already Saved: " + tas + " / Amt Saved Per Month: " + aspp + ")");
+			
+			getPrintlner().format("%-35s%-15s%-13s", description, tas, aspp);
+			getPrintlner().println();
 		}
 		
 		getPrintlner().println("-------\n");
