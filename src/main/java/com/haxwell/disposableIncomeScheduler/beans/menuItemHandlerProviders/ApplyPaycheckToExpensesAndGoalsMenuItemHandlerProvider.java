@@ -8,6 +8,7 @@ import net.minidev.json.JSONObject;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.ApplyPaycheckToExpensesAndGoalsMenuItemHandler;
 import com.haxwell.disposableIncomeScheduler.beans.MenuItemHandlerBean;
+import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
 import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
@@ -20,7 +21,9 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandlerProvider extends Abst
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		JSONObject state = dass.getState();
 		
-		if (isCurrentDateOnOrAfterTheNextPaycheckDateToOccurAfterTheMostRecentPaycheck() && (!state.containsKey(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS))) {
+		if (isCurrentDateOnOrAfterTheNextPaycheckDateToOccurAfterTheMostRecentPaycheck() 
+				&& (!state.containsKey(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS)
+						&& (MenuItemUtils.isMenuFocusedOnTheMainLevel(state)))) {
 			rtn = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
 		} 
 		
