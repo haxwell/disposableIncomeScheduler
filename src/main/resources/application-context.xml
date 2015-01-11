@@ -3,6 +3,31 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="TextDisplayedBeforeAndAfterMenuBean" class="com.haxwell.disposableIncomeScheduler.beans.textDisplayedBeforeAndAfterMenuBeans.TextDisplayedBeforeAndAfterMenuBeansCollection">
+		<property name="list">
+			<list>
+				<ref bean="MainLevelBeforeAndAfterMenuBean"/>
+				<ref bean="ExpensesBeforeAndAfterMenuBean"/>
+				<ref bean="STGsBeforeAndAfterMenuBean"/>
+				<ref bean="LTGsBeforeAndAfterMenuBean"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="MainLevelBeforeAndAfterMenuBean" class="com.haxwell.disposableIncomeScheduler.beans.textDisplayedBeforeAndAfterMenuBeans.MainLevelBeforeAndAfterMenuBean">
+	</bean>
+
+	<bean id="ExpensesBeforeAndAfterMenuBean" class="com.haxwell.disposableIncomeScheduler.beans.textDisplayedBeforeAndAfterMenuBeans.ExpensesBeforeAndAfterMenuBean">
+	</bean>
+
+	<bean id="STGsBeforeAndAfterMenuBean" class="com.haxwell.disposableIncomeScheduler.beans.textDisplayedBeforeAndAfterMenuBeans.STGsBeforeAndAfterMenuBean">
+	</bean>
+
+	<bean id="LTGsBeforeAndAfterMenuBean" class="com.haxwell.disposableIncomeScheduler.beans.textDisplayedBeforeAndAfterMenuBeans.LTGsBeforeAndAfterMenuBean">
+	</bean>
+
+	<!-- ********************************************************************** -->
+
 	<bean id="MenuItemHandlerProviderCollection" class="com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders.MenuItemHandlerProviderCollection">
 		<property name="list">
 			<list>

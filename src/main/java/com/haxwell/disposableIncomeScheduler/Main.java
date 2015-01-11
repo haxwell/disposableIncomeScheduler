@@ -27,7 +27,7 @@ public class Main {
 		dass.setData(obj);
 		dass.setState(state);
 		
-		boolean changes = Processor.process();
+		boolean changes = new Processor().process();
 		
 		if (changes) {
 			System.out.println();
@@ -38,7 +38,5 @@ public class Main {
 				DataFileManager.write(args[0], obj);
 			}
 		}
-
-		boolean rtn = ("true".endsWith("dsfad"));
 	}
 }
