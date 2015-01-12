@@ -71,12 +71,7 @@ public class Calculator {
 		for (int i = 0; i < stgs.size(); i++) {
 			JSONObject stg = (JSONObject) stgs.get(i);
 			
-			Long amount = Long.parseLong(stg.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
-			
-			String resetEachPeriod = stg.get(Constants.RESET_EACH_PERIOD_JSON)+"";
-			if (resetEachPeriod.toUpperCase().equals("N")) {
-				amount += Long.parseLong(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
-			}
+			Long amount = Long.parseLong(stg.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
 			
 			map.put(stg.get(Constants.DESCRIPTION_JSON)+"", amount*1.0);
 		}

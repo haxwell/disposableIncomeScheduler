@@ -7,14 +7,20 @@ import java.util.Date;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import org.springframework.util.StringUtils;
+
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
+import com.haxwell.disposableIncomeScheduler.validators.PositiveIntegerValidator;
 
 public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
 
+	PaycheckUtils pu;
+	
 	public String getMenuText() {
 		String str = getDateOfPaycheckToBeAppliedAsString();
 		return "Apply the most recent paycheck (" + str + ")";
@@ -47,17 +53,15 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-//		if (state.containsKey(Constants.PERIODIC_AMT_HAS_BEEN_APPLIED_TO_LTGS)) {
-//			System.out.println("\nThe periodically saved amount has already been added!\n");
-//			return rtn;
-//		}
-
+		pu = new PaycheckUtils(data);
+		
 		getPrintlner().println("Type 'yes' to apply the paycheck for " + getDateOfPaycheckToBeAppliedAsString() + "..");
 		
 		String input = getInputGetter().readInput();
 		
 		if (input.toLowerCase().equals("yes")) {
-			PaycheckUtils pu = new PaycheckUtils(data);
+			
+			accountForAmountsSpentOnEachSTG(data);
 			
 			initializePreviousBalanceState(data);
 			
@@ -67,7 +71,7 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 			}
 			
 			// subtract any non-accumulating stgs from the prev total.. accumulating stgs must be reset manually as they are spent
-			subtractNonAccumulatingSTGsFromThePrevTotal(data);
+			subtractSTGsFromThePrevTotal(data);
 			
 			setBeginningBalanceToIncludeThisPeriodsPay(data);
 			
@@ -89,6 +93,32 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 		}
 		
 		return rtn;
+	}
+
+	private void accountForAmountsSpentOnEachSTG(JSONObject data) {
+		PositiveIntegerValidator posIntValidator = new PositiveIntegerValidator();
+		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
+		
+		getPrintlner().println("How much was spent in the last period for each of the following short term goals? (ENTER = 0)");
+		
+		for (int idx=0; idx < stgs.size(); idx++) {
+			JSONObject obj = (JSONObject)stgs.get(idx);
+			
+			getPrintlner().print(obj.get(Constants.DESCRIPTION_JSON) + " [" + obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON) + "]: ");
+			String input = getInputGetter().readInput();
+			
+			if (StringUtils.isEmpty(input)) {
+				input = "0";
+			}
+			
+			Long amtSpent = Long.parseLong(posIntValidator.getValidValue(input));
+			
+			Long totalInThePot = Long.parseLong(data.get(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON)+"") - amtSpent;
+			data.put(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON, totalInThePot+"");
+			
+			Long totalAmtSaved = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"") - amtSpent;
+			obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, totalAmtSaved+"");
+		}
 	}
 
 	private void initializePreviousBalanceState(JSONObject data) {
@@ -116,7 +146,7 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 		}
 	}
 
-	private void subtractNonAccumulatingSTGsFromThePrevTotal(JSONObject data) {
+	private void subtractSTGsFromThePrevTotal(JSONObject data) {
 		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
 		long previousTotalInThePot = Integer.parseInt(data.get(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON)+"");
 		long numPaychecksProcessed = Integer.parseInt(data.get(Constants.NUMBER_OF_PAYCHECKS_PROCESSED)+"");
@@ -126,13 +156,9 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 		if (numPaychecksProcessed > 0) {
 			for (int i = 0; i < stgs.size(); i++) {
 				JSONObject obj = (JSONObject)stgs.get(i);
+				Long amt = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
 				
-				String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
-				if (resetEachPeriod.toUpperCase().equals("Y")) {
-					Long amt = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
-					
-					previousTotalInThePot -= amt;
-				}
+				previousTotalInThePot -= amt;
 			}
 
 			data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, previousTotalInThePot+"");
@@ -140,19 +166,18 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 	}
 
 	private void updateShortTermGoalTotalSavedAmounts(JSONObject data) {
-		// update all the short term goals that need updating...
+		// update all the short term goals 
 		JSONArray shortTermGoals = MenuItemUtils.getShortTermGoals(data);
 		
 		for (int i = 0; i < shortTermGoals.size(); i++) {
 			JSONObject obj = (JSONObject)shortTermGoals.get(i);
 			
-			String resetEachPeriod = obj.get(Constants.RESET_EACH_PERIOD_JSON)+"";
-			if (resetEachPeriod.toUpperCase().equals("N")) {
-				Long amount = Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"");
-				Long total = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
-				
-				obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, (amount + total)+"");
-			}
+			long numPaychecksInThisPeriod = pu.getNumberOfPaychecks(CalendarUtils.getCurrentCalendar().getTime()); 
+					
+			int amount = Math.round(Long.parseLong(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"") / numPaychecksInThisPeriod);
+			Long total = Long.parseLong(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"");
+			
+			obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, (amount + total)+"");
 		}
 	}
 

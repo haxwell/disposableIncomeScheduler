@@ -47,7 +47,7 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		ApplyPaycheckToExpensesAndGoalsMenuItemHandler addT = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("yes");
+		when(mockedInputGetter.readInput()).thenReturn("yes", "", "", "");
 		
 		addT.setInputGetter(mockedInputGetter);
 		
@@ -108,7 +108,7 @@ public class AcceptanceTest extends JSONDataBasedTest {
 		ApplyPaycheckToExpensesAndGoalsMenuItemHandler addT = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("yes");
+		when(mockedInputGetter.readInput()).thenReturn("yes", "", "", "");
 		
 		addT.setInputGetter(mockedInputGetter);
 		

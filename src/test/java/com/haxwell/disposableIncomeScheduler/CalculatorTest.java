@@ -32,41 +32,30 @@ public class CalculatorTest extends JSONDataBasedTest {
 	}
 
 	@Test
-	public void getDollarAmountsToBeAppliedToShortTermGoals_PreApplyingFundsForThisPeriod() {
+	public void getDollarAmountsToBeAppliedToShortTermGoals() {
+		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
+		
+		// simulate the fact that the most recent paycheck has been applied to the data
+		//  the method were testing, getDollarAmountsToBeAppliedToShortTermGoals(), 
+		//  returns the amount saved for each short term goal as of the last application 
+		//  of the paycheck.
+		JSONObject stg = getJSONObjectByDescriptionFromJSONArray(stgs, "clothing");
+		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "75");
+		
+		stg = getJSONObjectByDescriptionFromJSONArray(stgs, "gas");
+		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "120");
+		
+		stg = getJSONObjectByDescriptionFromJSONArray(stgs, "groceries");
+		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "150");
+
+		// set up some expected values
 		Map<String, Double> expectedValues = new HashMap<String, Double>();
 		
 		expectedValues.put("clothing", 75.0);
 		expectedValues.put("gas", 120.0);
 		expectedValues.put("groceries", 150.0);
 		
-		Map<String, Double> map = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
-		
-		assertTrue(map.size() == 3);
-		
-		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
-		for (int i = 0; i < stgs.size(); i++) {
-			JSONObject obj = (JSONObject) stgs.get(i);
-			
-			String desc = obj.get(Constants.DESCRIPTION_JSON)+"";
-			assertTrue(map.containsKey(desc));
-			
-			Double d = map.get(desc);
-			assertTrue(expectedValues.get(desc).equals(d));
-		}
-	}
-
-	@Test
-	public void getDollarAmountsToBeAppliedToShortTermGoals() {
-		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
-		JSONObject stg = getJSONObjectByDescriptionFromJSONArray(stgs, "clothing");
-		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "75");
-
-		Map<String, Double> expectedValues = new HashMap<String, Double>();
-		
-		expectedValues.put("clothing", 150.0);
-		expectedValues.put("gas", 120.0);
-		expectedValues.put("groceries", 150.0);
-		
+		// exercise the method to be tested
 		Map<String, Double> map = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
 		
 		assertTrue(map.size() == 3);

@@ -22,32 +22,20 @@ public class AddAShortTermGoalMenuItemHandler extends GoalAttributeEditingMenuIt
 		
 		if (name != null && name.length() > 0) {
 			getPrintlner().print("Amount to save per month: ");
-			String amtPerPeriod = getInputGetter().readInput();
+			String amtPerMonth = getInputGetter().readInput();
 			
 			Validator v = getValidatorMap().get(Constants.PRICE);
-			if (v.isValidValue(amtPerPeriod)) {
+			if (v.isValidValue(amtPerMonth)) {
 				
-				getPrintlner().print("Reset with each new month? (y/N)");
-				String reset = getInputGetter().readInput();
+				JSONObject obj = new JSONObject();
 				
-				if (reset == "")
-					reset = "N";
+				obj.put(Constants.AMT_SAVED_PER_MONTH_JSON, amtPerMonth);
+				obj.put(Constants.DESCRIPTION_JSON, name);
+				obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
 				
-				// TODO: if ever another attribute is needed here.. refactor using a more
-				//  extensable solution, rather than adding a deeper IF.
-				String upperReset = reset.toUpperCase();
-				if (upperReset.equals("Y") || upperReset.equals("N")) {
-					JSONObject obj = new JSONObject();
-					
-					obj.put(Constants.AMT_SAVED_PER_MONTH_JSON, amtPerPeriod);
-					obj.put(Constants.DESCRIPTION_JSON, name);
-					obj.put(Constants.RESET_EACH_PERIOD_JSON, reset);
-					obj.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "0");
-					
-					arr.add(obj);
-					
-					rtn = true;
-				}
+				arr.add(obj);
+				
+				rtn = true;
 			}
 		}
 		

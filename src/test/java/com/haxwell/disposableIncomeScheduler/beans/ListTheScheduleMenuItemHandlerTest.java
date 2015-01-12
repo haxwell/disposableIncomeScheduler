@@ -29,23 +29,23 @@ public class ListTheScheduleMenuItemHandlerTest extends JSONDataBasedTest {
 		
 	}
 
-	@Test
-	public void testBar() {
-		ListTheScheduleMenuItemHandler sut = new ListTheScheduleMenuItemHandler();
-		
-		createDataAndStateObjects("/home/jjames/haxSVN/trunk/projects/disposableIncomeScheduler/./src/main/resources/testData.json");
-		
-		ApplyPaycheckToExpensesAndGoalsMenuItemHandler aph = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
-		
-		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("yes");
-		
-		aph.setInputGetter(mockedInputGetter);
-
-		aph.doIt(data, state);
-		
-		sut.doIt(data, state);
-	}
+//	@Test
+//	public void testBar() {
+//		ListTheScheduleMenuItemHandler sut = new ListTheScheduleMenuItemHandler();
+//		
+//		createDataAndStateObjects("/home/jjames/haxSVN/trunk/projects/disposableIncomeScheduler/./src/main/resources/testData.json");
+//		
+//		ApplyPaycheckToExpensesAndGoalsMenuItemHandler aph = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
+//		
+//		InputGetter mockedInputGetter = mock(InputGetter.class);
+//		when(mockedInputGetter.readInput()).thenReturn("yes");
+//		
+//		aph.setInputGetter(mockedInputGetter);
+//
+//		aph.doIt(data, state);
+//		
+//		sut.doIt(data, state);
+//	}
 	
 	@Test
 	public void testFoo() {
@@ -80,7 +80,7 @@ public class ListTheScheduleMenuItemHandlerTest extends JSONDataBasedTest {
 		ApplyPaycheckToExpensesAndGoalsMenuItemHandler mih = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();
 		
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn("yes");
+		when(mockedInputGetter.readInput()).thenReturn("yes", "", "", "");
 		
 		mih.setInputGetter(mockedInputGetter);
 		
