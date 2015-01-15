@@ -2,20 +2,28 @@ package com.haxwell.disposableIncomeScheduler.beans.utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import com.haxwell.disposableIncomeScheduler.Constants;
+
 public class GroupedGoalsIterator implements Iterator<JSONObject> {
 
 	Stack<InnerDataObj> stack;
+	LinkedList<String> pathLinkedList;
+	
 	int level = 0;
 	
 	public GroupedGoalsIterator(JSONArray arr) {
 		stack = new Stack<InnerDataObj>();
 		stack.push(new InnerDataObj(arr));
+		
+		pathLinkedList = new LinkedList<String>();
+		pathLinkedList.add(Constants.LONG_TERM_GOALS_JSON);
 	}
 	
 	@Override
@@ -55,6 +63,8 @@ public class GroupedGoalsIterator implements Iterator<JSONObject> {
 						
 						level--;
 					}
+					
+					pathLinkedList.removeLast();
 				}
 			} else {
 				// if not, next call to next() will advance the ido, storing a ref to the string and object returned from the iterator
@@ -75,11 +85,34 @@ public class GroupedGoalsIterator implements Iterator<JSONObject> {
 
 	@Override
 	public JSONObject next() {
-		return stack.peek().advance();
+		JSONObject rtn = stack.peek().advance();
+		
+		pathLinkedList.add(stack.peek().lastNameReturned);
+		
+		return rtn;
+	}
+	
+	public String getPath() {
+		StringBuffer sb = new StringBuffer();
+		
+		for (String str : pathLinkedList) {
+			sb.append(str);
+			sb.append(Constants.STATE_ATTR_PATH_DELIMITER);
+		}
+		
+		return sb.toString();
 	}
 	
 	public int getLevel() {
 		return level;
+	}
+	
+	public boolean objIsALongTermGoal(JSONObject obj) {
+		return obj.containsKey(Constants.DESCRIPTION_JSON) && obj.containsKey(Constants.PREVIOUS_SAVED_AMT_JSON);
+	}
+	
+	public boolean objIsASubgroup(JSONObject obj) {
+		return !obj.containsKey(Constants.DESCRIPTION_JSON) && !obj.containsKey(Constants.PREVIOUS_SAVED_AMT_JSON);
 	}
 
 	private class InnerDataObj {

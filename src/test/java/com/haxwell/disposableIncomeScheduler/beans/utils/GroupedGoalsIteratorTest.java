@@ -1,6 +1,7 @@
 package com.haxwell.disposableIncomeScheduler.beans.utils;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 	}
 	
 	@Test
-	public void testGroupGoalsIterator() {
+	public void testGroupedGoalsIterator() {
 		JSONArray grpArr = MenuItemUtils.getLongTermGoals(data);
 		
 		GroupedGoalsIterator sut = new GroupedGoalsIterator(grpArr);
@@ -63,6 +64,77 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 				}
 			}
 			
+		}
+	}
+	
+	@Test
+	public void testGroupedGoalsIterator_objIsALongTermGoal_method() {
+		JSONArray grpArr = MenuItemUtils.getLongTermGoals(data);
+		
+		GroupedGoalsIterator sut = new GroupedGoalsIterator(grpArr);
+		
+		assertTrue(sut.hasNext());
+		
+		JSONObject obj = sut.next(); // get johnathans_goals
+		
+		assertFalse(sut.objIsALongTermGoal(obj));
+		
+		assertTrue(sut.hasNext());
+		obj = sut.next(); // get 12880
+		assertFalse(sut.objIsALongTermGoal(obj));
+		
+		assertTrue(sut.hasNext());
+		obj = sut.next(); // get bathroom
+		assertFalse(sut.objIsALongTermGoal(obj));
+		
+		assertTrue(sut.hasNext());
+		obj = sut.next(); // get sink
+		assertTrue(sut.objIsALongTermGoal(obj));
+	}
+
+	@Test
+	public void testGroupedGoalsIterator_objIsASubgroup_method() {
+		JSONArray grpArr = MenuItemUtils.getLongTermGoals(data);
+		
+		GroupedGoalsIterator sut = new GroupedGoalsIterator(grpArr);
+		
+		assertTrue(sut.hasNext());
+		
+		JSONObject obj = sut.next(); // get johnathans_goals
+		
+		assertTrue(sut.objIsASubgroup(obj));
+		
+		assertTrue(sut.hasNext());
+		obj = sut.next(); // get 12880
+		assertTrue(sut.objIsASubgroup(obj));
+		
+		assertTrue(sut.hasNext());
+		obj = sut.next(); // get bathroom
+		assertTrue(sut.objIsASubgroup(obj));
+		
+		assertTrue(sut.hasNext());
+		obj = sut.next(); // get sink
+		assertFalse(sut.objIsASubgroup(obj));
+	}
+
+	@Test
+	public void testGroupedGoalsIterator_getPath() {
+		JSONArray grpArr = MenuItemUtils.getLongTermGoals(data);
+		
+		GroupedGoalsIterator sut = new GroupedGoalsIterator(grpArr);
+		
+		assertTrue(sut.hasNext());
+
+		String expectedElements = "johnathans goals, 12880, bathroom, sink, shower, outside, garage door, kitchen, trip to France, airfare, lodging";
+		StringTokenizer tokenizer = new StringTokenizer(expectedElements, ",");
+		
+		while (sut.hasNext()) {
+			sut.next();
+			
+			assertTrue(tokenizer.hasMoreTokens());
+			String token = tokenizer.nextToken().trim();
+			
+			assertTrue(sut.getPath().endsWith(token + Constants.STATE_ATTR_PATH_DELIMITER));
 		}
 	}
 }
