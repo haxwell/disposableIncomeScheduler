@@ -86,7 +86,7 @@ public class Calculator {
 		while (ggi.hasNext()) {
 			JSONObject obj = ggi.next();
 			
-			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+			if (ggi.objIsALongTermGoal(obj)) {
 				map.put(obj.get(Constants.DESCRIPTION_JSON)+"", Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"")*1.0 );	
 			}
 		}
@@ -191,7 +191,7 @@ public class Calculator {
 	public static void applyMoneyToLongTermGoals(JSONObject data, long totalDollarAmount) {
 		resetDollarAmountsClaimed(data);
 		JSONObject grpRootElement = getFirstElementInRootGroupArray(data);
-		
+
 		if (grpRootElement != null) {
 			boolean finished = false;
 
@@ -215,13 +215,20 @@ public class Calculator {
 		}
 	}
 	
+	/**
+	 * Resets the AMT_CLAIMED_DURING_LAST_APPLICATION for each long term goal. This value is used in calculating the schedule to
+	 * determine how much more at the current rate of saving (that rate being equal to the AMT_CLAIMED_DURING_LAST_APPLICATION value) 
+	 * is necessary to reach the goal.
+	 * 
+	 * @param grpRootElement
+	 */
 	private static void resetDollarAmountsClaimed(JSONObject grpRootElement) {
 		GroupedGoalsIterator ggi = new GroupedGoalsIterator(MenuItemUtils.getLongTermGoals(grpRootElement));
 		
 		while (ggi.hasNext()) {
 			JSONObject obj = ggi.next();
 			
-			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+			if (ggi.objIsALongTermGoal(obj)) {
 				obj.put(Constants.AMT_CLAIMED_DURING_LAST_APPLICATION, "0");
 			}
 		}
@@ -496,7 +503,7 @@ public class Calculator {
 									diff = diff * -1;
 								}
 								
-								Double offset = ((multiplier * 0.01) * multiplier);
+								Double offset = ((multiplier * 0.00001) * multiplier);
 								
 								Double prevDiff = null;
 								// while the difference has not been completely spread...
@@ -519,11 +526,11 @@ public class Calculator {
 												
 												if (d > 0.0) {
 													// apply the inc/dec to Double d
-													d = getTwoDecimalPlaceDouble(d + offset);
+													d = getFiveDecimalPlaceDouble(d + offset);
 													grandchildGroupGoal.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, d);
 													
 													// adjust diff
-													diff = getTwoDecimalPlaceDouble(diff + offset);
+													diff = getFiveDecimalPlaceDouble(diff + offset);
 												}
 											}
 										}
@@ -722,7 +729,7 @@ public class Calculator {
 							if (jo2.containsKey(Constants.GROUP_WEIGHT_JSON)) {
 								found = true;
 								int weight = Integer.parseInt(jo2.get(Constants.GROUP_WEIGHT_JSON)+"");
-								double weightAsPercentage = getTwoDecimalPlaceDouble((weight == 0) ? 0 : (weight*1.0)/total);
+								double weightAsPercentage = getFiveDecimalPlaceDouble((weight == 0) ? 0 : (weight*1.0)/total);
 								
 								jo2.put(Constants.GROUP_WEIGHT_AS_PERCENTAGE_JSON, weightAsPercentage+"");
 							}
@@ -765,8 +772,8 @@ public class Calculator {
 		return element;
 	}
 	
-	public static double getTwoDecimalPlaceDouble(double d) {
-		return (Math.round(d*100.0)) / 100.0;
+	public static double getFiveDecimalPlaceDouble(double d) {
+		return (Math.round(d*100000.0)) / 100000.0;
 	}
 
 	public static int getNumberOfDaysFromToday(JSONObject obj) {
