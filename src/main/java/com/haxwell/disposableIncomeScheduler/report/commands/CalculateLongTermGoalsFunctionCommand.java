@@ -1,14 +1,9 @@
 package com.haxwell.disposableIncomeScheduler.report.commands;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Map;
 import java.util.Set;
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.GroupedGoalsIterator;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
@@ -17,22 +12,13 @@ import com.haxwell.disposableIncomeScheduler.report.CommandList;
 public class CalculateLongTermGoalsFunctionCommand extends FunctionCommand {
 
 	JSONObject data = null;
-	private Map<String, Long> genericFundsMap;
-	private Map<String, Double> expenseMap;
-	private Map<String, Double> stgMap;
 	
-	public CalculateLongTermGoalsFunctionCommand(JSONObject data, Map<String, Long> genericFundsMap, Map<String, Double> expenseMap, 
-			Map<String, Double> stgMap) {
+	public CalculateLongTermGoalsFunctionCommand(JSONObject data) {
 		this.data = data;
-		this.genericFundsMap = genericFundsMap;
-		this.expenseMap = expenseMap;
-		this.stgMap = stgMap;
 	}
 	
 	public void func(CommandList cl, int index) {
-		GroupedGoalsIterator ggi = new GroupedGoalsIterator((JSONArray)data.get(MenuItemUtils.getRootGroupName()));
-//		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(this.genericFundsMap, this.expenseMap, this.stgMap);
-//		Map<String, Long> dapg = Calculator.getDollarAmountsToBeAppliedPerLongTermGoalGroup(data, totalDollarAmount);
+		GroupedGoalsIterator ggi = new GroupedGoalsIterator(MenuItemUtils.getLongTermGoals(data));
 		
 		int indexOffset = 1;
 		cl.add(index + indexOffset++, new StringCommand(""));
@@ -45,7 +31,7 @@ public class CalculateLongTermGoalsFunctionCommand extends FunctionCommand {
 			for (int i=0; i < ggi.getLevel(); i++)
 				levelString += "  ";
 		
-			if (obj.containsKey(Constants.DESCRIPTION_JSON)) {
+			if (ggi.objIsALongTermGoal(obj)) {
 				long prevSavedAmt = Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
 				long price = Long.parseLong(obj.get(Constants.PRICE_JSON)+"");
 				

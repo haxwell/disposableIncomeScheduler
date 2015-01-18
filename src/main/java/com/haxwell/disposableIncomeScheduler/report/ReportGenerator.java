@@ -69,7 +69,7 @@ public class ReportGenerator {
 		cl.add(new SubtotalCommand("Total Short Term Goals", "stgsGroup"));
 		cl.add(new SubtotalCommand("Savings, to be spread over Long Term Goals", data, Constants.AMT_SAVED_PER_MONTH_JSON));
 		
-		cl.add(new CalculateLongTermGoalsFunctionCommand(data, map, expenseMap, stgMap));
+		cl.add(new CalculateLongTermGoalsFunctionCommand(data));
 		
 		cl.add(new SubtotalCommand("Total - Amount Remaining"));
 
