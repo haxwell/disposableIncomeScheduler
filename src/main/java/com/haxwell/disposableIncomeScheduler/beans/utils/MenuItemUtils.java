@@ -533,4 +533,29 @@ public class MenuItemUtils {
 	public static JSONArray getLongTermGoals(JSONObject data) {
 		return (JSONArray)data.get(Constants.LONG_TERM_GOALS_JSON);
 	}
+	
+	public static JSONObject removeLongTermGoal(JSONObject data, String path) {
+		JSONArray sg = MenuItemUtils.getSelectedGroup(data, path);
+		int sgSize = sg.size();
+		
+		// iterate over returned array till you find the goal, keep track of the index
+		int idx = 0;
+		boolean found = false;
+		for (; idx < sgSize ; idx++) {
+			JSONObject obj = (JSONObject)sg.get(idx);
+			
+			if (obj.containsKey(Constants.DESCRIPTION_JSON) && obj.get(Constants.DESCRIPTION_JSON).equals("sink")) {
+				found = true;
+				break;
+			}
+		}
+		
+		// remove the goal from the array
+		JSONObject rtn = null;
+		if (found)
+			rtn = (JSONObject)sg.remove(idx);
+		
+		return rtn;
+		
+	}
 }

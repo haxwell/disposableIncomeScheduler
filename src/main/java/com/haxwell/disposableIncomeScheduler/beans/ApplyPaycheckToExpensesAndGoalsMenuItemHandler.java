@@ -3,6 +3,8 @@ package com.haxwell.disposableIncomeScheduler.beans;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -11,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.GroupedGoalsIterator;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
 import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
 import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
@@ -62,6 +65,8 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 		if (input.toLowerCase().equals("yes")) {
 			
 			accountForAmountsSpentOnEachSTG(data);
+			
+			accountForAmountsSpentOnAccomplishedLongTermGoals(data);
 			
 			initializePreviousBalanceState(data);
 			
@@ -121,6 +126,85 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 		}
 	}
 
+	public void accountForAmountsSpentOnAccomplishedLongTermGoals(JSONObject data) {
+		getPrintlner().println();
+		getPrintlner().print("Were any long term goals paid off in this last period? (y/N) ");
+		
+		String input = getInputGetter().readInput();
+		
+		if (input.toUpperCase().equals("Y")) {
+		
+			boolean done = false;
+
+			getPrintlner().println();
+			
+			do {
+				GroupedGoalsIterator ggi = new GroupedGoalsIterator(MenuItemUtils.getLongTermGoals(data));
+				Map<Integer, JSONObject> map = new HashMap<>();
+				Map<Integer, String> pathMap = new HashMap<>();
+				int index = 0;
+				
+				while (ggi.hasNext()) {
+					JSONObject obj = ggi.next();
+					
+					if (ggi.objIsALongTermGoal(obj)) {
+						map.put(index, obj);
+						pathMap.put(index, ggi.getPath());
+						
+						index++;
+					}
+				}
+				
+				for (int x=0; x < index; x++) {
+					JSONObject obj = map.get(x);
+					String shortPath = getNameOfGoalAndItsParent(pathMap.get(x));
+					
+					String str = obj.containsKey(Constants.TOTAL_AMOUNT_SAVED_JSON) ? ""+obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON) : "0";
+					
+					getPrintlner().println(x+1 + ". " + shortPath + " (" + str + ")");
+				}
+				
+				getPrintlner().println();
+				getPrintlner().print("Which? ");
+				
+				input = getInputGetter().readInput();
+				PositiveIntegerValidator validator = new PositiveIntegerValidator();
+				
+				input = validator.getValidValue(input);
+				
+				if (input.equals("0")) {
+					done = true;
+				} else {
+					int idx = Integer.parseInt(input);
+					JSONObject obj = map.get(idx);
+
+					String str = data.get(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON)+"";
+					int parseInt1 = Integer.parseInt(str);
+					String str2 = obj.containsKey(Constants.TOTAL_AMOUNT_SAVED_JSON) ? ""+obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON) : "0";
+					int parseInt2 = Integer.parseInt(str2);
+					
+					data.put(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON, ""+(parseInt1-parseInt2));
+					
+					String path = pathMap.get(idx);
+					MenuItemUtils.removeLongTermGoal(data, path);
+					
+					getPrintlner().print("\nWere any more long term goals paid off in this last period? (y/N) ");
+					input = getInputGetter().readInput();
+					
+					done = !(input.toUpperCase().equals("Y")); 
+				}
+
+			} while (!done);
+		}
+	}
+	
+	private String getNameOfGoalAndItsParent(String path) {
+		int index = path.lastIndexOf(Constants.STATE_ATTR_PATH_DELIMITER);
+		index = path.lastIndexOf(Constants.STATE_ATTR_PATH_DELIMITER, index-1);
+		
+		return path.substring(index+1, path.length());
+	}
+	
 	private void initializePreviousBalanceState(JSONObject data) {
 		Object object = data.get(Constants.PREV_TOTAL_IN_THE_POT_AFTER_APPLYING_FUNDS_JSON);
 		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, object);
