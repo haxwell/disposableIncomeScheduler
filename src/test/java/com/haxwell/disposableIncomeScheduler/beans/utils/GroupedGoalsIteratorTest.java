@@ -134,7 +134,7 @@ public class GroupedGoalsIteratorTest extends JSONDataBasedTest {
 			assertTrue(tokenizer.hasMoreTokens());
 			String token = tokenizer.nextToken().trim();
 			
-			assertTrue(sut.getPath().endsWith(token + Constants.STATE_ATTR_PATH_DELIMITER));
+			assertTrue(sut.getPath().endsWith(token));
 		}
 	}
 }

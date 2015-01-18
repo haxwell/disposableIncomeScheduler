@@ -95,9 +95,13 @@ public class GroupedGoalsIterator implements Iterator<JSONObject> {
 	public String getPath() {
 		StringBuffer sb = new StringBuffer();
 		
-		for (String str : pathLinkedList) {
-			sb.append(str);
-			sb.append(Constants.STATE_ATTR_PATH_DELIMITER);
+		Iterator<String> iterator = pathLinkedList.iterator();
+		
+		while (iterator.hasNext()) {
+			sb.append(iterator.next());
+			
+			if (iterator.hasNext())
+				sb.append(Constants.STATE_ATTR_PATH_DELIMITER);
 		}
 		
 		return sb.toString();
