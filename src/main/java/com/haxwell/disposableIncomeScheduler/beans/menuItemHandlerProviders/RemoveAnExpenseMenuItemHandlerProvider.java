@@ -14,7 +14,7 @@ public class RemoveAnExpenseMenuItemHandlerProvider extends AbstractMenuItemHand
 		
 		MenuItemHandlerBean rtn = null;
 		
-		if (MenuItemUtils.isMenuFocusedOn(dass.getState(), Constants.LONG_TERM_GOALS_JSON))
+		if (MenuItemUtils.isMenuFocusedOn(dass.getState(), Constants.EXPENSES_JSON))
 			rtn = new RemoveAnExpenseMenuItemHandler();
 		
 		return rtn;

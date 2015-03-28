@@ -66,7 +66,7 @@ public class SetCurrentGroupOverridePercentageMenuItemHandler extends MenuItemHa
 		
 		try {
 			Double d = Double.parseDouble(newWeight);
-			d = Calculator.getTwoDecimalPlaceDouble(d);
+			d = Calculator.getFiveDecimalPlaceDouble(d);
 			
 			if (d < 1) {
 				if (foundStr != null)

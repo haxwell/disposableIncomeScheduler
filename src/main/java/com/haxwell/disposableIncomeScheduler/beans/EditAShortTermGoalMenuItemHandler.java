@@ -43,7 +43,7 @@ public class EditAShortTermGoalMenuItemHandler extends GoalAttributeEditingMenuI
 					rtn = true;
 				}
 				
-				getPrintlner().print("Amount Saved Per Period [" + obj.get(Constants.AMT_SAVED_PER_MONTH_JSON) + "]: ");
+				getPrintlner().print("Amount Saved Per Month [" + obj.get(Constants.AMT_SAVED_PER_MONTH_JSON) + "]: ");
 				String price = getInputGetter().readInput();
 				
 				if (price != null && !price.equals("") && getPriceValidator().isValidValue(price)) {
