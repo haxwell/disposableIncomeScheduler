@@ -1,0 +1,92 @@
+DONE: the weights on a goal level are now generated. Need to add code to add weights on a group level. The weight of the group should be the sum of the goals and subgroups contained within it. For each group, add a JSONObject with values for "groupWeight" and "groupWeightAsAPercentage"
+
+GroupWeight is the sum of the goals in the group. GroupWeightAsAPercentage is this groups weight, divided by the total of its and its siblings weights.
+
+WILO: Need to add overriding percentage functionality. I think this can be added while the group weight as percentage is being set. Need to think about what happens if the overriding percentage is less than the calculated weight as percentage.
+---
+
+The user can specify that a group should get a certain percentage of the funds no matter what. If this is specified, there is an "overridingPercentage" field in the group weights object. 
+
+When applying money, the overriding percent refers to the percentage of the money given to the relative group's parent. the groups with the largest overriding percentages get money first. So if two sibling groups have 75% and 50% respectively, the 75% group gets all its money, the 50% group gets the remaining 25%.
+
+And suppose you had three groups: One with a WAP=50, but with an OWAP=75, and two other groups with WAP=25 and no OWAP. Once the first group gets its money, there's still 25% remaining. A percentage point from the first groups 50 should be given each remaining group in turn, so that they end up with WAP=50 each (half of the original groups 50 to one group and half to the other) and then distribute the remaing 25% according to the new WAP values. In other words, the groups with OWAP should, once they get their money, have their WAP amounts distributed over the sibling groups without an OWAP, and then the sibling groups get that new WAP percentage of the remaining money.
+
+{
+    "goals_johnathans goals": [
+        {
+            "goals_12880": [
+                {
+                    "goals_bathroom": [
+                        {
+                            "weight": "40",
+                            "description": "sink",
+                            "weightAsPercentage": "0.5"
+                        },
+                        {
+                            "weight": "40",
+                            "description": "shower",
+                            "weightAsPercentage": "0.5"
+                        },
+                        {
+                            "groupWeight": "80",
+                            "groupWeightAsPercentage": "0.66"
+                        }
+                    ]
+                },
+                {
+                    "goals_outside": [
+                        {
+                            "weight": "40",
+                            "description": "garage door",
+                            "weightAsPercentage": "1.0"
+                        },
+                        {
+                            "groupWeight": "40",
+                            "groupWeightAsPercentage": "0.34",
+                            "overridingPercentage":"0.75"
+                        }
+                    ]
+                },
+                {
+                    "goals_kitchen": [
+                        {
+                            "weight": "0",
+                            "description": null,
+                            "weightAsPercentage": "0.0"
+                        },
+                        {
+                            "groupWeight": "0",
+                            "groupWeightAsPercentage": "0.0"
+                        }
+                    ]
+                },
+                {
+                    "groupWeight": "120",
+                    "groupWeightAsPercentage": "0.60"
+                }
+            ]
+        },
+        {
+            "goals_trip to France": [
+                {
+                    "weight": "40",
+                    "description": "airfare",
+                    "weightAsPercentage": "0.5"
+                },
+                {
+                    "weight": "40",
+                    "description": "lodging",
+                    "weightAsPercentage": "0.5"
+                },
+                {
+                    "groupWeight": "80",
+                    "groupWeightAsPercentage": "0.40"
+                }
+            ]
+        },
+        {
+            "groupWeight": "120",
+            "groupWeightAsPercentage": "1.0"
+        }
+    ]
+}
