@@ -666,8 +666,9 @@ public class Calculator {
 		
 		int hsn = 0;
 		if (!goal.get(Constants.DATE_NEEDED_JSON).toString().equals("") && dateArr.length > 0) {
-			int days = getNumberOfDaysFromToday(goal);
-			hsn = dateArr[days - 1];
+			int days = getNumberOfDaysFromToday(goal) - 1;
+			if (days >= 0)
+				hsn = dateArr[days];
 		}
 
 		rtn += hsn;
