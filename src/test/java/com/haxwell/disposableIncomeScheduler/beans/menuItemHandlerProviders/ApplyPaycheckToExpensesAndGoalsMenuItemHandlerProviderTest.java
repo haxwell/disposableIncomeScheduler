@@ -3,6 +3,9 @@ package com.haxwell.disposableIncomeScheduler.beans.menuItemHandlerProviders;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import net.minidev.json.JSONObject;
 
 import org.junit.After;
@@ -11,6 +14,8 @@ import org.junit.Test;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.JSONDataBasedTest;
+import com.haxwell.disposableIncomeScheduler.beans.utils.PaycheckUtils;
+import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 public class ApplyPaycheckToExpensesAndGoalsMenuItemHandlerProviderTest extends JSONDataBasedTest {
@@ -46,7 +51,10 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandlerProviderTest extends 
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		JSONObject data = dass.getData();
 		
-		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "12/22/2014");
+		Calendar cal = CalendarUtils.getCalendar(PaycheckUtils.getMostRecentPaydate(data));
+		cal.add(Calendar.DAY_OF_MONTH, 3);
+		
+		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, CalendarUtils.getCalendarAsMMDDYYYY(cal));
 		
 		assertTrue(sut.getMenuItemHandler() == null); 
 	}
@@ -62,7 +70,9 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandlerProviderTest extends 
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		JSONObject data = dass.getData();
 		
-		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "01/02/2015");
+		Calendar cal = CalendarUtils.getCalendar(PaycheckUtils.getFuturePaydate(data, 1));
+		
+		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, CalendarUtils.getCalendarAsMMDDYYYY(cal));
 		
 		assertFalse(sut.getMenuItemHandler() == null); 
 	}
@@ -78,7 +88,10 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandlerProviderTest extends 
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		JSONObject data = dass.getData();
 		
-		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, "01/05/2015");
+		Calendar cal = CalendarUtils.getCalendar(PaycheckUtils.getFuturePaydate(data, 1));
+		cal.add(Calendar.DAY_OF_MONTH, 3);
+		
+		data.put(Constants.TESTING_OVERRIDE_DATE_JSON, CalendarUtils.getCalendarAsMMDDYYYY(cal));
 		
 		assertFalse(sut.getMenuItemHandler() == null); 
 	}

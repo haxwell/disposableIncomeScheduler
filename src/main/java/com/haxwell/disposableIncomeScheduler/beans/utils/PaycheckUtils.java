@@ -96,6 +96,14 @@ public class PaycheckUtils {
 		return rtn;
 	}
 	
+	/**
+	 * Returns the Date of the paycheck X number of periods AFTER the most recent
+	 * paydate.
+	 * 
+	 * @param data
+	 * @param periodsAhead
+	 * @return
+	 */
 	public static Date getFuturePaydate(JSONObject data, int periodsAhead) {
 		Date d = getMostRecentPaydate(data);
 		Calendar cal = CalendarUtils.getCurrentCalendar();
@@ -148,16 +156,34 @@ public class PaycheckUtils {
 		
 		return Integer.parseInt(data.get(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER)+"");
 	}
+	
+	private long getNumberOfDaysBetweenMostRecentPaydateAndCurrentDate() {
+		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		
+		JSONObject data = dass.getData();
 
+		return (CalendarUtils.getCurrentCalendar().getTimeInMillis() - getMostRecentPaydate(data).getTime()) / (1000 * 60 * 60 * 24);
+	}
+
+	/**
+	 * Returns an array, with each element representing a day, starting with
+	 * the date of mostRecentPaydate. The value in each element is the number in
+	 * the month that that paycheck covers. So if rtn[0] = 1, that means the 
+	 * paycheck on the most recent paydate was the first in the month. Or second,
+	 * or third, as the case may be.
+	 *  
+	 * @param data
+	 * @return
+	 */
 	private int[] getPaycheckNumberArray(JSONObject data) {
-		final int ARRAY_SIZE = 365;
+		final long ARRAY_SIZE = getNumberOfDaysBetweenMostRecentPaydateAndCurrentDate() + 365; // leave room for calculations
 		int[] rtn = null;
 		Calendar cal = CalendarUtils.getCurrentCalendar();
 		paycheckNumberArrayBeginDate = getMostRecentPaydate(data);
 		
 		cal.setTime(paycheckNumberArrayBeginDate);
  
-		rtn = new int[ARRAY_SIZE];
+		rtn = new int[(int)ARRAY_SIZE];
 		int periodLength = getPeriodLength();
 		int periodCounter = 0;
 		int paycheckNumber = getMostRecentPaydatePeriodNumber();

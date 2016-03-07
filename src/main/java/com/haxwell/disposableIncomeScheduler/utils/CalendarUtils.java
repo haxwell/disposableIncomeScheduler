@@ -28,6 +28,11 @@ public class CalendarUtils {
 		return rtn;
 	}
 	
+	public static String getCalendarAsMMDDYYYY(Calendar cal) {
+		String str = cal.get(Calendar.MONTH)+1 + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
+		return str;
+	}
+	
 	public static Calendar getCalendar(Date date) {
 		Calendar rtn = Calendar.getInstance();
 		rtn.setTime(date);
