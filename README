@@ -1,0 +1,8 @@
+HOW DISPOSABLE INCOME SCHEDULER WORKS
+====
+
+mvn clean package
+
+java -cp ./target/DisposableIncomeScheduler-2.0.0-SNAPSHOT.jar com.haxwell.disposableIncomeScheduler.Main ./src/main/resources/testData.json
+
+
