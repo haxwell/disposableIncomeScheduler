@@ -68,6 +68,13 @@ public class MenuItemUtils {
 		return getSelectedGroup(data, state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP)+"");
 	}
 	
+	/**
+	 * Searches the DATA for the node at the given path. Returns it and its children.
+	 * 
+	 * @param data
+	 * @param path
+	 * @return
+	 */
 	public static JSONArray getSelectedGroup(JSONObject data, String path) {
 		LinkedList<String> tokenList = getTokenList(new StringTokenizer(path, Constants.STATE_ATTR_PATH_DELIMITER));
 		

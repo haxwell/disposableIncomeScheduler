@@ -16,13 +16,22 @@ public class CalendarUtils {
 		
 		JSONObject data = DataAndStateSingleton.getInstance().getData();
 		
-		if (data != null && data.containsKey(Constants.TESTING_OVERRIDE_DATE_JSON)) {
-			try {
-				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-				rtn.setTime(sdf.parse(data.get(Constants.TESTING_OVERRIDE_DATE_JSON).toString()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+		if (data != null && data.containsKey(Constants.TESTING_OVERRIDE_DATE_JSON)) 
+			rtn = getCalendar(data.get(Constants.TESTING_OVERRIDE_DATE_JSON).toString());
+		
+		return rtn;
+	}
+	
+	public static Calendar getCalendar(String mmddyyyy) {
+		Calendar rtn = null;
+		
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+			Date parse = sdf.parse(mmddyyyy);
+			rtn = Calendar.getInstance();
+			rtn.setTime(parse);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		
 		return rtn;

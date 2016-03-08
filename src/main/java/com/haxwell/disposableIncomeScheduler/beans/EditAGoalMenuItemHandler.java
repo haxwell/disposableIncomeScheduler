@@ -57,7 +57,7 @@ public class EditAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandle
 		
 		System.out.println();
 		
-		// list each attr and its value
+		// display the menu, with a line for each attribute of a goal
 		int count = 0;
 		for (String key : keys) {
 			System.out.println(++count + ". " + key + " -> " + obj.get(displayToJSONMap.get(key)));
