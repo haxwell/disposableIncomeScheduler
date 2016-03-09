@@ -50,6 +50,9 @@ public class CreateNewFileMenuItemHandler extends MenuItemHandlerBean {
 		obj.put(Constants.BEGINNING_BALANCE, initialBalance);
 		obj.put(Constants.AMT_PAID_PER_PERIOD_JSON, amountPaidPerPeriod);
 		obj.put(Constants.AMT_SAVED_FOR_RAINY_DAY_JSON, rainyDayAmount);
+		obj.put(Constants.LONG_TERM_GOALS_JSON, new String[0]);
+		obj.put(Constants.SHORT_TERM_GOALS_JSON, new String[0]);
+		obj.put(Constants.EXPENSES_JSON, new String[0]);
 		
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		dass.setData(obj);

@@ -91,7 +91,7 @@ public class Processor {
 				rtn = map.get(i);
 
 				if (rtn == null)
-					getPrintln().println("\nInvalid selection.");
+					getPrintln().println("\nDidn't find a menu item handler " + i + ".");
 			}
 			catch (NumberFormatException nfe) {
 				if (!input.equals("quit"))

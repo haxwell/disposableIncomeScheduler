@@ -86,8 +86,15 @@ public class MenuItemUtils {
 		do {
 			String token = tokenList.get(tokenListIndex);
 
-			if (obj.containsKey(token))
-				arr = (JSONArray)obj.get(token);
+			if (obj.containsKey(token)) {
+				Object o = obj.get(token);
+				
+				if (o instanceof JSONArray) {
+					arr = (JSONArray)obj.get(token);
+				} else {
+					arr = new JSONArray();
+				}
+			}
 
 			if (tokenListIndex+1 < tokenList.size()) {
 				boolean found = false;
