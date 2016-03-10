@@ -16,8 +16,11 @@ public class PaycheckUtils {
 	int[] paycheckNumberArray = null;
 	Date paycheckNumberArrayBeginDate = null;
 	
+	JSONObject data;
+	
 	public PaycheckUtils(JSONObject data) {
-		paycheckNumberArray = getPaycheckNumberArray(data);
+		this.data = data;
+		paycheckNumberArray = getPaycheckNumberArray(this.data);
 	}
 	
 	/**
@@ -141,27 +144,15 @@ public class PaycheckUtils {
 		data.put(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER, getPaycheckNumber(cal.getTime()));
 	}
 	
-	private int getPeriodLength() {
-		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
-		
-		JSONObject data = dass.getData();
-		
+	private int getPeriodLength(JSONObject data) {
 		return Integer.parseInt(data.get(Constants.PERIOD_LENGTH_JSON)+"");
 	}
 	
-	private int getMostRecentPaydatePeriodNumber() {
-		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
-		
-		JSONObject data = dass.getData();
-		
+	private int getMostRecentPaydatePeriodNumber(JSONObject data) {
 		return Integer.parseInt(data.get(Constants.MOST_RECENT_PAYDATE_PERIOD_NUMBER)+"");
 	}
-	
-	private long getNumberOfDaysBetweenMostRecentPaydateAndCurrentDate() {
-		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
-		
-		JSONObject data = dass.getData();
 
+	private long getNumberOfDaysBetweenMostRecentPaydateAndCurrentDate(JSONObject data) {
 		return (CalendarUtils.getCurrentCalendar().getTimeInMillis() - getMostRecentPaydate(data).getTime()) / (1000 * 60 * 60 * 24);
 	}
 
@@ -176,7 +167,7 @@ public class PaycheckUtils {
 	 * @return
 	 */
 	private int[] getPaycheckNumberArray(JSONObject data) {
-		final long ARRAY_SIZE = getNumberOfDaysBetweenMostRecentPaydateAndCurrentDate() + 365; // leave room for calculations
+		final long ARRAY_SIZE = getNumberOfDaysBetweenMostRecentPaydateAndCurrentDate(data) + 365; // leave room for calculations
 		int[] rtn = null;
 		Calendar cal = CalendarUtils.getCurrentCalendar();
 		paycheckNumberArrayBeginDate = getMostRecentPaydate(data);
@@ -184,9 +175,9 @@ public class PaycheckUtils {
 		cal.setTime(paycheckNumberArrayBeginDate);
  
 		rtn = new int[(int)ARRAY_SIZE];
-		int periodLength = getPeriodLength();
+		int periodLength = getPeriodLength(data);
 		int periodCounter = 0;
-		int paycheckNumber = getMostRecentPaydatePeriodNumber();
+		int paycheckNumber = getMostRecentPaydatePeriodNumber(data);
 		int month = cal.get(Calendar.MONTH);
 		
 		for (int i = 0; i < ARRAY_SIZE; i++) {
