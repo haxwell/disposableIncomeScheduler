@@ -95,7 +95,7 @@ public class ReportScreenPrinter {
 					amt = total;
 					println.println("=======");
 				}
-				else {
+				else if (groupMap != null && groupMap.containsKey(grp)) {
 					amt = groupMap.get(grp);
 					groupMap.remove(grp);
 					

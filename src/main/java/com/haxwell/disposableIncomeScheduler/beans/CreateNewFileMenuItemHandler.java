@@ -1,6 +1,6 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import java.util.Calendar;
+import java.util.Calendar;	
 
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.StringUtil;
@@ -8,6 +8,7 @@ import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONArray;
 
 public class CreateNewFileMenuItemHandler extends MenuItemHandlerBean {
 
@@ -62,6 +63,10 @@ public class CreateNewFileMenuItemHandler extends MenuItemHandlerBean {
 		obj.put(Constants.EXPENSES_JSON, new String[0]);
 		
 		obj.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, initialBalance);
+		
+		obj.put(Constants.EXPENSES_JSON, new JSONArray());
+		obj.put(Constants.LONG_TERM_GOALS_JSON, new JSONArray());
+		obj.put(Constants.SHORT_TERM_GOALS_JSON, new JSONArray());
 		
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		dass.setData(obj);
