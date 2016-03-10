@@ -3,6 +3,7 @@ package com.haxwell.disposableIncomeScheduler.beans;
 import java.util.Calendar;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
+import com.haxwell.disposableIncomeScheduler.beans.utils.StringUtil;
 import com.haxwell.disposableIncomeScheduler.utils.CalendarUtils;
 import com.haxwell.disposableIncomeScheduler.utils.DataAndStateSingleton;
 
@@ -22,9 +23,10 @@ public class CreateNewFileMenuItemHandler extends MenuItemHandlerBean {
 		
 		String mostRecentPaycheckDateAsMMDDYYY = getInputGetter().readInput();
 		
-		System.out.print("How many calendar days long is your pay period? (numbers, no cents)? ");
+		System.out.print("How many calendar days long is your pay period? (numbers, no cents) [14]? ");
 		
 		String payPeriodLength = getInputGetter().readInput();
+		if (StringUtil.isNullOrEmpty(payPeriodLength)) payPeriodLength = "14";
 
 		Calendar cal = CalendarUtils.getCalendar(mostRecentPaycheckDateAsMMDDYYY);
 		cal.add(Calendar.DAY_OF_MONTH, Integer.parseInt(payPeriodLength));
