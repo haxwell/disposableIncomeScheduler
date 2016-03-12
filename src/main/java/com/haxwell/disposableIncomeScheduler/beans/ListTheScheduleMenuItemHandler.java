@@ -9,6 +9,7 @@ import net.minidev.json.JSONObject;
 import com.haxwell.disposableIncomeScheduler.Calculator;
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.utils.ObjectUtils;
 
 /**
  * Lists the goals, how much you've currently saved (how much has been applied to a goal), and how much of the NEXT
@@ -31,13 +32,11 @@ public class ListTheScheduleMenuItemHandler extends GoalAttributeEditingMenuItem
 
 		this.data = data;
 		
-		JSONObject weights = Calculator.getWeights(data);
-		
 		JSONArray grpArr = (JSONArray)data.get(MenuItemUtils.getRootGroupName());
-		JSONObject grpRootElement = (JSONObject)grpArr.get(0);
+		JSONObject grpRootElement = ObjectUtils.getFirstObjectInArray(grpArr);
 		
-		JSONArray weightsArr = (JSONArray)weights.get(MenuItemUtils.getRootGroupName());
-		JSONObject weightsRootElement = (JSONObject)weightsArr.get(0);
+		JSONArray weightsArr = (JSONArray)Calculator.getWeights(data).get(MenuItemUtils.getRootGroupName());
+		JSONObject weightsRootElement = ObjectUtils.getFirstObjectInArray(weightsArr);
 		
 //		long totalDollarAmount = Calculator.getDollarAmountToBeSpreadOverLongTermGoals(data, state);
 		
