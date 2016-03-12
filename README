@@ -6,3 +6,7 @@ mvn clean package
 java -cp ./target/DisposableIncomeScheduler-2.0.0-SNAPSHOT.jar com.haxwell.disposableIncomeScheduler.Main ./src/main/resources/testData.json
 
 
+
+---
+
+You enter your monthly income, how often you get paid, what your expenses are, what your short and long term savings goals are. It calculates everything from the perspective of the most recent paycheck, and your current balance.
