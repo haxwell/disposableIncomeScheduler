@@ -16,7 +16,7 @@ public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandler
 	public String getMenuText() {
 		return "Add A Goal";
 	}
-	
+
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
@@ -24,42 +24,48 @@ public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandler
 		LinkedList<String> keys = getListOfKeys();
 		Map<String, String> mapOfDisplayNamesToJSONFieldNames = getMapOfDisplayNamesToJSONFieldNames();
 		Map<String, Validator> validatorMap = getValidatorMap();
-		
+
 		printHeader();
-		
+
 		Iterator<String> iterator = keys.iterator();
 		boolean lastEntryWasBlank = false;
+		boolean allValidatorsAreValid = true;
 		while (iterator.hasNext() && !lastEntryWasBlank) {
 			String key = iterator.next();
-			
+
 			getPrintlner().println("Enter value for '" + key + "' :");
 			String val = getInputGetter().readInput();
 
 			lastEntryWasBlank = (val == null || val.equals(""));
-			
+
 			Validator v = validatorMap.get(key);
 			val = v.getValidValue(val);
-			
+
+			allValidatorsAreValid &= v.isValidValue(val);
+
 			newObj.put(mapOfDisplayNamesToJSONFieldNames.get(key), val);
 		}
 
-		if (!lastEntryWasBlank) {
+		if (!lastEntryWasBlank || (lastEntryWasBlank && allValidatorsAreValid)) {
 			JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 			arr.add(newObj);
 			rtn = true;
-			
+
 			getPrintlner().println("\nAdded goal '" + newObj.get(Constants.DESCRIPTION_JSON) + "'.");
 			getPrintlner().println(newObj.toJSONString());
 		}
-		
+
 		return rtn;
 	}
-	
+
 	private void printHeader() {
 		getPrintlner().println("Immediacy and Length values are on a scale of 1-25");
-		getPrintlner().println("Happiness Immediacy: 1 = Phht. Whatever, 5 = One less worry, 13 = Satisfied. A goal accomplished, 20 = exuberant, 25 = bliss");
-		getPrintlner().println("Utility Immediacy: 1 = Could've done without, 5 = Did what I had to do, 13 = Good! Baby steps!, 20 = moving in new circles, 25 = new life skill/ability");
-		getPrintlner().println("Happiness and Utility Length: 1 = A fleeting moment, 5 = scale of months, 13 = a good year or so, 20 = more than 3 years, 25 = the forseeable future");
+		getPrintlner().println(
+				"Happiness Immediacy: 1 = Phht. Whatever, 5 = One less worry, 13 = Satisfied. A goal accomplished, 20 = exuberant, 25 = bliss");
+		getPrintlner().println(
+				"Utility Immediacy: 1 = Could've done without, 5 = Did what I had to do, 13 = Good! Baby steps!, 20 = moving in new circles, 25 = new life skill/ability");
+		getPrintlner().println(
+				"Happiness and Utility Length: 1 = A fleeting moment, 5 = scale of months, 13 = a good year or so, 20 = more than 3 years, 25 = the forseeable future");
 		getPrintlner().println();
 	}
 }

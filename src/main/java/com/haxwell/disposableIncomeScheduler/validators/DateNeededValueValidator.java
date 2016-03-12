@@ -13,34 +13,41 @@ public class DateNeededValueValidator extends Validator {
 
 		try {
 			Date parse = sdf.parse(str);
-			
+
 			Calendar cal = CalendarUtils.getCurrentCalendar();
 			if (parse.before(cal.getTime()))
 				str = "";
-			
+
 		} catch (ParseException e) {
 			str = "";
 		}
-		
+
 		return str;
 	}
-	
-	public boolean isValidValue(String str) {
-		boolean rtn = true;
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-		try {
-			Date parse = sdf.parse(str);
-			
-			Calendar cal = CalendarUtils.getCurrentCalendar();
-			if (parse.before(cal.getTime()))
+	/**
+	 * Return true if string is either (1. Not Null, Not empty, and parseable) OR (2. Not Null, empty)
+	 */
+	public boolean isValidValue(String str) {
+		boolean rtn = (str != null);
+
+		if (str != null && !str.isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+			try {
+				Date parse = sdf.parse(str);
+
+				Calendar cal = CalendarUtils.getCurrentCalendar();
+				if (parse.before(cal.getTime())) {
+					rtn = false;
+					System.out.println("Not Valid Value!");
+				}
+
+			} catch (ParseException e) {
 				rtn = false;
-			
-		} catch (ParseException e) {
-			rtn = false;
+			}
 		}
-		
+
 		return rtn;
 	}
 }
