@@ -116,4 +116,56 @@ public class AddAGoalMenuItemHandlerTest extends JSONDataBasedTest {
 
 		assertTrue(arr.size() == 0);
 	}
+
+	@Test
+	public void testEmptyPrice_MeansNoGoalCreated() {
+		AddAGoalMenuItemHandler sut = new AddAGoalMenuItemHandler();
+
+		String desc = "desc";
+
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn(desc, "");
+
+		sut.setInputGetter(mockedInputGetter);
+
+		initializeState_Kitchen();
+
+		sut.doIt(data, state);
+
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+
+		assertTrue(arr.size() == 0);
+	}
+
+	@Test
+	public void testEmptyNonRequiredFieldsStillCreatesObject() {
+		AddAGoalMenuItemHandler sut = new AddAGoalMenuItemHandler();
+
+		String desc = "desc";
+		String price = "123";
+
+		InputGetter mockedInputGetter = mock(InputGetter.class);
+		when(mockedInputGetter.readInput()).thenReturn(desc, price, "", "", "", "", "", "");
+
+		sut.setInputGetter(mockedInputGetter);
+
+		initializeState_Kitchen();
+
+		sut.doIt(data, state);
+
+		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
+
+		assertTrue(arr.size() == 1);
+
+		JSONObject obj = (JSONObject) arr.get(0);
+
+		assertTrue(obj.get(Constants.DESCRIPTION_JSON).equals(desc));
+		assertTrue(obj.get(Constants.PRICE_JSON).equals(price));
+		assertTrue(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON).equals("0"));
+		assertTrue(obj.get(Constants.HAPPINESS_IMMEDIACY_JSON).equals("1"));
+		assertTrue(obj.get(Constants.UTILITY_IMMEDIACY_JSON).equals("1"));
+		assertTrue(obj.get(Constants.HAPPINESS_LENGTH_JSON).equals("1"));
+		assertTrue(obj.get(Constants.UTILITY_LENGTH_JSON).equals("1"));
+		assertTrue(obj.get(Constants.DATE_NEEDED_JSON).equals(""));
+	}
 }

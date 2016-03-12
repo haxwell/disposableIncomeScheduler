@@ -9,6 +9,7 @@ import net.minidev.json.JSONObject;
 
 import com.haxwell.disposableIncomeScheduler.Constants;
 import com.haxwell.disposableIncomeScheduler.beans.utils.MenuItemUtils;
+import com.haxwell.disposableIncomeScheduler.utils.StringUtils;
 import com.haxwell.disposableIncomeScheduler.validators.Validator;
 
 public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandlerBean {
@@ -22,31 +23,34 @@ public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandler
 
 		JSONObject newObj = new JSONObject();
 		LinkedList<String> keys = getListOfKeys();
+		Map<String, Boolean> isRequiredKeys = getIsRequiredKeys();
 		Map<String, String> mapOfDisplayNamesToJSONFieldNames = getMapOfDisplayNamesToJSONFieldNames();
 		Map<String, Validator> validatorMap = getValidatorMap();
 
 		printHeader();
 
 		Iterator<String> iterator = keys.iterator();
-		boolean lastEntryWasBlank = false;
-		boolean allValidatorsAreValid = true;
-		while (iterator.hasNext() && !lastEntryWasBlank) {
-			String key = iterator.next();
+		String key = "";
+		boolean badDataEntry = false;
+
+		while (iterator.hasNext() && !badDataEntry) {
+			key = iterator.next();
 
 			getPrintlner().println("Enter value for '" + key + "' :");
 			String val = getInputGetter().readInput();
 
-			lastEntryWasBlank = (val == null || val.equals(""));
+			if (isRequiredKeys.containsKey(key) && StringUtils.isNullOrEmpty(val)) {
+				badDataEntry = true;
+			} else {
 
-			Validator v = validatorMap.get(key);
-			val = v.getValidValue(val);
+				Validator v = validatorMap.get(key);
+				val = v.getValidValue(val);
 
-			allValidatorsAreValid &= v.isValidValue(val);
-
-			newObj.put(mapOfDisplayNamesToJSONFieldNames.get(key), val);
+				newObj.put(mapOfDisplayNamesToJSONFieldNames.get(key), val);
+			}
 		}
 
-		if (!lastEntryWasBlank || (lastEntryWasBlank && allValidatorsAreValid)) {
+		if (!badDataEntry) {
 			JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 			arr.add(newObj);
 			rtn = true;
