@@ -23,10 +23,12 @@ public class Main {
 		MenuItemUtils.initializeState(state);
 		dass.setState(state);
 		
-		String filename = args[0];
+		String filename = "";
 
 		if (args.length > 0) {
 			
+			filename = args[0];
+
 			File f = new File(filename);
 			if (f.exists()) {
 				try {
