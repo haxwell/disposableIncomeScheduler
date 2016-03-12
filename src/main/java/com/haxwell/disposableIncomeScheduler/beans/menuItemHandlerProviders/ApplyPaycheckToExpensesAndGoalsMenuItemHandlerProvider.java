@@ -19,9 +19,11 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandlerProvider extends Abst
 	public MenuItemHandlerBean getMenuItemHandler() {
 		MenuItemHandlerBean rtn = null;
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
+		JSONObject data = dass.getData();
 		JSONObject state = dass.getState();
 		
-		if (isCurrentDateOnOrAfterTheNextPaycheckDateToOccurAfterTheMostRecentPaycheck() 
+		if ((isCurrentDateOnOrAfterTheNextPaycheckDateToOccurAfterTheMostRecentPaycheck() ||
+				(data.containsKey(Constants.EXPENSES_HAVE_NEVER_BEEN_APPLIED_JSON)))
 				&& (!state.containsKey(Constants.CURRENT_PAYCHECK_HAS_BEEN_APPLIED_TO_LTGS)
 						&& (MenuItemUtils.isMenuFocusedOnTheMainLevel(state)))) {
 			rtn = new ApplyPaycheckToExpensesAndGoalsMenuItemHandler();

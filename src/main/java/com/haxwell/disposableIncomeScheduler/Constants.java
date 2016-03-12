@@ -68,4 +68,5 @@ public class Constants {
 	
 	public static final String MENU_FOCUS = "menuFocus";
 	public static final String MAIN_LEVEL_MENU_FOCUS = "mainLevelMF";
+	public static final String EXPENSES_HAVE_NEVER_BEEN_APPLIED_JSON = "expensesHaveNeverBeenApplied";
 }

@@ -94,6 +94,8 @@ public class ApplyPaycheckToExpensesAndGoalsMenuItemHandler extends GoalAttribut
 			long numPaychecksProcessed = Integer.parseInt(data.get(Constants.NUMBER_OF_PAYCHECKS_PROCESSED)+"");
 			data.put(Constants.NUMBER_OF_PAYCHECKS_PROCESSED, numPaychecksProcessed+1);
 			
+			data.remove(Constants.EXPENSES_HAVE_NEVER_BEEN_APPLIED_JSON);
+
 			pu.advanceMostRecentPaydateByOnePeriod(data);
 		}
 		

@@ -52,6 +52,8 @@ public class CreateNewFileMenuItemHandler extends MenuItemHandlerBean {
 		obj.put(Constants.LONG_TERM_GOALS_JSON, new JSONArray());
 		obj.put(Constants.SHORT_TERM_GOALS_JSON, new JSONArray());
 		
+		obj.put(Constants.EXPENSES_HAVE_NEVER_BEEN_APPLIED_JSON, true);
+
 		DataAndStateSingleton dass = DataAndStateSingleton.getInstance();
 		dass.setData(obj);
 
