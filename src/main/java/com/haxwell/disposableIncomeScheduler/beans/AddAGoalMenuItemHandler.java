@@ -21,13 +21,15 @@ public class AddAGoalMenuItemHandler extends GoalAttributeEditingMenuItemHandler
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
-		JSONObject newObj = new JSONObject();
 		LinkedList<String> keys = getListOfKeys();
 		Map<String, Boolean> isRequiredKeys = getIsRequiredKeys();
 		Map<String, String> mapOfDisplayNamesToJSONFieldNames = getMapOfDisplayNamesToJSONFieldNames();
 		Map<String, Validator> validatorMap = getValidatorMap();
 
 		printHeader();
+
+		JSONObject newObj = new JSONObject();
+		newObj.put(Constants.AMT_CLAIMED_DURING_LAST_APPLICATION, "0");
 
 		Iterator<String> iterator = keys.iterator();
 		String key = "";
