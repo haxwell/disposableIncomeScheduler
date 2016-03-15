@@ -11,33 +11,37 @@ public class ListShortTermGoalsMenuItemHandler extends GoalAttributeEditingMenuI
 	public String getMenuText() {
 		return "List Short Term Goals";
 	}
-	
+
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
-		
-		if (arr.size() > 0)
+
+		if (arr.size() > 0) {
 			getPrintlner().println("Short Term Goals\n-------------");
 
-		getPrintlner().format("%-35s%-15s%-13s", "Description", "Already Saved", "Amt Per Month");
-		getPrintlner().println();
-		getPrintlner().println();
-		
-		// list each item
-		int count = 0;
-		for (; count < arr.size(); count++) {
-			JSONObject jobj = (JSONObject)arr.get(count);
-			String description = jobj.get(Constants.DESCRIPTION_JSON)+"";
-			String tas = jobj.get(Constants.TOTAL_AMOUNT_SAVED_JSON)+"";
-			String aspp = jobj.get(Constants.AMT_SAVED_PER_MONTH_JSON)+"";
-//			getPrintlner().println(count+1 + ". " + description + "(Total Already Saved: " + tas + " / Amt Saved Per Month: " + aspp + ")");
-			
-			getPrintlner().format("%-35s%-15s%-13s", description, tas, aspp);
+			getPrintlner().format("%-35s%-15s%-13s", "Description", "Already Saved", "Amt Per Month");
 			getPrintlner().println();
-		}
-		
-		getPrintlner().println("-------\n");
-		
+			getPrintlner().println();
+
+			// list each item
+			int count = 0;
+			for (; count < arr.size(); count++) {
+				JSONObject jobj = (JSONObject) arr.get(count);
+				String description = jobj.get(Constants.DESCRIPTION_JSON) + "";
+				String tas = jobj.get(Constants.TOTAL_AMOUNT_SAVED_JSON) + "";
+				String aspp = jobj.get(Constants.AMT_SAVED_PER_MONTH_JSON) + "";
+				// getPrintlner().println(count+1 + ". " + description + "(Total
+				// Already Saved: " + tas + " / Amt Saved Per Month: " + aspp +
+				// ")");
+
+				getPrintlner().format("%-35s%-15s%-13s", description, tas, aspp);
+				getPrintlner().println();
+			}
+
+			getPrintlner().println("-------\n");
+		} else
+			getPrintlner().println("\nNo Items to List!\n");
+
 		return rtn;
 	}
 }
