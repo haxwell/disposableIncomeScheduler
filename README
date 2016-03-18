@@ -10,3 +10,16 @@ java -cp ./target/DisposableIncomeScheduler-2.0.0-SNAPSHOT.jar com.haxwell.dispo
 ---
 
 You enter your monthly income, how often you get paid, what your expenses are, what your short and long term savings goals are. It calculates everything from the perspective of the most recent paycheck, and your current balance.
+
+---
+
+When you first begin the program, and are entering goals, you should enter an amount that you have already saved toward them. Especially STGs, because as part of the application process, you will deduct from these amounts. The program will go negative, and since you are likely not negative, you likely do have money for those things, like groceries etc, you should enter money for them. If you truly do not plan to buy whatever goal in the next period, I suppose its okay to enter 0.
+----
+
+The program does two major things. First, it keeps track of how much you've already saved toward various goals, be those monthly expenses like a car payment, short term like a new pair of nikes, or longer term like a trip to france. This is the Report functionality. Second, it calculates how long it will be, at your current rate of saving, until you have enough money for a long term goal. This, is the schedule.
+
+So you get paid, each pay period. Some of that money is going right away, to monthly expenses. The report shows you how much of this check is going to those expenses, all summed up. It shows you how much you have saved toward each goal. For each STG, the report shows the amount already saved for it.
+
+Applying funds, is done when the period is over, and you enter into the program how much you actually spent on various goals. It uses this info to decrease the amount of dollars in your account. Which in turn, affects your schedule. Applying funds is the process of deducting the amount spent in a period on a goal, in order to arrive at a totalInThePot value. This is the unplanned, disposable income.
+
+
