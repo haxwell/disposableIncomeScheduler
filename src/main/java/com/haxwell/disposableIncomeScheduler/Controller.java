@@ -36,10 +36,10 @@ public class Controller {
 		List<MenuItemHandlerBean> rtn = new ArrayList<>();
 		List<AbstractMenuItemHandlerProvider> providerList = mihpc.getList();
 
-		Iterator<AbstractMenuItemHandlerProvider> iterator = providerList.iterator();
+		Iterator<AbstractMenuItemHandlerProvider> providerIterator = providerList.iterator();
 		
-		while (iterator.hasNext()) {
-			MenuItemHandlerBean bean = iterator.next().getMenuItemHandler();
+		while (providerIterator.hasNext()) {
+			MenuItemHandlerBean bean = providerIterator.next().getMenuItemHandler();
 			
 			if (bean != null) {
 				rtn.add(bean);
