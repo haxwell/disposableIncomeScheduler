@@ -13,7 +13,7 @@ public class AddAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandle
 	public String getMenuText() {
 		return "Add A Group";
 	}
-	
+
 	public boolean doIt(JSONObject data, JSONObject state) {
 		boolean rtn = false;
 
@@ -21,28 +21,42 @@ public class AddAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandle
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
 
 		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
-		
-		System.out.println(selectedGroupName + "'s children...");
-		System.out.println("-----===-----------------");
-		
-		for (String str : list) {
-			System.out.println(str);
+
+		if (!selectedGroupName.equals(MenuItemUtils.getRootGroupName())) {
+			System.out.println(selectedGroupName + "'s children...");
+			System.out.println("-----===-----------------");
+
+			for (String str : list) {
+				System.out.println(str);
+			}
+
+			System.out.println("");
 		}
-		
-		System.out.println("\nEnter the name of the new group to add to " + selectedGroupName + ": ");
-		
+
+		String str = "\nEnter the name of the new group to add";
+
+		if (!selectedGroupName.equals(MenuItemUtils.getRootGroupName()))
+			str += " to " + selectedGroupName;
+
+		str += ": ";
+
+		System.out.println(str);
+
 		String input = System.console().readLine();
 
 		if (input != null && input.length() > 0) {
 			JSONObject obj = new JSONObject();
 			obj.put(input, new JSONArray());
 			arr.add(obj);
-			
+
 			rtn = true;
+
+			if (selectedGroupName.equals(MenuItemUtils.getRootGroupName()))
+				MenuItemUtils.setSelectedGroupNameAndPath(state, input);
 
 			System.out.println("\n--> Added the group [" + input + "]");
 		}
-		
+
 		return rtn;
 	}
 

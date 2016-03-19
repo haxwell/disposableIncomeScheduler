@@ -17,14 +17,15 @@ public class AddAGoalMenuItemHandlerProvider extends AbstractMenuItemHandlerProv
 	public MenuItemHandlerBean getMenuItemHandler() {
 		JSONObject data = DataAndStateSingleton.getInstance().getData();
 		JSONObject state = DataAndStateSingleton.getInstance().getState();
-		
+
 		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 
 		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
-		
-		if (list.size() == 0 && MenuItemUtils.isMenuFocusedOn(state, Constants.LONG_TERM_GOALS_JSON))
+
+		if (list.size() == 0 && MenuItemUtils.isMenuFocusedOn(state, Constants.LONG_TERM_GOALS_JSON) && 
+				!MenuItemUtils.getSelectedGroupName(state).equals(MenuItemUtils.getRootGroupName()))
 			return new AddAGoalMenuItemHandler();
-		
+
 		return null;
 	}
 }

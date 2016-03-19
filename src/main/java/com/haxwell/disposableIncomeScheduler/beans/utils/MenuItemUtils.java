@@ -36,10 +36,6 @@ public class MenuItemUtils {
 		return obj == null;
 	}
 
-	public static boolean isAnyGroupSelected(JSONObject state) {
-		return state.containsKey(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME);
-	}
-
 	/**
 	 * returns the selected group name, or if none is selected, the name of the root group.
 	 * 
@@ -49,10 +45,8 @@ public class MenuItemUtils {
 	public static String getSelectedGroupName(JSONObject state) {
 		String rtn = null;
 
-		if (isAnyGroupSelected(state))
+		if (state.containsKey(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME))
 			rtn = (String) state.get(Constants.STATE_ATTR_KEY_SELECTED_GROUP_NAME);
-		else
-			rtn = getRootGroupName();
 
 		return rtn;
 	}
@@ -62,8 +56,6 @@ public class MenuItemUtils {
 
 		if (state.containsKey(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP))
 			rtn = (String) state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
-		else
-			rtn = getRootGroupName();
 
 		return rtn;
 	}
@@ -206,6 +198,15 @@ public class MenuItemUtils {
 
 	public static String getRootGroupName() {
 		return Constants.LONG_TERM_GOALS_JSON;
+	}
+
+	public static void setSelectedGroupNameAndPath(JSONObject state, String groupName) {
+		setSelectedGroupName(state, groupName);
+
+		String pathToGroup = (String) state.get(Constants.STATE_ATTR_PATH_TO_SELECTED_GROUP);
+		pathToGroup += Constants.STATE_ATTR_PATH_DELIMITER + groupName;
+
+		MenuItemUtils.setSelectedGroupPath(state, pathToGroup);
 	}
 
 	public static void setSelectedGroupPath(JSONObject state, String path) {
