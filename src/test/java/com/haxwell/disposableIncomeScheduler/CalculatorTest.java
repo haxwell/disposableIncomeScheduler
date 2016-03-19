@@ -20,7 +20,7 @@ public class CalculatorTest extends JSONDataBasedTest {
 	private abstract class Command {
 		public abstract void execute();
 	}
-	
+
 	@Before
 	public void setup() {
 		createDataAndStateObjects();
@@ -28,44 +28,44 @@ public class CalculatorTest extends JSONDataBasedTest {
 
 	@After
 	public void teardown() {
-		
+
 	}
 
 	@Test
 	public void getDollarAmountsToBeAppliedToShortTermGoals() {
 		JSONArray stgs = MenuItemUtils.getShortTermGoals(data);
-		
+
 		// simulate the fact that the most recent paycheck has been applied to the data
-		//  the method were testing, getDollarAmountsToBeAppliedToShortTermGoals(), 
-		//  returns the amount saved for each short term goal as of the last application 
+		//  the method were testing, getDollarAmountsToBeAppliedToShortTermGoals(),
+		//  returns the amount saved for each short term goal as of the last application
 		//  of the paycheck.
 		JSONObject stg = getJSONObjectByDescriptionFromJSONArray(stgs, "clothing");
 		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "75");
-		
+
 		stg = getJSONObjectByDescriptionFromJSONArray(stgs, "gas");
 		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "120");
-		
+
 		stg = getJSONObjectByDescriptionFromJSONArray(stgs, "groceries");
 		stg.put(Constants.TOTAL_AMOUNT_SAVED_JSON, "150");
 
 		// set up some expected values
 		Map<String, Double> expectedValues = new HashMap<String, Double>();
-		
+
 		expectedValues.put("clothing", 75.0);
 		expectedValues.put("gas", 120.0);
 		expectedValues.put("groceries", 150.0);
-		
+
 		// exercise the method to be tested
 		Map<String, Double> map = Calculator.getDollarAmountsToBeAppliedToShortTermGoals(data, state);
-		
+
 		assertTrue(map.size() == 3);
-		
+
 		for (int i = 0; i < stgs.size(); i++) {
 			JSONObject obj = (JSONObject) stgs.get(i);
-			
-			String desc = obj.get(Constants.DESCRIPTION_JSON)+"";
+
+			String desc = obj.get(Constants.DESCRIPTION_JSON) + "";
 			assertTrue(map.containsKey(desc));
-			
+
 			Double d = map.get(desc);
 			assertTrue(expectedValues.get(desc).equals(d));
 		}
@@ -74,36 +74,36 @@ public class CalculatorTest extends JSONDataBasedTest {
 	@Test
 	public void testApplyMoneyToLongTermGoals_GoalBecomesFullySavedAndNoMoreMoneyIsApplied() {
 		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "2000");
-		
+
 		long totalDollarAmount = 2400;
 		// apply the money once.. with the default values in 'data', the 'Garage Door' goal should have all the money it needs ($1000).
 		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
-		
+
 		initializeState_Outside();
 		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(arr);
 		long price = -1;
 		long prevSavedAmt = -1;
-		
+
 		for (JSONObject obj : goals) {
 			if (obj.containsKey(strOutside_garage)) {
-				price = Long.parseLong(obj.get(Constants.PRICE_JSON)+"");
-				prevSavedAmt = Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"");
-				
+				price = Long.parseLong(obj.get(Constants.PRICE_JSON) + "");
+				prevSavedAmt = Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON) + "");
+
 				assertTrue(prevSavedAmt == price);
 			}
 		}
-		
+
 		// apply the money again.. the 'Garage Door' goal should have the same amount as before.. no money should be applied to it
-		//  once a moneyApplication has put it over the top.
+		// once a moneyApplication has put it over the top.
 		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
-		
+
 		arr = MenuItemUtils.getSelectedGroup(data, state);
 		goals = MenuItemUtils.getGoalsOfAGroup(arr);
-		
+
 		for (JSONObject obj : goals) {
 			if (obj.containsKey(strOutside_garage)) {
-				assertTrue(prevSavedAmt == Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+""));
+				assertTrue(prevSavedAmt == Long.parseLong(obj.get(Constants.PREVIOUS_SAVED_AMT_JSON) + ""));
 			}
 		}
 	}
@@ -111,35 +111,35 @@ public class CalculatorTest extends JSONDataBasedTest {
 	@Test
 	public void testApplyMoneyToLongTermGoals_AllGoalsAreFullySaved() {
 		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "2000");
-		
+
 		long totalDollarAmount = 2400;
 
 		// set the price for all the goals to 20.. so they can quickly be fully saved.
 		initializeState_Bathroom();
 		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(MenuItemUtils.getSelectedGroup(data, state));
-		
+
 		for (JSONObject goal : goals) {
 			goal.put(Constants.PRICE_JSON, "20");
 		}
-		
+
 		initializeState_Outside();
 		goals = MenuItemUtils.getGoalsOfAGroup(MenuItemUtils.getSelectedGroup(data, state));
-		
+
 		for (JSONObject goal : goals) {
 			goal.put(Constants.PRICE_JSON, "20");
 		}
 
 		// skip initializing state to Kitchen, because it should be empty.
-		
+
 		initializeState_TripToFrance();
 		goals = MenuItemUtils.getGoalsOfAGroup(MenuItemUtils.getSelectedGroup(data, state));
-		
+
 		for (JSONObject goal : goals) {
 			goal.put(Constants.PRICE_JSON, "20");
 		}
-		
+
 		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
-		
+
 		verifyGoalSavedAmount(strBathroom_sink, "20", new Command() {
 			@Override
 			public void execute() {
@@ -160,9 +160,9 @@ public class CalculatorTest extends JSONDataBasedTest {
 				initializeState_Outside();
 			}
 		});
-		
+
 		// skip verifying kitchen.. should be empty.. should probably check, too.. but don't want to right now..
-		
+
 		verifyGoalSavedAmount(strTripToFrance_airfare, "20", new Command() {
 			@Override
 			public void execute() {
@@ -177,15 +177,15 @@ public class CalculatorTest extends JSONDataBasedTest {
 			}
 		});
 	}
-	
+
 	@Test
 	public void testApplyMoneyToLongTermGoals_NoGoalsAreFullySaved() {
 		data.put(Constants.PREV_TOTAL_IN_THE_POT_BEFORE_APPLYING_FUNDS_JSON, "200");
-		
+
 		long totalDollarAmount = 240;
-		
+
 		Calculator.applyMoneyToLongTermGoals(data, totalDollarAmount);
-		
+
 		verifyGoalSavedAmount(strBathroom_sink, "12", new Command() {
 			@Override
 			public void execute() {
@@ -206,9 +206,9 @@ public class CalculatorTest extends JSONDataBasedTest {
 				initializeState_Outside();
 			}
 		});
-		
+
 		// skip verifying kitchen.. should be empty.. should probably check, too.. but don't want to right now..
-		
+
 		verifyGoalSavedAmount(strTripToFrance_airfare, "41", new Command() {
 			@Override
 			public void execute() {
@@ -223,18 +223,18 @@ public class CalculatorTest extends JSONDataBasedTest {
 			}
 		});
 	}
-	
+
 	private void verifyGoalSavedAmount(String goalKey, String amt, Command initStateCmd) {
 		initStateCmd.execute();
-		
+
 		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
 		List<JSONObject> goals = MenuItemUtils.getGoalsOfAGroup(arr);
 		String prevSavedAmt = "";
-		
+
 		for (JSONObject obj : goals) {
-			if (obj.containsKey(strOutside_garage)) {
-				prevSavedAmt = obj.get(Constants.PREVIOUS_SAVED_AMT_JSON)+"";
-				
+			if (obj.get(Constants.DESCRIPTION_JSON).equals(goalKey)) {
+				prevSavedAmt = obj.get(Constants.PREVIOUS_SAVED_AMT_JSON) + "";
+
 				assertTrue(prevSavedAmt.equals(amt));
 			}
 		}
