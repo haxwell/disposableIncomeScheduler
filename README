@@ -13,13 +13,106 @@ You enter your monthly income, how often you get paid, what your expenses are, w
 
 ---
 
-When you first begin the program, and are entering goals, you should enter an amount that you have already saved toward them. Especially STGs, because as part of the application process, you will deduct from these amounts. The program will go negative, and since you are likely not negative, you likely do have money for those things, like groceries etc, you should enter money for them. If you truly do not plan to buy whatever goal in the next period, I suppose its okay to enter 0.
+When you first begin the program, and are entering goals, you should enter an amount that you have already saved toward them. Especially STGs, because as part of the application process, you will indicate how much you just spent in the last period on these things, and so will deduct from these amounts. The program will go negative, to indicate you over spent in this category, and you owe yourself money. And since you likely do have money for those things, like groceries etc, you should enter money for them. If you truly do not plan to spend money on whatever goal in the next period, I suppose its okay to enter 0.
 ----
 
-The program does two major things. First, it keeps track of how much you've already saved toward various goals, be those monthly expenses like a car payment, short term like a new pair of nikes, or longer term like a trip to france. This is the Report functionality. Second, it calculates how long it will be, at your current rate of saving, until you have enough money for a long term goal. This, is the schedule.
+The program does two major things. First, it keeps track of how much you've already SAVED toward various goals, be those monthly expenses like a car payment, short term like a new pair of nikes, or longer term like a trip to france. This is the Report functionality. Second, it calculates how long it will be, at your current rate of saving, until you have enough money for a long term goal. This, is the schedule.
+
+Report tells you the current state of things, and Schedule is the future.
 
 So you get paid, each pay period. Some of that money is going right away, to monthly expenses. The report shows you how much of this check is going to those expenses, all summed up. It shows you how much you have saved toward each goal. For each STG, the report shows the amount already saved for it.
 
-Applying funds, is done when the period is over, and you enter into the program how much you actually spent on various goals. It uses this info to decrease the amount of dollars in your account. Which in turn, affects your schedule. Applying funds is the process of deducting the amount spent in a period on a goal, in order to arrive at a totalInThePot value. This is the unplanned, disposable income.
+---
+Applying funds, is done when the period is over, and you enter into the program how much you actually spent on various goals. It uses this info to decrease the amount of dollars in your account. Which in turn, affects your Schedule. Applying funds is the process of deducting the amount spent in a period on a goal, in order to arrive at a totalInThePot value. This is the unplanned, disposable income.
+
+The Schedule is the plan for this unplanned, disposable income; the money you have in a month after everything else is paid for.
+----
+The Report is based on monthly expenses, short term goals, and long term goals. The schedule, is based only on long term goals.
+
+----
+Goals and Weights
+
+Johnathan's Goals
+ - House
+ -- Carpet (goal)
+ -- Furnace (goal)
+ - Vacation
+ -- Spain
+ --- Airfare (goal)
+ --- Lodging (goal)
+ -- Aspen
+ --* no goals/groups here *
+ - Family
+ -- Portraits (goal)
+
+Goals are contained by groups.
+Groups contain either subgroups, or goals, but not both.
+Subgroups are groups.
+A group can be empty.
+The outer group you define is a normal group, it can contain all goals, or all subgroups, exclusively.
 
 
+How is the schedule calculated?
+--------
+We begin with a dollar amount, our disposable income, the money not otherwise planned for. And of course, our list of goals, grouped. We could just divide the money over each of the goals equally, but not all goals are created equally, not all have the same importance. Some may not need to be realized for years, and others we just really, really want. Now. So, assign each goal a calculated value, and in turn the group that it is in derives a value. We call this value, the weight. The more weight it has, the greater portion of the money available it can claim. This is how things we want/need sooner can get more of the money faster, and still leave some saving for other wants/needs.
+
+So to calculate the weight, we state that the outer group has a weight of 1.00. Mathematically, it is the whole, it is everything. It gets all the money. Each group or goal within it comprises a portion of that 1.00. We compare each inner item (group or goal) with its siblings. We use the happiness and utility values for each sibling inner item to compare them. The sum of those values forms the inner item's share of the weight of its containing group. In turn, we compare the weight of the containing group with its siblings, to figure its weight, as a percentage of its parent. And on and on until each goal and group has a weight.
+
+So, assume these are our goals. The H&U is the score we've given the goal, based on the happiness and utility values we set for it, along with its date needed (and a possible override value!). Its purpose is to assign a relative importance to a goal.
+
+Johnathan's Goals
+ - House
+ -- Carpet (goal) H&U = 40
+ -- Furnace (goal) H&U = 50
+ - Vacation
+ -- Spain
+ --- Airfare (goal) H&U = 70
+ --- Lodging (goal) H&U = 70
+ -- Aspen
+ --* no goals/groups here *
+ - Family
+ -- Portraits (goal) H&U = 45
+
+
+We begin with the outer group, and we list its contents. Its immediate children are the House, Vacation, and Family groups. We are going to go over them, one by one, and calculate their weight, and what percentage of their parent group (the outer group, at this point) that they can claim. First is House. It has children, so we step into it. Carpet is a goal, so we know we're at the leaf level of this group. We add up the weights of the goals in this group, Carpet and Furnace, for a total weight of 90.
+
+We step up to the parent level, House. Since it has a sibling, Vacation, we step into it. We repeat the recursive operation here, and check if Vacation has children. It does, Spain and Aspen. We step into Spain, and it has goals. We add up the H&Us, for a weight of 140. 
+
+We step up to the parent level, Spain. Since it has a sibling, Aspen, we step into it. Since Aspen has no children, its weight is automatically 0. 
+
+We step up to the parent level, and there are no more siblings, so Vacation has a total weight of 140. It has a sibling, Family, so we step into it. It has one goal, with a weight of 45, so the weight of the Family group is 45.
+
+There are no more groups on this level, and the parent is our outer group, so we can be sure we have the weight information for this set of goals. With it, we can determine how much money a goal will get, and then based on that amount, the total dollar amount we have to go, and knowing how often paychecks are coming in, we can figure out how much time will pass at this rate until we have the money for what we want!
+
+So, to continue, we are going to create a matching hierarchy containing the weight information we just accumulated. Starting on the outer group level, we add an outer group to our weights hierarchy. Our outer group, as we know has children, House, Vacation and Family. So we step into the first one, House. In so doing, we create a House level in our weights hierarchy. House has two child goals, Carpet and Furnace. We know already that their weight in total is 90. So in WH (the weights hierarchy), we add a child to its House group, with values for Description, its weight (40), and its weight as a percentage (.444). Same for Furnace, we add an object with values for its description, its weight (50), and its weight as a percentage (.555). We add another object to this group, to describe the groups weight against its siblings.
+
+I'll spare you more details, you can look at the code if you really want to know. But you end up with a weights hierarchy object that looks like
+
+Johnathan's Goals
+ - House
+ -- Carpet (goal) H&U = 40 WAP=.444
+ -- Furnace (goal) H&U = 50 WAP=.555
+ -- GROUP_WEIGHT = 90 WAP=0.327272727
+ - Vacation
+ -- Spain
+ --- Airfare (goal) H&U = 70 WAP=.5
+ --- Lodging (goal) H&U = 70 WAP=.5
+ --- GROUP_WEIGHT = 140
+ -- Aspen
+ --- GROUP_WEIGHT = 0
+ -- GROUP_WEIGHT=140 WAP=0.509090909
+ - Family
+ -- Portraits (goal) H&U = 45 WAP=1
+ -- GROUP_WEIGHT = 45 WAP=0.163636364
+ - GROUP_WEIGHT = 275 WAP=1
+
+WAP = Weight As Percentage (of its parent group's money claimed)
+
+So we know the amount we have available to put towards our goal, we know what the goals are, and which are relatively more important to us (as a percentage of the amount we have to spend). We know when we get paid next, so we can repeat our calculation using this same information out to the future, and determine the point in the future when we will have the money we need for our goal.
+
+We can plan now.
+
+----
+Overriding percentages
+
+Another concept is an overriding percentage. This is for when you want to temporarily make a group more important than its weight, or less important! For reasons you can discover in the code, you can only override one of a group of siblings.
