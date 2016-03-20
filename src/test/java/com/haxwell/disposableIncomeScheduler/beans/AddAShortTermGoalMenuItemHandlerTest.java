@@ -1,6 +1,6 @@
 package com.haxwell.disposableIncomeScheduler.beans;
 
-import static org.mockito.Mockito.mock;	
+import static org.mockito.Mockito.mock;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
@@ -25,35 +25,34 @@ public class AddAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 
 	@After
 	public void teardown() {
-		
+
 	}
 
 	@Test
 	public void testHappyPath() {
 		AddAShortTermGoalMenuItemHandler sut = new AddAShortTermGoalMenuItemHandler();
-		
+
 		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
-		
+
 		int arrSize = arr.size();
-		
+
 		final String NAME = "name";
 		final String AMT_PP = "150";
-		final String RESET = "y";
-		
+
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, RESET);
-		
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, "");
+
 		sut.setInputGetter(mockedInputGetter);
-		
+
 		boolean rtn = sut.doIt(data, state);
-		
+
 		assertTrue(rtn);
-		
+
 		assertTrue(arr.size() == arrSize + 1);
-		
+
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
 		assertFalse(obj == null);
-		
+
 		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals(AMT_PP));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 	}
@@ -61,81 +60,80 @@ public class AddAShortTermGoalMenuItemHandlerTest extends JSONDataBasedTest {
 	@Test
 	public void testHappyPath_WithPressingEnterToSelectDefaultReset() {
 		AddAShortTermGoalMenuItemHandler sut = new AddAShortTermGoalMenuItemHandler();
-		
+
 		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
-		
+
 		int arrSize = arr.size();
-		
+
 		final String NAME = "name";
 		final String AMT_PP = "150";
-		final String RESET = "";
-		
+
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, RESET);
-		
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, "");
+
 		sut.setInputGetter(mockedInputGetter);
-		
+
 		boolean rtn = sut.doIt(data, state);
-		
+
 		assertTrue(rtn);
-		
+
 		assertTrue(arr.size() == arrSize + 1);
-		
+
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
 		assertFalse(obj == null);
-		
+
 		assertTrue(obj.get(Constants.AMT_SAVED_PER_MONTH_JSON).equals(AMT_PP));
 		assertTrue(obj.get(Constants.TOTAL_AMOUNT_SAVED_JSON).equals("0"));
 	}
-		
+
 	@Test
 	public void testEnterNameButNoAmountPerPeriod() {
 		AddAShortTermGoalMenuItemHandler sut = new AddAShortTermGoalMenuItemHandler();
-		
+
 		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
-		
+
 		int arrSize = arr.size();
-		
+
 		final String NAME = "name";
 		final String AMT_PP = "";
-		
+
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP);
-		
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, "");
+
 		sut.setInputGetter(mockedInputGetter);
-		
+
 		boolean rtn = sut.doIt(data, state);
-		
+
 		assertFalse(rtn);
-		
+
 		assertTrue(arr.size() == arrSize);
-		
+
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
 		assertTrue(obj == null);
 	}
-		
+
 	@Test
 	public void testEnterBlankNameAndNoAmountPerPeriod() {
 		AddAShortTermGoalMenuItemHandler sut = new AddAShortTermGoalMenuItemHandler();
-		
+
 		JSONArray arr = MenuItemUtils.getShortTermGoals(data);
-		
+
 		int arrSize = arr.size();
-		
+
 		final String NAME = "";
 		final String AMT_PP = "";
-		
+
 		InputGetter mockedInputGetter = mock(InputGetter.class);
-		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP);
-		
+		when(mockedInputGetter.readInput()).thenReturn(NAME, AMT_PP, "");
+
 		sut.setInputGetter(mockedInputGetter);
-		
+
 		boolean rtn = sut.doIt(data, state);
-		
+
 		assertFalse(rtn);
-		
+
 		assertTrue(arr.size() == arrSize);
-		
+
 		JSONObject obj = MenuItemUtils.getShortTermGoal(data, NAME);
 		assertTrue(obj == null);
 	}
