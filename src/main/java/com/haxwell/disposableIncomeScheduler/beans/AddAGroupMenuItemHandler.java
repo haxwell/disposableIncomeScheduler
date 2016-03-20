@@ -18,15 +18,16 @@ public class AddAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandle
 		boolean rtn = false;
 
 		JSONArray arr = MenuItemUtils.getSelectedGroup(data, state);
-		List<String> list = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
+		List<String> subgroupNamesList = MenuItemUtils.getSubgroupNamesOfAGroup(arr);
 
 		String selectedGroupName = MenuItemUtils.getSelectedGroupName(state);
+		boolean selectedGroupIsRootGroup = selectedGroupName.equals(MenuItemUtils.getRootGroupName());
 
-		if (!selectedGroupName.equals(MenuItemUtils.getRootGroupName())) {
-			System.out.println(selectedGroupName + "'s children...");
+		if (!selectedGroupIsRootGroup && subgroupNamesList.size() > 0) {
+			System.out.println(selectedGroupName + "'s child groups...");
 			System.out.println("-----===-----------------");
 
-			for (String str : list) {
+			for (String str : subgroupNamesList) {
 				System.out.println(str);
 			}
 
@@ -35,7 +36,7 @@ public class AddAGroupMenuItemHandler extends GoalAttributeEditingMenuItemHandle
 
 		String str = "\nEnter the name of the new group to add";
 
-		if (!selectedGroupName.equals(MenuItemUtils.getRootGroupName()))
+		if (!selectedGroupIsRootGroup)
 			str += " to " + selectedGroupName;
 
 		str += ": ";
